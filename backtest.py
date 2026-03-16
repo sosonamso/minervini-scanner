@@ -24,15 +24,10 @@ HOLD_PERIODS  = [5, 20, 60]
 # ══════════════════════════════════════
 # 데이터 수집
 # ══════════════════════════════════════
-def get_kospi200():
-    try:
-        today = datetime.today().strftime("%Y%m%d")
-        tickers = stock.get_index_portfolio_deposit_file(today, "1028")
-        return list(tickers)
-    except:
-        today = datetime.today().strftime("%Y%m%d")
-        return stock.get_market_ticker_list(today, market="KOSPI")[:200]
 
+def get_kospi200():
+    today = datetime.today().strftime("%Y%m%d")
+    return stock.get_market_ticker_list(today, market="KOSPI")
 def get_ohlcv_full(ticker, start_str, end_str):
     for _ in range(2):
         try:
