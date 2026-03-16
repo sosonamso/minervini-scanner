@@ -1,6 +1,6 @@
 import os,time,warnings,requests
 import numpy as np,pandas as pd
-from pykrx import stock
+import yfinance as yf
 from datetime import datetime,timedelta
 warnings.filterwarnings("ignore")
 TOK=os.environ.get("TELEGRAM_TOKEN","")
@@ -12,33 +12,38 @@ def send(t):
   try:requests.post(f"https://api.telegram.org/bot{TOK}/sendMessage",data={"chat_id":CID,"text":t},timeout=10)
   except:pass
 
-def get_tickers():
- try:
-  headers={"User-Agent":"Mozilla/5.0","Referer":"http://data.krx.co.kr/"}
-  r=requests.post("http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd",
-   data={"bld":"dbms/MDC/STAT/standard/MDCSTAT01901","locale":"ko_KR","mktId":"STK","share":"1","money":"1","csvxls_isNo":"false"},
-   headers=headers,timeout=10)
-  items=r.json()["OutBlock_1"]
-  tickers=[x["ISU_SRT_CD"] for x in items]
-  send(f"KRX직접: {len(tickers)}개")
-  return tickers
- except Exception as e:
-  send(f"KRX직접 실패: {e}")
-  return []
+# KOSPI 주요 종목 100개 (yfinance .KS 형식)
+TICKERS=[
+ "005930.KS","000660.KS","207940.KS","005380.KS","000270.KS",
+ "068270.KS","105560.KS","012330.KS","055550.KS","066570.KS",
+ "028260.KS","035420.KS","000810.KS","051910.KS","003550.KS",
+ "034730.KS","096770.KS","003490.KS","017670.KS","032830.KS",
+ "011200.KS","018260.KS","009150.KS","010130.KS","086790.KS",
+ "033780.KS","316140.KS","003670.KS","009830.KS","010950.KS",
+ "011070.KS","047050.KS","034020.KS","010140.KS","021240.KS",
+ "000100.KS","161390.KS","002790.KS","008770.KS","004020.KS",
+ "139480.KS","011170.KS","006400.KS","009540.KS","010620.KS",
+ "000720.KS","004170.KS","035250.KS","001800.KS","002380.KS",
+ "047810.KS","030200.KS","097950.KS","023530.KS","018880.KS",
+ "004990.KS","007070.KS","003410.KS","016360.KS","008930.KS",
+ "000880.KS","005490.KS","011780.KS","000150.KS","001040.KS",
+ "002160.KS","004800.KS","006800.KS","007310.KS","009240.KS",
+ "010060.KS","011500.KS","012750.KS","014820.KS","015760.KS",
+ "017800.KS","019170.KS","020150.KS","021820.KS","023150.KS",
+ "024110.KS","025540.KS","026960.KS","028050.KS","029780.KS",
+ "032640.KS","033530.KS","034230.KS","035000.KS","036570.KS",
+ "042660.KS","044880.KS","051600.KS","055490.KS","057050.KS",
+ "064350.KS","069960.KS","078930.KS","086280.KS","267250.KS"
+]
 
-def get_name(t):
- try:return stock.get_market_ticker_name(t)
- except:return t
-
-def ohlcv(ticker,s,e):
+def get_ohlcv(ticker,start,end):
  for _ in range(2):
   try:
-   df=stock.get_market_ohlcv(s,e,ticker)
-   df.index=pd.to_datetime(df.index)
-   df=df.rename(columns={"종가":"Close","거래량":"Volume"})
+   df=yf.download(ticker,start=start,end=end,progress=False,auto_adjust=True)
+   if df.empty or len(df)<100:return None
    df=df[["Close","Volume"]].dropna()
-   if len(df)>=100:return df
-  except:time.sleep(0.3)
+   return df
+  except:time.sleep(1)
  return None
 
 def trend(df):
@@ -72,21 +77,22 @@ def cup(df):
  cur=cl[-1]
  if not(rh*0.97<=cur<=rh*1.05):return False,{}
  vr=float(np.mean(v[-5:]))/float(np.mean(v[-40:-5]))if len(v)>=40 else 1.0
- return True,{"cd":round(cd*100,1),"pivot":round(float(rh),0),"cur":round(float(cur),0),"vs":vr>=1.40}
+ return True,{"cd":round(cd*100,1),"cur":round(float(cur),0),"vs":vr>=1.40}
 
 if __name__=="__main__":
- end=datetime.today();s=(end-timedelta(days=800)).strftime("%Y%m%d");e=end.strftime("%Y%m%d")
+ end=datetime.today()
+ s=(end-timedelta(days=800)).strftime("%Y-%m-%d")
+ e=end.strftime("%Y-%m-%d")
  sd=set(pd.bdate_range(end-timedelta(days=365),end).map(pd.Timestamp))
- tickers=get_tickers()
- if not tickers:send("종목리스트 실패");exit()
+ send(f"스캔시작: {len(TICKERS)}개 종목 (yfinance)")
  res=[]
- for i,t in enumerate(tickers):
-  if i%100==0:print(f"[{i}/{len(tickers)}] 발견:{len(res)}")
-  df=ohlcv(t,s,e)
+ for i,t in enumerate(TICKERS):
+  if i%20==0:print(f"[{i}/{len(TICKERS)}] 발견:{len(res)}")
+  df=get_ohlcv(t,s,e)
   if df is None:continue
   dates=df.index.tolist()
   for j,dt in enumerate(dates):
-   if dt not in sd:continue
+   if pd.Timestamp(dt) not in sd:continue
    sl=df.iloc[:j+1]
    if not trend(sl):continue
    ok,info=cup(sl)
@@ -94,7 +100,10 @@ if __name__=="__main__":
    ep=info["cur"]
    r20=round((df["Close"].iloc[j+20]/ep-1)*100,2)if j+20<len(df)else None
    r60=round((df["Close"].iloc[j+60]/ep-1)*100,2)if j+60<len(df)else None
-   res.append({"날짜":dt.strftime("%Y-%m-%d"),"종목":get_name(t),"5일":round((df["Close"].iloc[j+5]/ep-1)*100,2)if j+5<len(df)else None,"20일":r20,"60일":r60,"급등":info["vs"],"_r":r20})
+   nm=t.replace(".KS","")
+   res.append({"날짜":pd.Timestamp(dt).strftime("%Y-%m-%d"),"종목":nm,
+    "5일":round((df["Close"].iloc[j+5]/ep-1)*100,2)if j+5<len(df)else None,
+    "20일":r20,"60일":r60,"급등":info["vs"],"_r":r20})
  res.sort(key=lambda x:x["_r"]or-999,reverse=True)
  print(f"완료:{len(res)}건")
  if not res:send("⚠️ 시그널 없음");exit()
@@ -105,7 +114,7 @@ if __name__=="__main__":
  hdr=f"📋 시그널(20일순)\n{'날짜':<11}{'종목':<8}{'5일':>6}{'20일':>7}{'60일':>7}\n{'─'*45}\n"
  body=""
  for r in res:
-  body+=f"{r['날짜']:<11}{r['종목'][:6]:<8}{str(r['5일']or'-'):>6}{str(r['20일']or'-'):>7}{str(r['60일']or'-'):>7}{'🔥'if r['급등']else''}\n"
+  body+=f"{r['날짜']:<11}{r['종목']:<8}{str(r['5일']or'-'):>6}{str(r['20일']or'-'):>7}{str(r['60일']or'-'):>7}{'🔥'if r['급등']else''}\n"
  full=hdr+body
  while len(full)>4000:send(full[:4000]);full=full[4000:];time.sleep(0.5)
  send(full)
