@@ -1,0 +1,4 @@
+numpy==1.26.4
+pandas==2.2.2
+pykrx==1.0.45
+requests==2.31.0
