@@ -54,7 +54,11 @@ def cup(df):
 if __name__=="__main__":
  end=datetime.today();s=(end-timedelta(days=800)).strftime("%Y%m%d");e=end.strftime("%Y%m%d")
  sd=set(pd.bdate_range(end-timedelta(days=365),end).map(pd.Timestamp))
- tickers=list(stock.get_market_ticker_list(e,market="KOSPI"))
+ tickers=[]
+ for d in range(5):
+  td=(datetime.today()-timedelta(days=d)).strftime("%Y%m%d")
+  tickers=list(stock.get_market_ticker_list(td,market="KOSPI"))
+  if tickers:break
  send(f"스캔시작: {len(tickers)}개 종목")
  res=[]
  for i,t in enumerate(tickers):
