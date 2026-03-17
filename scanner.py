@@ -1836,6 +1836,7 @@ TICKERS={
  "087260":("KOSDAQ","기타","모바일어플라이언스"),
 }
 
+
 def send(text):
  print(text)
  if TOK:
@@ -1863,6 +1864,14 @@ def get_ohlcv(ticker_yf,start,end):
    if len(df)>=100:return df
   except:time.sleep(1)
  return None
+
+def check_market(mkt_df):
+ if mkt_df is None or len(mkt_df)<200:return True
+ c=mkt_df["Close"]
+ ma200=c.rolling(200).mean()
+ cur=float(c.iloc[-1]);ma=float(ma200.iloc[-1])
+ if pd.isna(ma):return True
+ return cur>ma
 
 def check_trend(df):
  if len(df)<200:return False
@@ -1906,18 +1915,59 @@ def calc_rs(df,mkt):
  m=sum([0.4,0.2,0.2,0.2][i]*p(mkt,[63,126,189,252][i])for i in range(4))
  return round((s-m)*100,1)
 
+def get_past_signals(df,exclude_ts):
+ results=[]
+ idx=df.index.tolist()
+ check_start=max(0,len(idx)-180)
+ for i in range(check_start,len(idx)-5):
+  ts=idx[i]
+  if ts>=exclude_ts:continue
+  sl=df.iloc[:i+1]
+  if not check_trend(sl):continue
+  ok,pat=detect(sl)
+  if not ok:continue
+  close_on=float(df["Close"].iloc[i])
+  r5=None;r20=None
+  if i+5<len(idx):
+   r5=round((float(df["Close"].iloc[i+5])/close_on-1)*100,1)
+  if i+20<len(idx):
+   r20=round((float(df["Close"].iloc[i+20])/close_on-1)*100,1)
+  results.append({"date":ts.strftime("%y-%m-%d"),"r5":r5,"r20":r20,"vs":pat["vs"]})
+ return results
+
+def format_past(history):
+ if not history:return ""
+ lines=[]
+ wins=sum(1 for h in history if h["r20"] is not None and h["r20"]>0)
+ total=sum(1 for h in history if h["r20"] is not None)
+ for h in history[-3:]:
+  r5_s=f"{h['r5']:+.1f}%"if h["r5"] is not None else"-"
+  r20_s=f"{h['r20']:+.1f}%"if h["r20"] is not None else"미완"
+  ok="OK"if(h["r20"] is not None and h["r20"]>0)else("..."if h["r20"] is None else"XX")
+  vol="VOL"if h["vs"]else""
+  lines.append(f"  {h['date']}: 5일{r5_s}/20일{r20_s} {ok}{vol}")
+ result="[과거이력]\n"+"\n".join(lines)
+ if total>0:
+  wr=round(wins/total*100)
+  result+=f"\n  -> 과거{total}회 승률{wr}%"
+ return result
+
 if __name__=="__main__":
  end=datetime.today()
  start=(end-timedelta(days=420)).strftime("%Y-%m-%d")
  end_str=end.strftime("%Y-%m-%d")
  sig_dates=get_recent_dates(SCAN_DAYS)
  print(f"탐색날짜: {sig_dates}")
- send(f"🚀 스캐너 시작\n📅 최근 {SCAN_DAYS}거래일\n({sig_dates[-1]}~{sig_dates[0]})\n{len(TICKERS)}개 종목 스캔 중...")
  try:
   mkt_raw=yf.download("^KS11",start=start,end=end_str,progress=False,auto_adjust=True)
   if isinstance(mkt_raw.columns,pd.MultiIndex):mkt_raw.columns=mkt_raw.columns.get_level_values(0)
   mkt_df=pd.DataFrame({"Close":pd.to_numeric(mkt_raw["Close"],errors="coerce")}).dropna()
  except:mkt_df=None
+ market_ok=check_market(mkt_df)
+ market_str="상승장(KOSPI>200MA)"if market_ok else"하락장(KOSPI<200MA)"
+ send(f"스캐너 시작\n최근 {SCAN_DAYS}거래일 | {market_str}\n{len(TICKERS)}개 종목 스캔 중...")
+ if not market_ok:
+  send("KOSPI 200MA 하방 - 시그널 신뢰도 낮음, 주의!")
  res=[]
  for i,(code,(mkt,sector,name)) in enumerate(TICKERS.items()):
   if i%100==0:print(f"[{i}/{len(TICKERS)}] 발견:{len(res)}")
@@ -1932,12 +1982,15 @@ if __name__=="__main__":
    if not check_trend(sl):continue
    ok,pat=detect(sl)
    if not ok:continue
+   if not pat["vs"]:continue
    rs=calc_rs(sl,mkt_df.loc[:sig_ts])if mkt_df is not None else 0.0
+   if rs<=0:continue
+   history=get_past_signals(df,sig_ts)
    res.append({"sig_date":sig_str,"ticker":code,"name":name,
                "market":mkt,"sector":sector,
                "cur":pat["cur"],"pivot":pat["pivot"],
                "cd":pat["cd"],"hd":pat["hd"],"cdays":pat["cdays"],"hdays":pat["hdays"],
-               "vr":pat["vr"],"vs":pat["vs"],"rs":rs})
+               "vr":pat["vr"],"vs":pat["vs"],"rs":rs,"history":history})
   time.sleep(0.1)
  res.sort(key=lambda x:(x["sig_date"],x["rs"]),reverse=True)
  seen=set();deduped=[]
@@ -1945,24 +1998,24 @@ if __name__=="__main__":
   if r["ticker"] not in seen:
    seen.add(r["ticker"]);deduped.append(r)
  res=deduped
- print(f"✅ {len(res)}개 발견")
+ print(f"완료: {len(res)}개 발견")
  if not res:
-  send(f"📊 미너비니 스캐너\n📅 최근 {SCAN_DAYS}거래일\n⚠️ 조건 충족 종목 없음")
+  send(f"미너비니 스캐너\n최근 {SCAN_DAYS}거래일 | {market_str}\n조건 충족 종목 없음\n(거래량급증+RS양수 기준)")
  else:
-  hdr=f"📊 미너비니 컵&핸들\n📅 최근 {SCAN_DAYS}거래일\n✅ {len(res)}개 발견\n"+"─"*24+"\n"
+  hdr=f"미너비니 컵&핸들\n최근 {SCAN_DAYS}거래일 | {market_str}\n{len(res)}개 발견(RS순)\n---\n"
   msg=hdr
   for r in res:
    up=round((r["pivot"]/r["cur"]-1)*100,1)
-   mkt_lbl="🔵코스피"if r["market"]=="KOSPI"else"🟢코스닥"
-   vol="🔥"if r["vs"]else"  "
-   blk=(f"📅{r['sig_date']}\n"
-        f"{mkt_lbl}[{r['sector']}]\n"
-        f"🔹{r['name']}({r['ticker']})\n"
-        f"  현재가:{r['cur']:,.0f}원\n"
-        f"  피벗:{r['pivot']:,.0f}원({up:+.1f}%)\n"
-        f"  컵:{r['cd']}%/{r['cdays']}일 핸들:{r['hd']}%/{r['hdays']}일\n"
-        f"  거래량:{r['vr']}x{vol} RS:{r['rs']:+.1f}%\n\n")
+   mkt_lbl="[코스피]"if r["market"]=="KOSPI"else"[코스닥]"
+   past=format_past(r["history"])
+   blk=(f"[{r['sig_date']}] {mkt_lbl} {r['sector']}\n"
+        f"{r['name']}({r['ticker']})\n"
+        f"현재가:{r['cur']:,.0f}원\n"
+        f"피벗:{r['pivot']:,.0f}원({up:+.1f}%)\n"
+        f"컵:{r['cd']}%/{r['cdays']}일 핸들:{r['hd']}%/{r['hdays']}일\n"
+        f"거래량:{r['vr']}x VOL RS:{r['rs']:+.1f}%\n"
+        +(past+"\n" if past else "")+"\n")
    if len(msg)+len(blk)>4000:
-    send(msg);msg="📊(이어서)\n\n"+blk
+    send(msg);msg="(이어서)\n\n"+blk
    else:msg+=blk
   send(msg)
