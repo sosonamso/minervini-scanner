@@ -6,6 +6,7 @@ warnings.filterwarnings("ignore")
 
 TOK=os.environ.get("TELEGRAM_TOKEN","")
 CID=os.environ.get("TELEGRAM_CHAT_ID","")
+SCAN_DAYS=7  # 최근 며칠치 시그널 탐색
 
 def send(text):
  print(text)
@@ -13,14 +14,18 @@ def send(text):
   try:requests.post(f"https://api.telegram.org/bot{TOK}/sendMessage",data={"chat_id":CID,"text":text},timeout=10)
   except:pass
 
-def get_date():
- for i in range(10):
-  d=(datetime.today()-timedelta(days=i)).strftime("%Y%m%d")
+def get_recent_trading_dates(n=7):
+ dates=[]
+ d=datetime.today()
+ while len(dates)<n:
+  ds=d.strftime("%Y%m%d")
   try:
-   t=stock.get_market_ticker_list(d,market="KOSPI")
-   if t:return d
+   t=stock.get_market_ticker_list(ds,market="KOSPI")
+   if t:dates.append(ds)
   except:pass
- return datetime.today().strftime("%Y%m%d")
+  d-=timedelta(days=1)
+  if (datetime.today()-d).days>30:break
+ return dates
 
 def get_universe(today):
  uni=[]
@@ -39,13 +44,12 @@ def get_universe(today):
     sm={}
    for t in sel:
     uni.append({"ticker":str(t),"market":mkt,"sector":sm.get(str(t),"기타")})
-   print(f"{mkt}: {n}개 → {len(sel)}개 선택")
+   print(f"{mkt}: {n}개 → {len(sel)}개")
    time.sleep(0.5)
   except Exception as e:
    print(f"{mkt} 실패: {e}")
  return uni
-
-def get_ohlcv(ticker,s,e):
+ def get_ohlcv(ticker,s,e):
  for _ in range(2):
   try:
    df=stock.get_market_ohlcv(s,e,ticker)
@@ -62,7 +66,7 @@ def check_trend(df):
  m50=c.rolling(50).mean();m150=c.rolling(150).mean();m200=c.rolling(200).mean()
  cur=c.iloc[-1];a=m50.iloc[-1];b=m150.iloc[-1];d=m200.iloc[-1]
  if any(pd.isna([a,b,d])):return False
- d1=m200.iloc[-21] if len(m200.dropna())>=21 else d
+ d1=m200.iloc[-21]if len(m200.dropna())>=21 else d
  lk=c.iloc[-252:]if len(c)>=252 else c
  return all([cur>b and cur>d,b>d,d>d1,a>b and a>d,cur>a,cur>=lk.min()*1.25,cur>=lk.max()*0.70])
 
@@ -90,6 +94,15 @@ def detect(df):
  return True,{"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":bi-li,"hdays":hl,
               "pivot":round(float(rh),0),"cur":round(float(cur),0),"vr":round(vr,2),"vs":vr>=1.40}
 
+def detect_on_date(df,sig_date):
+ """특정 날짜 기준 슬라이스로 패턴 감지"""
+ idx=df.index.tolist()
+ if sig_date not in idx:return False,{}
+ pos=idx.index(sig_date)
+ sl=df.iloc[:pos+1]
+ if not check_trend(sl):return False,{}
+ return detect(sl)
+
 def calc_rs(df,mkt):
  def p(d,n):return float(d["Close"].iloc[-1]/d["Close"].iloc[-n]-1)if len(d)>=n else 0.0
  s=sum([0.4,0.2,0.2,0.2][i]*p(df,[63,126,189,252][i])for i in range(4))
@@ -97,48 +110,80 @@ def calc_rs(df,mkt):
  return round((s-m)*100,1)
 
 if __name__=="__main__":
- today=get_date()
- start=(datetime.strptime(today,"%Y%m%d")-timedelta(days=420)).strftime("%Y%m%d")
- send(f"🚀 스캐너 시작\n📅 {today} 기준\n잠시만 기다려주세요...")
+ today=datetime.today().strftime("%Y%m%d")
+ start=(datetime.today()-timedelta(days=420)).strftime("%Y%m%d")
+
+ # 최근 7거래일 탐색 날짜
+ sig_dates=get_recent_trading_dates(SCAN_DAYS)
+ sig_date_ts=set(pd.Timestamp(d) for d in sig_dates)
+ print(f"탐색 날짜: {sig_dates}")
+
+ send(f"🚀 스캐너 시작\n📅 최근 {SCAN_DAYS}거래일 시그널 탐색\n({sig_dates[-1]}~{sig_dates[0]})\n잠시만 기다려주세요...")
+
  try:
   mkt_df=stock.get_index_ohlcv(start,today,"1028")
   mkt_df.index=pd.to_datetime(mkt_df.index)
   mkt_df=mkt_df.rename(columns={"종가":"Close"})
  except:mkt_df=None
- uni=get_universe(today)
+
+ uni=get_universe(sig_dates[0])
  send(f"📡 {len(uni)}개 종목 스캔 중...")
+
  nc={}
  def nm(t):
   if t not in nc:
    try:nc[t]=stock.get_market_ticker_name(t)
    except:nc[t]=t
   return nc[t]
- res=[];passed=0
+
+ res=[]
  for i,info in enumerate(uni):
   t=info["ticker"]
-  if i%50==0:print(f"[{i}/{len(uni)}] 통과:{passed} 발견:{len(res)}")
+  if i%50==0:print(f"[{i}/{len(uni)}] 발견:{len(res)}")
   df=get_ohlcv(t,start,today)
   if df is None:continue
-  if not check_trend(df):continue
-  passed+=1
-  ok,pat=detect(df)
-  if not ok:continue
-  rs=calc_rs(df,mkt_df)if mkt_df is not None else 0.0
-  res.append({"ticker":t,"name":nm(t),"market":info["market"],"sector":info["sector"],
-              "cur":pat["cur"],"pivot":pat["pivot"],"cd":pat["cd"],"hd":pat["hd"],
-              "cdays":pat["cdays"],"hdays":pat["hdays"],"vr":pat["vr"],"vs":pat["vs"],"rs":rs})
- res.sort(key=lambda x:x["rs"],reverse=True)
+
+  # 7거래일 각 날짜별로 시그널 체크
+  for sig_date_str in sig_dates:
+   sig_ts=pd.Timestamp(sig_date_str)
+   if sig_ts not in df.index:continue
+   ok,pat=detect_on_date(df,sig_ts)
+   if not ok:continue
+   rs=calc_rs(df.loc[:sig_ts],mkt_df.loc[:sig_ts])if mkt_df is not None else 0.0
+   res.append({
+    "sig_date":sig_date_str,"ticker":t,"name":nm(t),
+    "market":info["market"],"sector":info["sector"],
+    "cur":pat["cur"],"pivot":pat["pivot"],
+    "cd":pat["cd"],"hd":pat["hd"],
+    "cdays":pat["cdays"],"hdays":pat["hdays"],
+    "vr":pat["vr"],"vs":pat["vs"],"rs":rs
+   })
+  time.sleep(0.05)
+
+ # 날짜 내림차순 → RS 내림차순
+ res.sort(key=lambda x:(x["sig_date"],x["rs"]),reverse=True)
+ # 중복 종목 제거 (같은 종목 가장 최근 날짜만)
+ seen=set()
+ deduped=[]
+ for r in res:
+  if r["ticker"] not in seen:
+   seen.add(r["ticker"])
+   deduped.append(r)
+ res=deduped
+
  print(f"✅ {len(res)}개 발견")
+
  if not res:
-  send(f"📊 미너비니 스캐너\n📅 {today}\n⚠️ 조건 충족 종목 없음")
+  send(f"📊 미너비니 스캐너\n📅 최근 {SCAN_DAYS}거래일\n⚠️ 조건 충족 종목 없음")
  else:
-  hdr=f"📊 미너비니 컵&핸들\n📅 {today}\n✅ {len(res)}개 발견\n{'─'*24}\n"
+  hdr=f"📊 미너비니 컵&핸들\n📅 최근 {SCAN_DAYS}거래일 시그널\n✅ {len(res)}개 발견\n{'─'*24}\n"
   msg=hdr
   for r in res:
    up=round((r['pivot']/r['cur']-1)*100,1)
    mkt="🔵코스피"if r['market']=="KOSPI"else"🟢코스닥"
-   vol="🔥급증"if r['vs']else"보통"
-   blk=(f"{mkt} [{r['sector']}]\n"
+   vol="🔥"if r['vs']else"  "
+   blk=(f"📅 {r['sig_date'][:4]}/{r['sig_date'][4:6]}/{r['sig_date'][6:]}\n"
+        f"{mkt} [{r['sector']}]\n"
         f"🔹 {r['name']}({r['ticker']})\n"
         f"   현재가:{r['cur']:,.0f}원\n"
         f"   피벗  :{r['pivot']:,.0f}원({up:+.1f}%)\n"
