@@ -14,12 +14,10 @@ def send(text):
   try:requests.post(f"https://api.telegram.org/bot{TOK}/sendMessage",data={"chat_id":CID,"text":text},timeout=10)
   except:pass
 
-
 def get_recent_dates(n=7):
  dates=[]
  d=datetime.today()
  while len(dates)<n:
-  # 평일(월~금)만 포함, 공휴일은 데이터 없으면 자동 스킵됨
   if d.weekday()<5:
    dates.append(d.strftime("%Y%m%d"))
   d-=timedelta(days=1)
@@ -35,15 +33,17 @@ def get_universe(today):
    cap=cap[["시가총액"]].copy()
    cap=cap[cap["시가총액"]>0].sort_values("시가총액",ascending=False)
    n=len(cap)
-   sel=cap.iloc[int(n*0.30):int(n*0.50)].index.tolist()
+   sel=cap.iloc[0:int(n*0.60)].index.tolist()
    try:
     sec=stock.get_market_sector_classifications(today,market=mkt)
     sm={str(t):r.get("업종명","기타") for t,r in sec.iterrows()}
    except:
     sm={}
-   for t in sel:
-    uni.append({"ticker":str(t),"market":mkt,"sector":sm.get(str(t),"기타")})
-   print(f"{mkt}: {n}개 → {len(sel)}개")
+   for rank,t in enumerate(sel,1):
+    pct=round(rank/n*100,1)
+    uni.append({"ticker":str(t),"market":mkt,"sector":sm.get(str(t),"기타"),
+                "rank":rank,"pct":pct,"total":n})
+   print(f"{mkt}: {n}개 → 상위 60% {len(sel)}개")
    time.sleep(0.5)
   except Exception as e:
    print(f"{mkt} 실패: {e}")
@@ -126,7 +126,7 @@ if __name__=="__main__":
  res=[]
  for i,info in enumerate(uni):
   t=info["ticker"]
-  if i%50==0:print(f"[{i}/{len(uni)}] 발견:{len(res)}")
+  if i%100==0:print(f"[{i}/{len(uni)}] 발견:{len(res)}")
   df=get_ohlcv(t,start,today)
   if df is None:continue
   for sig_str in sig_dates:
@@ -140,6 +140,7 @@ if __name__=="__main__":
    rs=calc_rs(sl,mkt_df.loc[:sig_ts])if mkt_df is not None else 0.0
    res.append({"sig_date":sig_str,"ticker":t,"name":nm(t),
                "market":info["market"],"sector":info["sector"],
+               "rank":info["rank"],"pct":info["pct"],"total":info["total"],
                "cur":pat["cur"],"pivot":pat["pivot"],
                "cd":pat["cd"],"hd":pat["hd"],"cdays":pat["cdays"],"hdays":pat["hdays"],
                "vr":pat["vr"],"vs":pat["vs"],"rs":rs})
@@ -163,6 +164,7 @@ if __name__=="__main__":
    blk=(f"📅{r['sig_date'][:4]}/{r['sig_date'][4:6]}/{r['sig_date'][6:]}\n"
         f"{mkt}[{r['sector']}]\n"
         f"🔹{r['name']}({r['ticker']})\n"
+        f"  시총: 상위{r['pct']}% ({r['rank']}/{r['total']}위)\n"
         f"  현재가:{r['cur']:,.0f}원\n"
         f"  피벗:{r['pivot']:,.0f}원({up:+.1f}%)\n"
         f"  컵:{r['cd']}%/{r['cdays']}일 핸들:{r['hd']}%/{r['hdays']}일\n"
