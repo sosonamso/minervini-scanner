@@ -1,7 +1,7 @@
 """
 미너비니 컵&핸들 스캐너 - 미국 주식
-- 대상: S&P1500 (S&P500 + MidCap400 + SmallCap600)
-- 데이터: yfinance (미국은 GitHub Actions에서 정상 동작)
+- 대상: S&P1500 하드코딩 (Wikipedia 차단 우회)
+- 데이터: yfinance (미국은 GitHub Actions 정상 동작)
 - 결과: 텔레그램 전송 (한국어)
 """
 import os,time,warnings,requests
@@ -16,44 +16,19 @@ SCAN_DAYS=7
 BATCH_SIZE=50
 
 # ─────────────────────────────────────
-# S&P1500 종목 리스트 수집 (Wikipedia)
+# S&P1500 종목 리스트 (하드코딩)
 # ─────────────────────────────────────
-def get_sp1500():
-    tickers={}
-    sources=[
-        ("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies","S&P500",0),
-        ("https://en.wikipedia.org/wiki/List_of_S%26P_400_companies","MidCap400",0),
-        ("https://en.wikipedia.org/wiki/List_of_S%26P_600_companies","SmallCap600",0),
-    ]
-    for url,cap,tbl_idx in sources:
-        try:
-            tables=pd.read_html(url)
-            df=tables[tbl_idx]
-            # 티커 컬럼 찾기
-            tick_col=None
-            for col in df.columns:
-                if "ticker" in str(col).lower() or "symbol" in str(col).lower():
-                    tick_col=col
-                    break
-            if tick_col is None:
-                tick_col=df.columns[0]
-            # 섹터 컬럼 찾기
-            sec_col=None
-            for col in df.columns:
-                if "sector" in str(col).lower() or "gics" in str(col).lower():
-                    sec_col=col
-                    break
-            for _,row in df.iterrows():
-                t=str(row[tick_col]).strip().replace(".","-")
-                if not t or t=="nan" or len(t)>6:continue
-                sec=str(row[sec_col]).strip() if sec_col else "기타"
-                if sec=="nan":sec="기타"
-                tickers[t]={"cap":cap,"sector":sec}
-            print(f"{cap}: {len([k for k,v in tickers.items() if v['cap']==cap])}개")
-            time.sleep(1)
-        except Exception as e:
-            print(f"{cap} 수집 실패: {e}")
-    return tickers
+SP500 = [
+    "MMM","AOS","ABT","ABBV","ACN","ADBE","AMD","AES","AFL","A","APD","ABNB","AKAM","ALB","ARE","ALGN","ALLE","LNT","ALL","GOOGL","GOOG","MO","AMZN","AMCR","AEE","AEP","AXP","AIG","AMT","AWK","AMP","AME","AMGN","APH","ADI","ANSS","AON","APA","AAPL","AMAT","APTV","ACGL","ADM","ANET","AJG","AIZ","T","ATO","ADSK","ADP","AZO","AVB","AVY","AXON","BKR","BALL","BAC","BK","BBWI","BAX","BDX","WRB","BBY","TECH","BIIB","BLK","BX","BA","BCH","BSX","BMY","AVGO","BR","BRO","BF.B","BLDR","BG","CDNS","CZR","CPT","CPB","COF","CAH","KMX","CCL","CARR","CTLT","CAT","CBOE","CBRE","CDW","CE","COR","CNC","CNX","CDAY","CF","CRL","SCHW","CHTR","CVX","CMG","CB","CHD","CI","CINF","CTAS","CSCO","C","CFG","CLX","CME","CMS","KO","CTSH","CL","CMCSA","CAG","COP","ED","STZ","CEG","COO","CPRT","GLW","CPAY","CTVA","CSGP","COST","CTRA","CRWD","CCI","CSX","CMI","CVS","DHR","DRI","DVA","DAY","DE","DAL","XRAY","DVN","DXCM","FANG","DLR","DFS","DG","DLTR","D","DPZ","DOV","DOW","DHI","DTE","DUK","DD","EMN","ETN","EBAY","ECL","EIX","EW","EA","ELV","EMR","ENPH","ETR","EOG","EPAM","EQT","EFX","EQIX","EQR","ESS","EL","ETSY","EG","EXPE","EXPD","EXR","XOM","FFIV","FDS","FICO","FAST","FRT","FDX","FIS","FITB","FSLR","FE","FI","FMC","F","FTNT","FTV","FOXA","FOX","BEN","FCX","GRMN","IT","GE","GEHC","GEV","GEN","GNRC","GD","GIS","GM","GPC","GILD","GS","HAL","HIG","HAS","HCA","DOC","HSIC","HSY","HES","HPE","HLT","HOLX","HD","HON","HRL","HST","HWM","HPQ","HUBB","HUM","HBAN","HII","IBM","IEX","IDXX","ITW","INCY","IR","PODD","INTC","ICE","IFF","IP","IPG","INTU","ISRG","IVZ","INVH","IQV","IRM","JBHT","JBL","JKHY","J","JNJ","JCI","JPM","JNPR","K","KVUE","KDP","KEY","KEYS","KMB","KIM","KMI","KLAC","KHC","KR","LHX","LH","LRCX","LW","LVS","LDOS","LEN","LLY","LIN","LYV","LKQ","LMT","L","LOW","LULU","LYB","MTB","MRO","MPC","MKTX","MAR","MMC","MLM","MAS","MA","MTCH","MKC","MCD","MCK","MDT","MRK","META","MET","MTD","MGM","MCHP","MU","MSFT","MAA","MRNA","MHK","MOH","TAP","MDLZ","MPWR","MNST","MCO","MS","MOS","MSI","MSCI","NDAQ","NTAP","NFLX","NEM","NWSA","NWS","NEE","NKE","NI","NDSN","NSC","NTRS","NOC","NCLH","NRG","NUE","NVDA","NVR","NXPI","ORLY","OXY","ODFL","OMC","ON","OKE","ORCL","OTIS","PCAR","PKG","PLTR","PANW","PARA","PH","PAYX","PAYC","PYPL","PNR","PEP","PFE","PCG","PM","PSX","PNW","PNC","POOL","PPG","PPL","PFG","PG","PGR","PLD","PRU","PEG","PTC","PSA","PHM","QRVO","PWR","QCOM","DGX","RL","RJF","RTX","O","REG","REGN","RF","RSG","RMD","RVTY","ROK","ROL","ROP","ROST","RCL","SPGI","CRM","SBAC","SLB","STX","SRE","NOW","SHW","SPG","SWKS","SJM","SW","SNA","SOLV","SO","LUV","SWK","SBUX","STT","STLD","STE","SYK","SMCI","SYF","SNPS","SYY","TMUS","TROW","TTWO","TPR","TRGP","TGT","TEL","TDY","TFX","TER","TSLA","TXN","TXT","TMO","TJX","TSCO","TT","TDG","TRV","TRMB","TFC","TYL","TSN","USB","UBER","UDR","ULTA","UNP","UAL","UPS","URI","UNH","UHS","VLO","VTR","VLTO","VRSN","VRSK","VZ","VRTX","VTRS","VICI","V","VST","VMC","WRK","WAB","WBA","WMT","DIS","WBD","WM","WAT","WEC","WFC","WELL","WST","WDC","WHR","WMB","WTW","GWW","WYNN","XEL","XYL","YUM","ZBRA","ZBH","ZTS"
+]
+
+SP400 = [
+    "AAN","ACC","ACHC","ACM","ACIW","ADNT","AEO","AGCO","AGL","AIT","AKR","AL","ALG","ALEX","ALGT","ALKS","ALLE","ALRM","AM","AMG","AMKR","AMPH","AMWD","AN","ANF","AOUT","APA","APAM","APOG","APPF","ARCB","AROC","ARW","ASB","ASGN","ASH","ASTE","ATMU","ATR","AUB","AVAV","AVT","AWI","AX","AYI","AZTA","B","BC","BCO","BCPC","BDC","BKH","BKU","BL","BLKB","BMI","BOOT","BOX","BRC","BRX","BURL","BWXT","BXC","CABO","CACI","CALM","CALX","CARS","CASH","CATY","CBT","CBZ","CC","CCOI","CDP","CECO","CENX","CHE","CHEF","CHH","CHS","CLB","CLF","CMC","CMCO","CNDT","CNO","COHU","COLB","COLM","CORT","CPRI","CR","CRUS","CRVL","CSGS","CSWI","CUZ","CVBF","CW","CWT","DAR","DBD","DCO","DEN","DFIN","DINO","DKS","DLX","DNOW","DORM","DRH","DSP","DV","DXC","DXPE","EEFT","EFC","EGP","EHC","ELAN","ELF","EME","EPC","ESE","ESNT","ESTE","EVTC","EXLS","EXPO","EXTN","EYE","FAF","FBIN","FBP","FCFS","FELE","FHB","FHN","FLO","FLR","FMC","FN","FORM","FR","FRME","FRPT","FSS","FUL","G","GATX","GFF","GGG","GHC","GKOS","GMS","GNRC","GOLF","GRBK","GRC","GTES","GTLS","HAFC","HBI","HCSG","HHH","HIBB","HNI","HOMB","HOPE","HP","HRB","HSII","HTH","HTLD","HUBG","HWC","IBP","ICFI","IDCC","IDA","INGR","ITRI","JACK","JBT","JELD","JJSF","JLL","KAI","KALU","KBH","KBR","KFY","KMPR","KNX","KRC","KRG","KSS","KTOS","KW","LAUR","LBRT","LEA","LECO","LII","LM","LNC","LNW","LOPE","LPX","LSTR","LTC","LXP","LZB","MANT","MATX","MCY","MD","MDU","MED","MEDP","MGA","MGY","MIDD","MMS","MOG.A","MP","MRC","MRCY","MSA","MSGS","MTG","MTSI","MUR","NAVI","NBR","NEO","NHC","NMRK","NOVA","NRC","NSA","NVT","NVTS","NX","NXST","OFG","OGE","OGS","OHI","OII","OIS","OLN","ONTO","OSCR","OUT","OZK","PAAS","PB","PCAR","PCH","PENN","PFSI","PJT","POR","POWL","PRG","PRGO","PRIM","PRK","PRKS","PSN","PTCT","PTEN","PTVE","PVH","QDEL","QGEN","QTWO","RCM","RDN","RHP","RNG","RNR","ROG","ROAD","RPM","RRX","RS","RUSHA","RXO","RYAM","SAFE","SANM","SBCF","SCI","SEIC","SF","SFM","SHAK","SHO","SIG","SITE","SIX","SKX","SLGN","SM","SMAR","SMPL","SNV","SPSC","SRC","SRI","SSB","SSNC","STAA","STC","STER","STL","STNE","SUPN","SWX","SYBT","SYNA","TALO","TBI","TBBK","TDOC","TDS","TEX","TGI","THO","TILE","TNET","TNL","TOL","TOWN","TPX","TREX","TRNO","TRMK","TRUP","TTGT","TTMI","TWI","TXRH","UE","UFPI","UHAL","UNFI","UNVR","UVV","VAC","VCEL","VCYT","VRTS","VSAT","VVV","WAFD","WASH","WD","WDFC","WEX","WINA","WMS","WOR","WPC","WPM","WSFS","WTS","WU","XPO"
+]
+
+SP600 = [
+    "ACAD","ACLS","ADMA","ADUS","AEHR","AFCG","AHCO","AIRC","ALCO","ALGT","ALRM","AMBC","AMEH","AMKR","AMMO","AMSC","ANET","ANF","ANGO","AORT","AOSL","APAM","APPN","APLE","ARKO","ARLO","ARRY","ARWR","ASLE","ASND","ASPS","ASRT","ASTE","ATEN","ATNI","ATSG","AUBN","AUPH","AVNW","AWI","AXNX","AXSM","BAND","BANF","BANR","BCEL","BCPC","BFS","BGFV","BKD","BLDR","BLFS","BLNK","BMTC","BNL","BOOT","BOX","BPOP","BRKL","BRSP","BSIG","BSRR","BSVN","BURL","BUSE","BWFG","BZH","CACC","CAKE","CALM","CARA","CARE","CARS","CASH","CASY","CATO","CBAN","CBRL","CBSH","CC","CCNE","CDLX","CDMO","CDNA","CDRE","CEIX","CENT","CENX","CEVA","CFFI","CFFN","CHCO","CHDN","CHEF","CHUY","CIVB","CLAR","CLB","CLBK","CLDT","CLNE","CLPR","CMAX","CMCO","COHU","COLM","COOP","COUR","CPRI","CPRX","CRAI","CRDX","CRK","CRSP","CRVL","CSGS","CSII","CSTR","CTBI","CTLP","CTMX","CTRE","CTRN","CUBI","CULP","CUTR","CW","CWCO","DAKT","DAVA","DCOM","DFIN","DGII","DH","DHIL","DINO","DIOD","DK","DKL","DLX","DNOW","DORM","DRH","DRVN","DSP","DXC","DXPE","DXYN","EAF","EARN","EBC","EBMT","EFC","EGP","EIG","ELAN","ELY","EPC","EPRT","ESS","ESTE","EVTC","EXLS","EXPI","EXTN","EYE","EZPW","FARO","FBNC","FBRT","FCFS","FELE","FFBC","FFIN","FN","FORM","FOUR","FRAF","FRME","FULT","GBX","GCI","GFF","GHC","GKOS","GMS","GOLF","GOOD","GPX","GRPN","GSBC","GTLS","GWRE","HAFC","HAIN","HASI","HBI","HBT","HCSG","HDVS","HFWA","HIBB","HIMS","HLNE","HMN","HNI","HOFT","HOMB","HQY","HRMY","HSII","HTH","HTLD","HTLF","HUBG","HWC","HZO","IART","IBCP","IBOC","IBTX","IDCC","IDEX","IESC","IIIN","IMKTA","IMXI","INDB","INFU","INGN","INMD","INSP","INSW","IRBT","IRWD","ISBA","ITRI","JACK","JBLU","JBSS","JELD","JOUT","JWN","KAI","KALU","KFY","KMPR","KNSA","KREF","KRNT","KSS","KTOS","KW","LADR","LAUR","LCNB","LGIH","LGND","LKFN","LMB","LNTH","LOPE","LSTR","LWAY","LXP","MAIN","MATV","MBIN","MBUU","MCBS","MCF","MCRI","MDGL","MED","MEDP","MEI","MERC","MFIN","MGY","MKSI","MLAB","MLKN","MMI","MMSI","MNRO","MOD","MOFG","MRC","MRCY","MSEX","MSTR","MTG","MTSI","MTRN","MTRX","MVBF","MYR","MYRG","NATH","NBTB","NCOM","NCNO","NEO","NEOG","NFBK","NHC","NMIH","NNBR","NPO","NRC","NRIM","NRP","NTST","NVT","NVTS","NWE","NXST","OBK","OCFC","OCSL","OFG","OGE","OII","OIS","ONTO","OPBK","OPCH","OSPN","OTTR","OUT","OXM","PAHC","PATK","PBF","PBPB","PDCO","PEGA","PENN","PFBC","PFIS","PFSI","PGNY","PHR","PKST","PLBC","PLMR","PLNT","PNM","POOL","POWL","PPBI","PRAA","PRDO","PRGO","PRIM","PRK","PRKS","PSN","PTCT","PTEN","PTLO","PTVE","PUMP","QCRH","QDEL","QGEN","QTWO","RBC","RCKT","RCKY","RCM","RDNT","RES","REVG","RGEN","RGP","RICK","RILY","RMBS","RMNI","RMR","RPRX","RRR","RUSHA","RWT","RYAM","SAFE","SANM","SASR","SBCF","SBSI","SCVL","SEIC","SF","SFST","SHAK","SHBI","SHO","SIG","SIGI","SIT","SITM","SKX","SLG","SLGN","SLVM","SM","SMBC","SNCY","SNDR","SNEX","SOFI","SPFI","SPOK","SRC","SRI","SSBK","SSRM","STBA","STLD","STRA","SUPN","SWX","SYBT","SYNA","TALO","TBNK","TCBK","TCMD","TEX","TFSL","TGI","TILE","TNDM","TOWN","TPIC","TREX","TRNO","TRMK","TROW","TRUP","TTGT","TTMI","TWI","TXRH","UBCP","UCBI","UFPI","ULCC","UNFI","UNVR","UPST","USPH","UVV","VBTX","VCEL","VCYT","VECO","VICR","VIRT","VLGEA","VRTS","VSAT","VSEC","WAFD","WASH","WD","WDFC","WERN","WFRD","WINA","WMS","WOOF","WOR","WPC","WSFS","WTS","XRX"
+]
 
 # 섹터 한글 매핑
 SECTOR_KO={
@@ -68,15 +43,8 @@ SECTOR_KO={
     "Utilities":"유틸리티",
     "Real Estate":"리츠/부동산",
     "Materials":"소재",
-    "기타":"기타",
 }
 
-def sec_ko(s):
-    return SECTOR_KO.get(s,s)
-
-# ─────────────────────────────────────
-# 유틸
-# ─────────────────────────────────────
 def send(text):
     print(text)
     if TOK:
@@ -88,7 +56,7 @@ def get_recent_dates(n=7):
     dates=[]
     d=datetime.today()
     while len(dates)<n:
-        if d.weekday()<5:  # 미국 주말만 제외 (공휴일은 데이터 없으면 자동 스킵)
+        if d.weekday()<5:
             dates.append(d.strftime("%Y-%m-%d"))
         d-=timedelta(days=1)
         if len(dates)>=n*3:break
@@ -96,10 +64,9 @@ def get_recent_dates(n=7):
 
 def batch_download(tickers,start,end):
     result={}
-    ticker_list=list(tickers)
-    for i in range(0,len(ticker_list),BATCH_SIZE):
-        batch=ticker_list[i:i+BATCH_SIZE]
-        print(f"배치 {i+1}~{min(i+BATCH_SIZE,len(ticker_list))}/{len(ticker_list)}")
+    for i in range(0,len(tickers),BATCH_SIZE):
+        batch=tickers[i:i+BATCH_SIZE]
+        print(f"배치 {i+1}~{min(i+BATCH_SIZE,len(tickers))}/{len(tickers)}")
         for attempt in range(3):
             try:
                 raw=yf.download(" ".join(batch),start=start,end=end,
@@ -126,16 +93,12 @@ def batch_download(tickers,start,end):
                         except:pass
                 break
             except Exception as e:
-                print(f"배치 오류(시도{attempt+1}): {e}")
+                print(f"배치오류(시도{attempt+1}): {e}")
                 time.sleep(5*(attempt+1))
         time.sleep(1)
     return result
 
-# ─────────────────────────────────────
-# 미너비니 로직
-# ─────────────────────────────────────
 def check_market(mkt_df):
-    """S&P500 200MA 위에 있을 때만 True"""
     if mkt_df is None or len(mkt_df)<200:return True
     c=mkt_df["Close"]
     ma200=c.rolling(200).mean()
@@ -222,9 +185,6 @@ def format_past(history):
         result+=f"\n  -> 과거{total}회 승률{wr}%"
     return result
 
-# ─────────────────────────────────────
-# 메인
-# ─────────────────────────────────────
 if __name__=="__main__":
     end=datetime.today()
     start=(end-timedelta(days=420)).strftime("%Y-%m-%d")
@@ -233,29 +193,31 @@ if __name__=="__main__":
     data_cutoff=pd.Timestamp(sig_dates[0])-timedelta(days=7)
     print(f"탐색날짜: {sig_dates}")
 
-    # S&P500 지수 (기준)
+    # SPY로 시장 상태 체크
     try:
         mkt_raw=yf.download("SPY",start=start,end=end_str,progress=False,auto_adjust=True)
         if isinstance(mkt_raw.columns,pd.MultiIndex):mkt_raw.columns=mkt_raw.columns.get_level_values(0)
         mkt_df=pd.DataFrame({"Close":pd.to_numeric(mkt_raw["Close"],errors="coerce")}).dropna()
-        print(f"S&P500(SPY) {len(mkt_df)}일치 수신")
+        print(f"SPY {len(mkt_df)}일치 수신")
     except:mkt_df=None
 
     market_ok=check_market(mkt_df)
     market_str="상승장(S&P500>200MA)"if market_ok else"하락장(S&P500<200MA)"
 
-    # S&P1500 종목 수집
-    send(f"🇺🇸 미국 스캐너 시작\n최근 {SCAN_DAYS}거래일 | {market_str}\nS&P1500 종목 수집 중...")
+    # 전체 유니버스 구성
+    all_tickers=list(dict.fromkeys(SP500+SP400+SP600))
+    cap_map={t:"S&P500" for t in SP500}
+    cap_map.update({t:"MidCap400" for t in SP400 if t not in cap_map})
+    cap_map.update({t:"SmallCap600" for t in SP600 if t not in cap_map})
+
+    send(f"🇺🇸 미국 스캐너 시작\n최근 {SCAN_DAYS}거래일 | {market_str}\nS&P1500 {len(all_tickers)}개 배치 다운로드 중...")
     if not market_ok:
         send("S&P500 200MA 하방 - 시그널 신뢰도 낮음, 주의!")
 
-    sp1500=get_sp1500()
-    send(f"S&P1500 {len(sp1500)}개 종목 배치 다운로드 중...")
-
     # 배치 다운로드
-    all_data=batch_download(list(sp1500.keys()),start,end_str)
+    all_data=batch_download(all_tickers,start,end_str)
 
-    # 데이터 유효성 체크
+    # 유효성 체크
     data_ok=0;data_old=0;last_dates=[]
     valid_data={}
     for ticker,df in all_data.items():
@@ -274,12 +236,12 @@ if __name__=="__main__":
     else:
         date_stat="데이터 기준일: 없음"
 
-    send(f"다운로드 완료\n수신: {data_ok}/{len(sp1500)}개\n{date_stat}\n패턴 분석 시작...")
+    send(f"다운로드 완료\n수신: {data_ok}/{len(all_tickers)}개\n{date_stat}\n패턴 분석 시작...")
 
     # 패턴 분석
     res=[];trend_pass=0
-    for i,(ticker,info) in enumerate(sp1500.items()):
-        if i%200==0:print(f"[{i}/{len(sp1500)}] 트렌드:{trend_pass} 발견:{len(res)}")
+    for i,ticker in enumerate(all_tickers):
+        if i%200==0:print(f"[{i}/{len(all_tickers)}] 트렌드:{trend_pass} 발견:{len(res)}")
         df=valid_data.get(ticker)
         if df is None:continue
         for sig_str in sig_dates:
@@ -291,15 +253,14 @@ if __name__=="__main__":
             trend_pass+=1
             ok,pat=detect(sl)
             if not ok:continue
-            if not pat["vs"]:continue  # 거래량 급증 필수
+            if not pat["vs"]:continue
             rs=calc_rs(sl,mkt_df.loc[:sig_ts])if mkt_df is not None else 0.0
-            if rs<=0:continue  # RS 양수 필터
+            if rs<=0:continue
             history=get_past_signals(df,sig_ts)
             res.append({
                 "sig_date":sig_str,
                 "ticker":ticker,
-                "cap":info["cap"],
-                "sector":sec_ko(info["sector"]),
+                "cap":cap_map.get(ticker,"기타"),
                 "cur":pat["cur"],"pivot":pat["pivot"],
                 "cd":pat["cd"],"hd":pat["hd"],
                 "cdays":pat["cdays"],"hdays":pat["hdays"],
@@ -316,17 +277,17 @@ if __name__=="__main__":
     res=deduped
     print(f"완료: {len(res)}개 발견")
 
-    send(f"스캔 완료\n데이터 수신: {data_ok}/{len(sp1500)}개\n{date_stat}\n트렌드 통과: {trend_pass}개\n패턴+거래량+RS: {len(res)}개")
+    send(f"스캔 완료\n데이터 수신: {data_ok}/{len(all_tickers)}개\n{date_stat}\n트렌드 통과: {trend_pass}개\n패턴+거래량+RS: {len(res)}개")
 
     if not res:
         send(f"🇺🇸 미국 스캐너\n최근 {SCAN_DAYS}거래일 | {market_str}\n조건 충족 종목 없음\n(거래량급증+RS양수 기준)")
     else:
-        hdr=f"🇺🇸 미너비니 컵&핸들 (미국)\n최근 {SCAN_DAYS}거래일 | {market_str}\n{len(res)}개 발견(RS순)\n"+"─"*24+"\n"
+        hdr=f"🇺🇸 미너비니 컵&핸들(미국)\n최근 {SCAN_DAYS}거래일 | {market_str}\n{len(res)}개 발견(RS순)\n"+"─"*24+"\n"
         msg=hdr
         for r in res:
             up=round((r["pivot"]/r["cur"]-1)*100,1)
             past=format_past(r["history"])
-            blk=(f"[{r['sig_date']}] [{r['cap']}] {r['sector']}\n"
+            blk=(f"[{r['sig_date']}] [{r['cap']}]\n"
                  f"{r['ticker']}\n"
                  f"현재가: ${r['cur']:,.2f}\n"
                  f"피벗  : ${r['pivot']:,.2f} ({up:+.1f}%)\n"
