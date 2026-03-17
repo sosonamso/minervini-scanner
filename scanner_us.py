@@ -235,10 +235,10 @@ if __name__=="__main__":
 
     # S&P500 지수 (기준)
     try:
-        mkt_raw=yf.download("^GSPC",start=start,end=end_str,progress=False,auto_adjust=True)
+        mkt_raw=yf.download("SPY",start=start,end=end_str,progress=False,auto_adjust=True)
         if isinstance(mkt_raw.columns,pd.MultiIndex):mkt_raw.columns=mkt_raw.columns.get_level_values(0)
         mkt_df=pd.DataFrame({"Close":pd.to_numeric(mkt_raw["Close"],errors="coerce")}).dropna()
-        print(f"S&P500 지수 {len(mkt_df)}일치 수신")
+        print(f"S&P500(SPY) {len(mkt_df)}일치 수신")
     except:mkt_df=None
 
     market_ok=check_market(mkt_df)
