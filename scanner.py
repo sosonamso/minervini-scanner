@@ -7,6 +7,7 @@ warnings.filterwarnings("ignore")
 TOK=os.environ.get("TELEGRAM_TOKEN","")
 CID=os.environ.get("TELEGRAM_CHAT_ID","")
 SCAN_DAYS=7
+BATCH_SIZE=50  # 한번에 요청할 종목 수
 
 TICKERS={
  "005930":("KOSPI","전기전자","삼성전자"),
@@ -1853,17 +1854,43 @@ def get_recent_dates(n=7):
   if len(dates)>=n*3:break
  return dates[:n]
 
-def get_ohlcv(ticker_yf,start,end):
- for _ in range(2):
-  try:
-   raw=yf.download(ticker_yf,start=start,end=end,progress=False,auto_adjust=True)
-   if raw.empty or len(raw)<100:return None
-   if isinstance(raw.columns,pd.MultiIndex):raw.columns=raw.columns.get_level_values(0)
-   df=pd.DataFrame({"Close":pd.to_numeric(raw["Close"],errors="coerce"),
-                    "Volume":pd.to_numeric(raw["Volume"],errors="coerce")}).dropna()
-   if len(df)>=100:return df
-  except:time.sleep(1)
- return None
+def batch_download(tickers_yf, start, end):
+ """50개씩 묶어서 한번에 다운로드"""
+ result={}
+ total=len(tickers_yf)
+ for i in range(0,total,BATCH_SIZE):
+  batch=tickers_yf[i:i+BATCH_SIZE]
+  batch_str=" ".join(batch)
+  print(f"배치 다운로드: {i+1}~{min(i+BATCH_SIZE,total)}/{total}")
+  for attempt in range(3):
+   try:
+    raw=yf.download(batch_str,start=start,end=end,progress=False,auto_adjust=True,group_by="ticker")
+    if raw.empty:break
+    # 멀티인덱스 처리
+    if isinstance(raw.columns,pd.MultiIndex):
+     for t in batch:
+      try:
+       close=pd.to_numeric(raw[t]["Close"],errors="coerce")
+       volume=pd.to_numeric(raw[t]["Volume"],errors="coerce")
+       df=pd.DataFrame({"Close":close,"Volume":volume}).dropna()
+       if len(df)>=100:result[t]=df
+      except:pass
+    else:
+     # 단일 종목인 경우
+     if len(batch)==1:
+      t=batch[0]
+      try:
+       close=pd.to_numeric(raw["Close"],errors="coerce")
+       volume=pd.to_numeric(raw["Volume"],errors="coerce")
+       df=pd.DataFrame({"Close":close,"Volume":volume}).dropna()
+       if len(df)>=100:result[t]=df
+      except:pass
+    break
+   except Exception as e:
+    print(f"배치 오류(시도{attempt+1}): {e}")
+    time.sleep(5*(attempt+1))
+  time.sleep(2)  # 배치간 대기
+ return result
 
 def check_market(mkt_df):
  if mkt_df is None or len(mkt_df)<200:return True
@@ -1928,10 +1955,8 @@ def get_past_signals(df,exclude_ts):
   if not ok:continue
   close_on=float(df["Close"].iloc[i])
   r5=None;r20=None
-  if i+5<len(idx):
-   r5=round((float(df["Close"].iloc[i+5])/close_on-1)*100,1)
-  if i+20<len(idx):
-   r20=round((float(df["Close"].iloc[i+20])/close_on-1)*100,1)
+  if i+5<len(idx):r5=round((float(df["Close"].iloc[i+5])/close_on-1)*100,1)
+  if i+20<len(idx):r20=round((float(df["Close"].iloc[i+20])/close_on-1)*100,1)
   results.append({"date":ts.strftime("%y-%m-%d"),"r5":r5,"r20":r20,"vs":pat["vs"]})
  return results
 
@@ -1957,35 +1982,60 @@ if __name__=="__main__":
  start=(end-timedelta(days=420)).strftime("%Y-%m-%d")
  end_str=end.strftime("%Y-%m-%d")
  sig_dates=get_recent_dates(SCAN_DAYS)
- # 최신 데이터 기준일 — sig_dates[0]에서 7일 이내여야 유효
  data_cutoff=pd.Timestamp(sig_dates[0])-timedelta(days=7)
  print(f"탐색날짜: {sig_dates}")
- print(f"데이터 유효 기준일: {data_cutoff.date()} 이후")
+
+ # KOSPI 지수 다운로드
  try:
   mkt_raw=yf.download("^KS11",start=start,end=end_str,progress=False,auto_adjust=True)
   if isinstance(mkt_raw.columns,pd.MultiIndex):mkt_raw.columns=mkt_raw.columns.get_level_values(0)
   mkt_df=pd.DataFrame({"Close":pd.to_numeric(mkt_raw["Close"],errors="coerce")}).dropna()
  except:mkt_df=None
+
  market_ok=check_market(mkt_df)
  market_str="상승장(KOSPI>200MA)"if market_ok else"하락장(KOSPI<200MA)"
- send(f"스캐너 시작\n최근 {SCAN_DAYS}거래일 | {market_str}\n{len(TICKERS)}개 종목 스캔 중...\n(약 30~40분 소요)")
+ send(f"스캐너 시작\n최근 {SCAN_DAYS}거래일 | {market_str}\n{len(TICKERS)}개 종목 배치 다운로드 중...\n(50개씩 묶음, 약 10~15분 소요)")
  if not market_ok:
   send("KOSPI 200MA 하방 - 시그널 신뢰도 낮음, 주의!")
- res=[];data_ok=0;data_old=0;trend_pass=0
- last_dates=[]
- for i,(code,(mkt,sector,name)) in enumerate(TICKERS.items()):
-  if i%100==0:print(f"[{i}/{len(TICKERS)}] 데이터:{data_ok} 오래됨:{data_old} 트렌드:{trend_pass} 발견:{len(res)}")
-  suffix=".KS"if mkt=="KOSPI"else".KQ"
-  df=get_ohlcv(code+suffix,start,end_str)
-  if df is None:continue
-  # 마지막 날짜 체크 — 너무 오래된 데이터면 스킵
+
+ # 배치 다운로드
+ codes=list(TICKERS.keys())
+ suffixes={c:(".KS"if TICKERS[c][0]=="KOSPI"else".KQ")for c in codes}
+ tickers_yf=[c+suffixes[c]for c in codes]
+ print(f"배치 다운로드 시작: {len(tickers_yf)}개 / {BATCH_SIZE}개씩")
+ all_data=batch_download(tickers_yf,start,end_str)
+ print(f"다운로드 완료: {len(all_data)}개 수신")
+
+ # 데이터 유효성 체크
+ data_ok=0;data_old=0;last_dates=[]
+ valid_data={}
+ for t_yf,df in all_data.items():
   last_date=df.index[-1]
   if last_date<data_cutoff:
    data_old+=1
-   print(f"오래된데이터 스킵: {code} {name} 마지막={last_date.date()}")
    continue
+  code=t_yf.replace(".KS","").replace(".KQ","")
+  valid_data[code]=df
   data_ok+=1
   last_dates.append(last_date)
+
+ if last_dates:
+  last_dates.sort()
+  median_date=last_dates[len(last_dates)//2].strftime("%Y-%m-%d")
+  min_date=last_dates[0].strftime("%Y-%m-%d")
+  max_date=last_dates[-1].strftime("%Y-%m-%d")
+  date_stat=f"데이터 기준일: {median_date}(중앙) {min_date}~{max_date}"
+ else:
+  date_stat="데이터 기준일: 없음"
+
+ send(f"다운로드 완료\n수신: {len(all_data)}개 / 유효(최신): {data_ok}개 / 오래됨: {data_old}개\n{date_stat}\n패턴 분석 시작...")
+
+ # 패턴 분석
+ res=[];trend_pass=0
+ for i,(code,(mkt,sector,name)) in enumerate(TICKERS.items()):
+  if i%200==0:print(f"[{i}/{len(TICKERS)}] 트렌드:{trend_pass} 발견:{len(res)}")
+  df=valid_data.get(code)
+  if df is None:continue
   for sig_str in sig_dates:
    sig_ts=pd.Timestamp(sig_str)
    if sig_ts not in df.index:continue
@@ -2005,7 +2055,7 @@ if __name__=="__main__":
                "cd":pat["cd"],"hd":pat["hd"],"cdays":pat["cdays"],"hdays":pat["hdays"],
                "vr":pat["vr"],"vs":pat["vs"],"rs":rs,"history":history})
    break
-  time.sleep(0.1)
+
  res.sort(key=lambda x:(x["sig_date"],x["rs"]),reverse=True)
  seen=set();deduped=[]
  for r in res:
@@ -2013,16 +2063,9 @@ if __name__=="__main__":
    seen.add(r["ticker"]);deduped.append(r)
  res=deduped
  print(f"완료: {len(res)}개 발견")
- # 데이터 기준일 중앙값
- if last_dates:
-  last_dates.sort()
-  median_date=last_dates[len(last_dates)//2].strftime("%Y-%m-%d")
-  min_date=last_dates[0].strftime("%Y-%m-%d")
-  max_date=last_dates[-1].strftime("%Y-%m-%d")
-  date_stat=f"데이터 기준일: {median_date}(중앙) / {min_date}~{max_date}"
- else:
-  date_stat="데이터 기준일: 없음"
- send(f"스캔 완료\n데이터 수신(최신): {data_ok}/{len(TICKERS)}개\n데이터 스킵(오래됨): {data_old}개\n{date_stat}\n트렌드 통과: {trend_pass}개\n패턴+거래량+RS 통과: {len(res)}개")
+
+ send(f"스캔 완료\n데이터 수신: {data_ok}/{len(TICKERS)}개\n{date_stat}\n트렌드 통과: {trend_pass}개\n패턴+거래량+RS 통과: {len(res)}개")
+
  if not res:
   send(f"미너비니 스캐너\n최근 {SCAN_DAYS}거래일 | {market_str}\n조건 충족 종목 없음\n(거래량급증+RS양수 기준)")
  else:
