@@ -14,18 +14,17 @@ def send(text):
   try:requests.post(f"https://api.telegram.org/bot{TOK}/sendMessage",data={"chat_id":CID,"text":text},timeout=10)
   except:pass
 
+
 def get_recent_dates(n=7):
  dates=[]
  d=datetime.today()
  while len(dates)<n:
-  ds=d.strftime("%Y%m%d")
-  try:
-   t=stock.get_market_ticker_list(ds,market="KOSPI")
-   if t:dates.append(ds)
-  except:pass
+  # 평일(월~금)만 포함, 공휴일은 데이터 없으면 자동 스킵됨
+  if d.weekday()<5:
+   dates.append(d.strftime("%Y%m%d"))
   d-=timedelta(days=1)
-  if(datetime.today()-d).days>30:break
- return dates
+  if len(dates)>=n*2:break
+ return dates[:n]
 
 def get_universe(today):
  uni=[]
