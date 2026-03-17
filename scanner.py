@@ -21,30 +21,23 @@ def get_recent_dates(n=7):
   if d.weekday()<5:
    dates.append(d.strftime("%Y%m%d"))
   d-=timedelta(days=1)
-  if len(dates)>=n*2:break
+  if len(dates)>=n*3:break
  return dates[:n]
 
 def get_universe(today):
  uni=[]
  for mkt in ["KOSPI","KOSDAQ"]:
   try:
-   cap=stock.get_market_cap(today,today,market=mkt)
-   if cap.empty:continue
-   cap=cap[["시가총액"]].copy()
-   cap=cap[cap["시가총액"]>0].sort_values("시가총액",ascending=False)
-   n=len(cap)
-   sel=cap.iloc[0:int(n*0.60)].index.tolist()
+   tickers=stock.get_market_ticker_list(today,market=mkt)
    try:
     sec=stock.get_market_sector_classifications(today,market=mkt)
     sm={str(t):r.get("업종명","기타") for t,r in sec.iterrows()}
    except:
     sm={}
-   for rank,t in enumerate(sel,1):
-    pct=round(rank/n*100,1)
-    uni.append({"ticker":str(t),"market":mkt,"sector":sm.get(str(t),"기타"),
-                "rank":rank,"pct":pct,"total":n})
-   print(f"{mkt}: {n}개 → 상위 60% {len(sel)}개")
-   time.sleep(0.5)
+   for t in tickers:
+    uni.append({"ticker":str(t),"market":mkt,"sector":sm.get(str(t),"기타")})
+   print(f"{mkt}: {len(tickers)}개")
+   time.sleep(0.3)
   except Exception as e:
    print(f"{mkt} 실패: {e}")
  return uni
@@ -116,7 +109,7 @@ if __name__=="__main__":
   mkt_df=mkt_df.rename(columns={"종가":"Close"})
  except:mkt_df=None
  uni=get_universe(sig_dates[0])
- send(f"📡 {len(uni)}개 종목 스캔 중...")
+ send(f"📡 {len(uni)}개 종목 스캔 중...\n(약 20~40분 소요)")
  nc={}
  def nm(t):
   if t not in nc:
@@ -126,7 +119,7 @@ if __name__=="__main__":
  res=[]
  for i,info in enumerate(uni):
   t=info["ticker"]
-  if i%100==0:print(f"[{i}/{len(uni)}] 발견:{len(res)}")
+  if i%200==0:print(f"[{i}/{len(uni)}] 발견:{len(res)}")
   df=get_ohlcv(t,start,today)
   if df is None:continue
   for sig_str in sig_dates:
@@ -140,7 +133,6 @@ if __name__=="__main__":
    rs=calc_rs(sl,mkt_df.loc[:sig_ts])if mkt_df is not None else 0.0
    res.append({"sig_date":sig_str,"ticker":t,"name":nm(t),
                "market":info["market"],"sector":info["sector"],
-               "rank":info["rank"],"pct":info["pct"],"total":info["total"],
                "cur":pat["cur"],"pivot":pat["pivot"],
                "cd":pat["cd"],"hd":pat["hd"],"cdays":pat["cdays"],"hdays":pat["hdays"],
                "vr":pat["vr"],"vs":pat["vs"],"rs":rs})
@@ -164,7 +156,6 @@ if __name__=="__main__":
    blk=(f"📅{r['sig_date'][:4]}/{r['sig_date'][4:6]}/{r['sig_date'][6:]}\n"
         f"{mkt}[{r['sector']}]\n"
         f"🔹{r['name']}({r['ticker']})\n"
-        f"  시총: 상위{r['pct']}% ({r['rank']}/{r['total']}위)\n"
         f"  현재가:{r['cur']:,.0f}원\n"
         f"  피벗:{r['pivot']:,.0f}원({up:+.1f}%)\n"
         f"  컵:{r['cd']}%/{r['cdays']}일 핸들:{r['hd']}%/{r['hdays']}일\n"
