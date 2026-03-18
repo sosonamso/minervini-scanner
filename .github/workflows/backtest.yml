@@ -19,6 +19,7 @@ jobs:
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          KRX_TOKEN:        ${{ secrets.KRX_TOKEN }}
         run: python backtest.py
 
       - name: 결과 파일 저장
