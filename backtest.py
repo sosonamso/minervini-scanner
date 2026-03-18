@@ -116,15 +116,43 @@ def build_ohlcv(trading_dates):
 
 def build_index(trading_dates):
     kospi_data={};kosdaq_data={}
-    for date_str in trading_dates:
-        v,_=get_krx_index(date_str,"코스피")
-        if v:kospi_data[pd.Timestamp(date_str)]=v
-        time.sleep(0.2)
-    if kospi_data:
-        kospi_df=pd.DataFrame({"Close":kospi_data}).T.sort_index()
-    else:kospi_df=None
-    # 코스닥 지수는 별도 API 필요 — 일단 코스피로 대체
-    return kospi_df,kospi_df
+    total=len(trading_dates)
+    for i,date_str in enumerate(trading_dates):
+        if i%100==0:print(f"지수 수집 [{i}/{total}]")
+        # KOSPI 지수
+        try:
+            url_k="https://data-dbg.krx.co.kr/svc/apis/idx/kospi_dd_trd"
+            resp=requests.post(url_k,
+                headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
+                json={"basDd":date_str},timeout=30)
+            if resp.status_code==200:
+                block=resp.json().get("OutBlock_1",[])
+                for row in block:
+                    if str(row.get("IDX_NM",""))=="코스피":
+                        v=float(str(row.get("CLSPRC","0")).replace(",",""))
+                        if v>0:kospi_data[pd.Timestamp(date_str)]=v
+                        break
+        except:pass
+        # KOSDAQ 지수
+        try:
+            url_q="https://data-dbg.krx.co.kr/svc/apis/idx/ksq_dd_trd"
+            resp=requests.post(url_q,
+                headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
+                json={"basDd":date_str},timeout=30)
+            if resp.status_code==200:
+                block=resp.json().get("OutBlock_1",[])
+                for row in block:
+                    if str(row.get("IDX_NM",""))=="코스닥":
+                        v=float(str(row.get("CLSPRC","0")).replace(",",""))
+                        if v>0:kosdaq_data[pd.Timestamp(date_str)]=v
+                        break
+        except:pass
+        time.sleep(0.3)
+    kospi_df=pd.DataFrame({"Close":kospi_data}).T.sort_index() if len(kospi_data)>10 else None
+    kosdaq_df=pd.DataFrame({"Close":kosdaq_data}).T.sort_index() if len(kosdaq_data)>10 else None
+    print(f"코스피 지수: {len(kospi_df) if kospi_df is not None else 0}일치")
+    print(f"코스닥 지수: {len(kosdaq_df) if kosdaq_df is not None else 0}일치")
+    return kospi_df,kosdaq_df
 
 # ─────────────────────────────────────
 # 미너비니 로직
@@ -217,7 +245,6 @@ if __name__=="__main__":
     # 지수 수집
     send("지수 데이터 수집 중...")
     kospi_df,kosdaq_df=build_index(trading_dates)
-    print(f"코스피 지수: {len(kospi_df) if kospi_df is not None else 0}일치")
 
     send(f"데이터 수집 완료: {len(all_ohlcv)}개 종목\n패턴 분석 시작...")
 
@@ -237,9 +264,11 @@ if __name__=="__main__":
             ok,pat=detect(sl)
             if not ok or not pat["vs"]:continue
             if mkt_df is None:continue
-            if mkt_df is not None and len(mkt_df)>10:
+            # 시장별 지수 선택 (KOSPI→kospi_df, KOSDAQ→kosdaq_df)
+            idx_df=kospi_df if mkt=="KOSPI" else kosdaq_df
+            if idx_df is not None and len(idx_df)>10:
                 try:
-                    rs=calc_rs(sl,mkt_df.loc[:sig_ts])
+                    rs=calc_rs(sl,idx_df.loc[:sig_ts])
                 except:rs=0.0
                 if rs<=0:continue  # RS 필터 (지수 있을 때만)
             else:
@@ -260,14 +289,15 @@ if __name__=="__main__":
             # 알파 계산 (5/20/60일)
             alpha={}
             try:
-                mkt_idx=mkt_df.index.tolist()
-                if sig_ts in mkt_df.index:
+                idx_df2=kospi_df if mkt=="KOSPI" else kosdaq_df
+                if idx_df2 is not None and sig_ts in idx_df2.index:
+                    mkt_idx=idx_df2.index.tolist()
                     mkt_j=mkt_idx.index(sig_ts)
-                    mkt_entry=float(mkt_df["Close"].iloc[mkt_j])
+                    mkt_entry=float(idx_df2["Close"].iloc[mkt_j])
                     for hold in [5,20,60]:
                         mkt_fi=mkt_j+hold
                         if mkt_fi<len(mkt_idx):
-                            mkt_r=(float(mkt_df["Close"].iloc[mkt_fi])/mkt_entry-1)*100
+                            mkt_r=(float(idx_df2["Close"].iloc[mkt_fi])/mkt_entry-1)*100
                             sr=daily_r.get(hold)
                             if sr is not None:
                                 alpha[hold]=round(sr-mkt_r,2)
