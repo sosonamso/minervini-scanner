@@ -31,16 +31,20 @@ def get_krx_data(date_str, market="KOSPI"):
     반환: {ticker: {Open,High,Low,Close,Volume}} dict
     """
     if market=="KOSPI":
-        url="http://data-dbg.krx.co.kr/svc/apis/sto/stk_bydd_trd"
+        url="https://data-dbg.krx.co.kr/svc/apis/sto/stk_bydd_trd"
     else:
-        url="http://data-dbg.krx.co.kr/svc/apis/sto/ksq_bydd_trd"
+        url="https://data-dbg.krx.co.kr/svc/apis/sto/ksq_bydd_trd"
 
-    headers={"AUTH_KEY":KRX}
-    params={"basDd":date_str}
+    headers={
+        "AUTH_KEY":KRX.strip(),
+        "Content-Type":"application/json",
+        "Accept":"application/json",
+    }
+    payload={"basDd":date_str}
 
     for attempt in range(3):
         try:
-            resp=requests.get(url,params=params,headers=headers,timeout=30)
+            resp=requests.post(url,headers=headers,json=payload,timeout=30)
             if resp.status_code!=200:
                 print(f"KRX API 오류: {resp.status_code} ({market} {date_str})")
                 return {}
@@ -241,9 +245,10 @@ if __name__=="__main__":
     kospi_data={}
     for date_str in trading_dates:
         try:
-            url="http://data-dbg.krx.co.kr/svc/apis/idx/kospi_dd_trd"
-            resp=requests.get(url,params={"basDd":date_str},
-                              headers={"AUTH_KEY":KRX},timeout=30)
+            url="https://data-dbg.krx.co.kr/svc/apis/idx/kospi_dd_trd"
+            resp=requests.post(url,
+                               headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
+                               json={"basDd":date_str},timeout=30)
             if resp.status_code==200:
                 block=resp.json().get("OutBlock_1",[])
                 for row in block:
