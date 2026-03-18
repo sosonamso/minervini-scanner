@@ -302,31 +302,45 @@ if __name__=="__main__":
     all_ohlcv=build_ohlcv(trading_dates)
     print(f"OHLCV 구축 완료: {len(all_ohlcv)}개 종목")
 
-    # 코스피 지수 (RS 계산용) — 코스피200 지수코드 1028
-    kospi_data={}
+    # KOSPI + KOSDAQ 지수 수집
+    kospi_data={};kosdaq_data={}
     for date_str in trading_dates:
         try:
-            url="https://data-dbg.krx.co.kr/svc/apis/idx/kospi_dd_trd"
-            resp=requests.post(url,
-                               headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
-                               json={"basDd":date_str},timeout=30)
+            url_k="https://data-dbg.krx.co.kr/svc/apis/idx/kospi_dd_trd"
+            resp=requests.post(url_k,
+                headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
+                json={"basDd":date_str},timeout=30)
             if resp.status_code==200:
                 block=resp.json().get("OutBlock_1",[])
                 for row in block:
                     if str(row.get("IDX_NM",""))=="코스피":
-                        kospi_data[pd.Timestamp(date_str)]=float(
-                            str(row.get("CLSPRC","0")).replace(",",""))
+                        v=float(str(row.get("CLSPRC","0")).replace(",",""))
+                        if v>0:kospi_data[pd.Timestamp(date_str)]=v
                         break
-            time.sleep(0.2)
         except:pass
+        try:
+            url_q="https://data-dbg.krx.co.kr/svc/apis/idx/ksq_dd_trd"
+            resp=requests.post(url_q,
+                headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
+                json={"basDd":date_str},timeout=30)
+            if resp.status_code==200:
+                block=resp.json().get("OutBlock_1",[])
+                for row in block:
+                    if str(row.get("IDX_NM",""))=="코스닥":
+                        v=float(str(row.get("CLSPRC","0")).replace(",",""))
+                        if v>0:kosdaq_data[pd.Timestamp(date_str)]=v
+                        break
+        except:pass
+        time.sleep(0.3)
 
-    mkt_df=None
-    if kospi_data:
-        mkt_df=pd.DataFrame({"Close":kospi_data}).T.sort_index()
-        print(f"코스피 지수 {len(mkt_df)}일치 수신")
+    kospi_df=pd.DataFrame({"Close":kospi_data}).T.sort_index() if len(kospi_data)>10 else None
+    kosdaq_df=pd.DataFrame({"Close":kosdaq_data}).T.sort_index() if len(kosdaq_data)>10 else None
+    mkt_df=kospi_df
+    print(f"코스피 지수: {len(kospi_df) if kospi_df is not None else 0}일치")
+    print(f"코스닥 지수: {len(kosdaq_df) if kosdaq_df is not None else 0}일치")
 
     market_ok=check_market(mkt_df)
-    market_str="상승장(KOSPI>200MA)"if market_ok else"하락장(KOSPI<200MA)"
+    market_str="상승장(KOSPI>200MA)" if market_ok else "하락장(KOSPI<200MA)"
 
     # 유효 데이터 통계
     kospi_cnt=sum(1 for v in all_ohlcv.values() if v["market"]=="KOSPI")
@@ -358,8 +372,12 @@ if __name__=="__main__":
             ok,pat=detect(sl)
             if not ok:continue
             if not pat["vs"]:continue
-            rs=calc_rs(sl,mkt_df.loc[:sig_ts])if mkt_df is not None else 0.0
-            if rs<=0:continue
+            idx_df=kospi_df if mkt=="KOSPI" else kosdaq_df
+            if idx_df is not None and len(idx_df)>10:
+                try:rs=calc_rs(sl,idx_df.loc[:sig_ts])
+                except:rs=0.0
+                if rs<=0:continue
+            else:rs=0.0
             history=get_past_signals(df,sig_ts)
             score=calc_score(rs,pat["vr"],pat["cd"],pat["hd"])
             grade=score_grade(score)
