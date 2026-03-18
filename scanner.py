@@ -13,6 +13,7 @@ CID=os.environ.get("TELEGRAM_CHAT_ID","")
 KRX=os.environ.get("KRX_TOKEN","")
 SCAN_DAYS=7
 HISTORY_DAYS=420
+_row_meta={}  # ticker -> {name, sector}
 
 def send(text):
     print(text)
@@ -71,6 +72,11 @@ def get_krx_data(date_str, market="KOSPI"):
                 try:
                     ticker=str(row.get("ISU_CD","")).strip()
                     if not ticker:continue
+                    # 섹터/종목명 저장 (build_ohlcv에서 접근 가능하도록)
+                    _row_meta[ticker]={
+                        "name":str(row.get("ISU_NM","")).strip(),
+                        "sector":str(row.get("SECT_TP_NM","기타")).strip() or "기타"
+                    }
                     result[ticker]={
                         "Open":float(str(row.get("TDD_OPNPRC","0")).replace(",","")),
                         "High":float(str(row.get("TDD_HGPRC","0")).replace(",","")),
@@ -116,6 +122,8 @@ def build_ohlcv(trading_dates):
     반환: {ticker: {"market":..., "df":DataFrame}}
     """
     ticker_data={}  # ticker -> {market, rows:[{date,O,H,L,C,V}]}
+    ticker_sector={}  # ticker -> 섹터명
+    ticker_name={}  # ticker -> 종목명
 
     total=len(trading_dates)
     for i,date_str in enumerate(trading_dates):
@@ -141,7 +149,10 @@ def build_ohlcv(trading_dates):
         df=df[["Open","High","Low","Close","Volume"]].astype(float)
         df=df[df["Close"]>0].dropna()
         if len(df)>=100:
-            result[ticker]={"market":info["market"],"df":df}
+            meta=_row_meta.get(ticker,{})
+            result[ticker]={"market":info["market"],"df":df,
+                           "name":meta.get("name",ticker),
+                           "sector":meta.get("sector","기타")}
 
     return result
 
@@ -218,6 +229,41 @@ def get_past_signals(df,exclude_ts):
         if i+20<len(idx):r20=round((float(df["Close"].iloc[i+20])/close_on-1)*100,1)
         results.append({"date":ts.strftime("%y-%m-%d"),"r5":r5,"r20":r20,"vs":pat["vs"]})
     return results
+
+
+def calc_score(rs, vr, cd, hd):
+    """시그널 강도 점수 계산 (백테스트 분포 기반, 0~100점)"""
+    # RS 점수 (가중치 40%)
+    if rs>=25:s_rs=100
+    elif rs>=15:s_rs=80
+    elif rs>=10:s_rs=60
+    elif rs>=5:s_rs=40
+    else:s_rs=20
+    # 거래량 배율 점수 (가중치 35%)
+    if vr>=3.0:s_vr=100
+    elif vr>=2.5:s_vr=85
+    elif vr>=2.0:s_vr=70
+    elif vr>=1.7:s_vr=55
+    else:s_vr=40
+    # 컵 깊이 점수 (가중치 15%) — 20~35%가 최적
+    if 20<=cd<=35:s_cd=100
+    elif 15<=cd<20 or 35<cd<=40:s_cd=75
+    elif 40<cd<=50:s_cd=50
+    else:s_cd=30
+    # 핸들 깊이 점수 (가중치 10%) — 5~10%가 최적
+    if 5<=hd<=10:s_hd=100
+    elif 10<hd<=12:s_hd=75
+    elif hd>12:s_hd=50
+    else:s_hd=60
+    total=s_rs*0.40+s_vr*0.35+s_cd*0.15+s_hd*0.10
+    return round(total)
+
+def score_grade(score):
+    if score>=90:return "S"
+    elif score>=80:return "A"
+    elif score>=70:return "B"
+    elif score>=60:return "C"
+    else:return "D"
 
 def format_past(history):
     if not history:return ""
@@ -315,18 +361,23 @@ if __name__=="__main__":
             rs=calc_rs(sl,mkt_df.loc[:sig_ts])if mkt_df is not None else 0.0
             if rs<=0:continue
             history=get_past_signals(df,sig_ts)
+            score=calc_score(rs,pat["vr"],pat["cd"],pat["hd"])
+            grade=score_grade(score)
             res.append({
                 "sig_date":sig_str,"ticker":ticker,
+                "name":info.get("name",ticker),
+                "sector":info.get("sector","기타"),
                 "market":mkt,
                 "cur":pat["cur"],"pivot":pat["pivot"],
                 "cd":pat["cd"],"hd":pat["hd"],
                 "cdays":pat["cdays"],"hdays":pat["hdays"],
                 "vr":pat["vr"],"vs":pat["vs"],
-                "rs":rs,"history":history,
+                "rs":rs,"score":score,"grade":grade,
+                "history":history,
             })
             break
 
-    res.sort(key=lambda x:(x["sig_date"],x["rs"]),reverse=True)
+    res.sort(key=lambda x:(x["sig_date"],x["score"],x["rs"]),reverse=True)
     seen=set();deduped=[]
     for r in res:
         if r["ticker"] not in seen:
@@ -345,8 +396,10 @@ if __name__=="__main__":
             up=round((r["pivot"]/r["cur"]-1)*100,1)
             mkt_lbl="🔵코스피"if r["market"]=="KOSPI"else"🟢코스닥"
             past=format_past(r["history"])
-            blk=(f"[{r['sig_date']}] {mkt_lbl}\n"
-                 f"🔹{r['ticker']}\n"
+            grade_emoji={"S":"🏆","A":"🥇","B":"🥈","C":"🥉","D":"📊"}.get(r["grade"],"📊")
+            blk=(f"[{r['sig_date']}] {mkt_lbl} {r['sector']}\n"
+                 f"🔹{r['name']}({r['ticker']})\n"
+                 f"  AI점수: {grade_emoji}{r['score']}점({r['grade']}등급)\n"
                  f"  현재가:{r['cur']:,.0f}원\n"
                  f"  피벗:{r['pivot']:,.0f}원({up:+.1f}%)\n"
                  f"  컵:{r['cd']}%/{r['cdays']}일 핸들:{r['hd']}%/{r['hdays']}일\n"
