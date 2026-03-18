@@ -2,7 +2,7 @@ name: 미너비니 스캐너 미국 데일리
 
 on:
   schedule:
-    - cron: '0 22 * * 1-5'   # KST 07:00 (미국 장 마감 다음날 아침, UTC 22:00)
+    - cron: '0 22 * * 1-5'   # KST 07:00
   workflow_dispatch:
 
 jobs:
@@ -25,4 +25,5 @@ jobs:
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TIINGO_TOKEN:     ${{ secrets.TIINGO_TOKEN }}
         run: python scanner_us.py
