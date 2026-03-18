@@ -238,9 +238,10 @@ if __name__=="__main__":
             if not ok or not pat["vs"]:continue
             if mkt_df is None:continue
             try:
-                rs=calc_rs(sl,mkt_df.loc[:sig_ts])
+                rs=calc_rs(sl,mkt_df.loc[:sig_ts]) if mkt_df is not None else 0.0
             except:rs=0.0
-            if rs<=0:continue
+            # 지수 데이터 없으면 RS 필터 스킵
+            if mkt_df is not None and rs<=0:continue
 
             entry=float(df["Close"].iloc[j])
             score=calc_score(rs,pat["vr"],pat["cd"],pat["hd"])
