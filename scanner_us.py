@@ -202,7 +202,7 @@ if __name__=="__main__":
         valid_data[ticker]=df
         data_ok+=1
         last_dates.append(last_date)
-        time.sleep(0.1)  # Tiingo rate limit 여유
+        time.sleep(1.5)  # Tiingo 무료 시간당 50개 제한 대응
 
     if last_dates:
         last_dates.sort()
