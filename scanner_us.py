@@ -1,7 +1,7 @@
 """
-미너비니 컵&핸들 스캐너 - 미국 주식 (Tiingo API 버전)
-- 대상: S&P1500 하드코딩
-- 데이터: Tiingo API (하루 50,000건 무료)
+미너비니 컵&핸들 스캐너 - 미국 주식 (Massive/Polygon API 버전)
+- 대상: S&P1500 (S&P500 + MidCap400 + SmallCap600)
+- 데이터: Massive.com (구 Polygon.io) REST API
 - 결과: 텔레그램 전송 (한국어)
 """
 import os,time,warnings,requests
@@ -11,13 +11,10 @@ warnings.filterwarnings("ignore")
 
 TOK=os.environ.get("TELEGRAM_TOKEN","")
 CID=os.environ.get("TELEGRAM_CHAT_ID","")
-TIINGO=os.environ.get("TIINGO_TOKEN","")
+MASSIVE=os.environ.get("MASSIVE_TOKEN","")
 SCAN_DAYS=7
 HISTORY_DAYS=420
 
-# ─────────────────────────────────────
-# S&P1500 종목 리스트 (하드코딩)
-# ─────────────────────────────────────
 SP500 = [
     "MMM","AOS","ABT","ABBV","ACN","ADBE","AMD","AES","AFL","A","APD","ABNB","AKAM","ALB","ARE","ALGN","ALLE","LNT","ALL","GOOGL","GOOG","MO","AMZN","AMCR","AEE","AEP","AXP","AIG","AMT","AWK","AMP","AME","AMGN","APH","ADI","ANSS","AON","APA","AAPL","AMAT","APTV","ACGL","ADM","ANET","AJG","AIZ","T","ATO","ADSK","ADP","AZO","AVB","AVY","AXON","BKR","BALL","BAC","BK","BBWI","BAX","BDX","WRB","BBY","TECH","BIIB","BLK","BX","BA","BSX","BMY","AVGO","BR","BRO","BLDR","BG","CDNS","CZR","CPT","CPB","COF","CAH","KMX","CCL","CARR","CAT","CBOE","CBRE","CDW","CE","COR","CNC","CNX","CF","CRL","SCHW","CHTR","CVX","CMG","CB","CHD","CI","CINF","CTAS","CSCO","C","CFG","CLX","CME","CMS","KO","CTSH","CL","CMCSA","CAG","COP","ED","STZ","CEG","COO","CPRT","GLW","CPAY","CTVA","CSGP","COST","CTRA","CRWD","CCI","CSX","CMI","CVS","DHR","DRI","DVA","DAY","DE","DAL","XRAY","DVN","DXCM","FANG","DLR","DFS","DG","DLTR","D","DPZ","DOV","DOW","DHI","DTE","DUK","DD","EMN","ETN","EBAY","ECL","EIX","EW","EA","ELV","EMR","ENPH","ETR","EOG","EPAM","EQT","EFX","EQIX","EQR","ESS","EL","ETSY","EG","EXPE","EXPD","EXR","XOM","FFIV","FDS","FICO","FAST","FRT","FDX","FIS","FITB","FSLR","FE","FI","FMC","F","FTNT","FTV","FOXA","FOX","BEN","FCX","GRMN","IT","GE","GEHC","GEV","GEN","GNRC","GD","GIS","GM","GPC","GILD","GS","HAL","HIG","HAS","HCA","DOC","HSIC","HSY","HES","HPE","HLT","HOLX","HD","HON","HRL","HST","HWM","HPQ","HUBB","HUM","HBAN","HII","IBM","IEX","IDXX","ITW","INCY","IR","PODD","INTC","ICE","IFF","IP","IPG","INTU","ISRG","IVZ","INVH","IQV","IRM","JBHT","JBL","JKHY","J","JNJ","JCI","JPM","JNPR","K","KVUE","KDP","KEY","KEYS","KMB","KIM","KMI","KLAC","KHC","KR","LHX","LH","LRCX","LW","LVS","LDOS","LEN","LLY","LIN","LYV","LKQ","LMT","L","LOW","LULU","LYB","MTB","MRO","MPC","MKTX","MAR","MMC","MLM","MAS","MA","MTCH","MKC","MCD","MCK","MDT","MRK","META","MET","MTD","MGM","MCHP","MU","MSFT","MAA","MRNA","MHK","MOH","TAP","MDLZ","MPWR","MNST","MCO","MS","MOS","MSI","MSCI","NDAQ","NTAP","NFLX","NEM","NWSA","NWS","NEE","NKE","NI","NDSN","NSC","NTRS","NOC","NCLH","NRG","NUE","NVDA","NVR","NXPI","ORLY","OXY","ODFL","OMC","ON","OKE","ORCL","OTIS","PCAR","PKG","PLTR","PANW","PARA","PH","PAYX","PAYC","PYPL","PNR","PEP","PFE","PCG","PM","PSX","PNW","PNC","POOL","PPG","PPL","PFG","PG","PGR","PLD","PRU","PEG","PTC","PSA","PHM","QRVO","PWR","QCOM","DGX","RL","RJF","RTX","O","REG","REGN","RF","RSG","RMD","RVTY","ROK","ROL","ROP","ROST","RCL","SPGI","CRM","SBAC","SLB","STX","SRE","NOW","SHW","SPG","SWKS","SJM","SW","SNA","SOLV","SO","LUV","SWK","SBUX","STT","STLD","STE","SYK","SMCI","SYF","SNPS","SYY","TMUS","TROW","TTWO","TPR","TRGP","TGT","TEL","TDY","TFX","TER","TSLA","TXN","TXT","TMO","TJX","TSCO","TT","TDG","TRV","TRMB","TFC","TYL","TSN","USB","UBER","UDR","ULTA","UNP","UAL","UPS","URI","UNH","UHS","VLO","VTR","VLTO","VRSN","VRSK","VZ","VRTX","VTRS","VICI","V","VST","VMC","WAB","WBA","WMT","DIS","WBD","WM","WAT","WEC","WFC","WELL","WST","WDC","WHR","WMB","WTW","GWW","WYNN","XEL","XYL","YUM","ZBRA","ZBH","ZTS"
 ]
@@ -46,28 +43,30 @@ def get_recent_dates(n=7):
     return dates[:n]
 
 # ─────────────────────────────────────
-# Tiingo API 호출
+# Massive(Polygon) API
 # ─────────────────────────────────────
-def get_tiingo_ohlcv(ticker, start, end):
-    url=f"https://api.tiingo.com/tiingo/daily/{ticker}/prices"
-    headers={"Content-Type":"application/json","Authorization":f"Token {TIINGO}"}
-    params={"startDate":start,"endDate":end,"resampleFreq":"daily"}
+def get_massive_ohlcv(ticker, start, end):
+    """Massive REST API로 일별 OHLCV 수집"""
+    url=f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/day/{start}/{end}"
+    params={"adjusted":"true","sort":"asc","limit":50000,"apiKey":MASSIVE}
     for attempt in range(2):
         try:
-            resp=requests.get(url,headers=headers,params=params,timeout=30)
+            resp=requests.get(url,params=params,timeout=30)
+            if resp.status_code==429:
+                time.sleep(12)
+                continue
             if resp.status_code!=200:return None
             data=resp.json()
-            if not data or len(data)<100:return None
-            df=pd.DataFrame(data)
-            df["date"]=pd.to_datetime(df["date"]).dt.tz_localize(None)
+            results=data.get("results",[])
+            if not results or len(results)<100:return None
+            df=pd.DataFrame(results)
+            df["date"]=pd.to_datetime(df["t"],unit="ms").dt.tz_localize("UTC").dt.tz_convert("America/New_York").dt.normalize().dt.tz_localize(None)
             df=df.set_index("date").sort_index()
-            df=df.rename(columns={"adjClose":"Close","adjVolume":"Volume"})
-            if "Close" not in df.columns:
-                df=df.rename(columns={"close":"Close","volume":"Volume"})
+            df=df.rename(columns={"c":"Close","v":"Volume"})
             df=df[["Close","Volume"]].astype(float).dropna()
             if len(df)>=100:return df
         except Exception as e:
-            time.sleep(2)
+            time.sleep(3)
     return None
 
 # ─────────────────────────────────────
@@ -125,6 +124,34 @@ def calc_rs(df,mkt):
     m=sum([0.4,0.2,0.2,0.2][i]*p(mkt,[63,126,189,252][i])for i in range(4))
     return round((s-m)*100,1)
 
+def calc_score(rs,vr,cd,hd):
+    if rs>=25:s_rs=100
+    elif rs>=15:s_rs=80
+    elif rs>=10:s_rs=60
+    elif rs>=5:s_rs=40
+    else:s_rs=20
+    if vr>=3.0:s_vr=100
+    elif vr>=2.5:s_vr=85
+    elif vr>=2.0:s_vr=70
+    elif vr>=1.7:s_vr=55
+    else:s_vr=40
+    if 20<=cd<=35:s_cd=100
+    elif 15<=cd<20 or 35<cd<=40:s_cd=75
+    elif 40<cd<=50:s_cd=50
+    else:s_cd=30
+    if 5<=hd<=10:s_hd=100
+    elif 10<hd<=12:s_hd=75
+    elif hd>12:s_hd=50
+    else:s_hd=60
+    return round(s_rs*0.40+s_vr*0.35+s_cd*0.15+s_hd*0.10)
+
+def score_grade(score):
+    if score>=90:return "S"
+    elif score>=80:return "A"
+    elif score>=70:return "B"
+    elif score>=60:return "C"
+    else:return "D"
+
 def get_past_signals(df,exclude_ts):
     results=[]
     idx=df.index.tolist()
@@ -164,8 +191,8 @@ def format_past(history):
 # 메인
 # ─────────────────────────────────────
 if __name__=="__main__":
-    if not TIINGO:
-        send("TIINGO_TOKEN이 없어요! GitHub Secrets 확인해주세요.")
+    if not MASSIVE:
+        send("MASSIVE_TOKEN이 없어요! GitHub Secrets 확인해주세요.")
         exit(1)
 
     end=datetime.today()
@@ -176,24 +203,24 @@ if __name__=="__main__":
     print(f"탐색날짜: {sig_dates}")
 
     # SPY로 시장 상태 체크
-    mkt_df=get_tiingo_ohlcv("SPY",start,end_str)
+    mkt_df=get_massive_ohlcv("SPY",start,end_str)
     market_ok=check_market(mkt_df)
     market_str="상승장(S&P500>200MA)"if market_ok else"하락장(S&P500<200MA)"
 
-    all_tickers=list(dict.fromkeys(SP500))
+    all_tickers=list(dict.fromkeys(SP500+SP400+SP600))
     cap_map={t:"S&P500" for t in SP500}
-    
-    
+    cap_map.update({t:"MidCap400" for t in SP400 if t not in cap_map})
+    cap_map.update({t:"SmallCap600" for t in SP600 if t not in cap_map})
 
-    send(f"🇺🇸 미국 스캐너 시작 (Tiingo)\n최근 {SCAN_DAYS}거래일 | {market_str}\nS&P500 {len(all_tickers)}개 종목 수집 중...\n(약 30~40분 소요)")
+    send(f"🇺🇸 미국 스캐너 시작 (Massive)\n최근 {SCAN_DAYS}거래일 | {market_str}\nS&P1500 {len(all_tickers)}개 종목 수집 중...")
     if not market_ok:
         send("S&P500 200MA 하방 - 시그널 신뢰도 낮음, 주의!")
 
-    # 개별 종목 데이터 수집
+    # 데이터 수집
     valid_data={};data_ok=0;data_old=0;last_dates=[]
     for i,ticker in enumerate(all_tickers):
-        if i%100==0:print(f"[{i}/{len(all_tickers)}] 수신:{data_ok} 발견예정")
-        df=get_tiingo_ohlcv(ticker,start,end_str)
+        if i%100==0:print(f"[{i}/{len(all_tickers)}] 수신:{data_ok}")
+        df=get_massive_ohlcv(ticker,start,end_str)
         if df is None:continue
         last_date=df.index[-1]
         if last_date<data_cutoff:
@@ -202,7 +229,7 @@ if __name__=="__main__":
         valid_data[ticker]=df
         data_ok+=1
         last_dates.append(last_date)
-        time.sleep(1.5)  # Tiingo 무료 시간당 50개 제한 대응
+        time.sleep(0.05)  # Massive Starter - 무제한이지만 여유있게
 
     if last_dates:
         last_dates.sort()
@@ -231,6 +258,8 @@ if __name__=="__main__":
             if not pat["vs"]:continue
             rs=calc_rs(sl,mkt_df.loc[:sig_ts])if mkt_df is not None else 0.0
             if rs<=0:continue
+            score=calc_score(rs,pat["vr"],pat["cd"],pat["hd"])
+            grade=score_grade(score)
             history=get_past_signals(df,sig_ts)
             res.append({
                 "sig_date":sig_str,"ticker":ticker,
@@ -239,11 +268,12 @@ if __name__=="__main__":
                 "cd":pat["cd"],"hd":pat["hd"],
                 "cdays":pat["cdays"],"hdays":pat["hdays"],
                 "vr":pat["vr"],"vs":pat["vs"],
-                "rs":rs,"history":history,
+                "rs":rs,"score":score,"grade":grade,
+                "history":history,
             })
             break
 
-    res.sort(key=lambda x:(x["sig_date"],x["rs"]),reverse=True)
+    res.sort(key=lambda x:(x["sig_date"],x["score"],x["rs"]),reverse=True)
     seen=set();deduped=[]
     for r in res:
         if r["ticker"] not in seen:
@@ -256,17 +286,19 @@ if __name__=="__main__":
     if not res:
         send(f"🇺🇸 미국 스캐너\n최근 {SCAN_DAYS}거래일 | {market_str}\n조건 충족 종목 없음\n(거래량급증+RS양수 기준)")
     else:
-        hdr=f"🇺🇸 미너비니 컵&핸들(미국)\n최근 {SCAN_DAYS}거래일 | {market_str}\n{len(res)}개 발견(RS순)\n"+"─"*24+"\n"
+        hdr=f"🇺🇸 미너비니 컵&핸들(미국)\n최근 {SCAN_DAYS}거래일 | {market_str}\n{len(res)}개 발견(점수순)\n"+"─"*24+"\n"
         msg=hdr
         for r in res:
             up=round((r["pivot"]/r["cur"]-1)*100,1)
+            grade_emoji={"S":"🏆","A":"🥇","B":"🥈","C":"🥉","D":"📊"}.get(r["grade"],"📊")
             past=format_past(r["history"])
             blk=(f"[{r['sig_date']}] [{r['cap']}]\n"
                  f"{r['ticker']}\n"
-                 f"현재가: ${r['cur']:,.2f}\n"
-                 f"피벗  : ${r['pivot']:,.2f} ({up:+.1f}%)\n"
-                 f"컵:{r['cd']}%/{r['cdays']}일 핸들:{r['hd']}%/{r['hdays']}일\n"
-                 f"거래량:{r['vr']}x VOL RS:{r['rs']:+.1f}%\n"
+                 f"  AI점수: {grade_emoji}{r['score']}점({r['grade']}등급)\n"
+                 f"  현재가: ${r['cur']:,.2f}\n"
+                 f"  피벗  : ${r['pivot']:,.2f} ({up:+.1f}%)\n"
+                 f"  컵:{r['cd']}%/{r['cdays']}일 핸들:{r['hd']}%/{r['hdays']}일\n"
+                 f"  거래량:{r['vr']}x🔥 RS:{r['rs']:+.1f}%\n"
                  +(past+"\n" if past else "")+"\n")
             if len(msg)+len(blk)>4000:
                 send(msg);msg="(이어서)\n\n"+blk
