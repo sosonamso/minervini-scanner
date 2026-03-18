@@ -2,7 +2,7 @@ name: 미너비니 스캐너 데일리
 
 on:
   schedule:
-    - cron: '0 21 * * 0-4'   # KST 06:00
+    - cron: '0 23 * * 0-4'   # KST 08:00 (UTC 23:00, 일~목)
   workflow_dispatch:
 
 jobs:
