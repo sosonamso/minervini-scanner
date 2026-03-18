@@ -26,4 +26,5 @@ jobs:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TIINGO_TOKEN:     ${{ secrets.TIINGO_TOKEN }}
+          MASSIVE_TOKEN:    ${{ secrets.MASSIVE_TOKEN }}
         run: python scanner_us.py
