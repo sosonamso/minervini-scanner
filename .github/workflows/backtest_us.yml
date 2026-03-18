@@ -1,0 +1,33 @@
+name: 미국 백테스트 (수동실행)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+
+      - name: 미국 백테스트 실행
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MASSIVE_TOKEN:    ${{ secrets.MASSIVE_TOKEN }}
+        run: python backtest_us.py
+
+      - name: 결과 파일 저장
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backtest-us-results-${{ github.run_number }}
+          path: |
+            backtest_us_raw.csv
+            backtest_us_daily.json
+          retention-days: 90
