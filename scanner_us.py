@@ -180,12 +180,12 @@ if __name__=="__main__":
     market_ok=check_market(mkt_df)
     market_str="상승장(S&P500>200MA)"if market_ok else"하락장(S&P500<200MA)"
 
-    all_tickers=list(dict.fromkeys(SP500+SP400+SP600))
+    all_tickers=list(dict.fromkeys(SP500))
     cap_map={t:"S&P500" for t in SP500}
-    cap_map.update({t:"MidCap400" for t in SP400 if t not in cap_map})
-    cap_map.update({t:"SmallCap600" for t in SP600 if t not in cap_map})
+    
+    
 
-    send(f"🇺🇸 미국 스캐너 시작 (Tiingo)\n최근 {SCAN_DAYS}거래일 | {market_str}\nS&P1500 {len(all_tickers)}개 종목 수집 중...\n(약 30~40분 소요)")
+    send(f"🇺🇸 미국 스캐너 시작 (Tiingo)\n최근 {SCAN_DAYS}거래일 | {market_str}\nS&P500 {len(all_tickers)}개 종목 수집 중...\n(약 30~40분 소요)")
     if not market_ok:
         send("S&P500 200MA 하방 - 시그널 신뢰도 낮음, 주의!")
 
