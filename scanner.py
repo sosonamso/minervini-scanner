@@ -50,13 +50,14 @@ def get_krx_data(date_str, market="KOSPI"):
                 return {}
             data=resp.json()
             # 첫 번째 호출만 응답 구조 출력
-            if date_str=="20260317" and attempt==0:
+            if attempt==0 and date_str in ["20260317","20260318","20260313"] and not _debug_done[0]:
                 print(f"[DEBUG] KRX 응답 키: {list(data.keys())}")
                 for k,v in data.items():
                     if isinstance(v,list) and len(v)>0:
                         print(f"[DEBUG] {k}[0]: {v[0]}")
                     else:
                         print(f"[DEBUG] {k}: {v}")
+                _debug_done[0]=True
             block=data.get("OutBlock_1",[])
             if not block:
                 # 다른 키도 시도
@@ -68,7 +69,7 @@ def get_krx_data(date_str, market="KOSPI"):
             result={}
             for row in block:
                 try:
-                    ticker=str(row.get("ISU_SRT_CD","")).strip()
+                    ticker=str(row.get("ISU_CD","")).strip()
                     if not ticker:continue
                     result[ticker]={
                         "Open":float(str(row.get("TDD_OPNPRC","0")).replace(",","")),
