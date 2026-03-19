@@ -322,11 +322,13 @@ if __name__=="__main__":
                     _kospi_logged=True
                 for row in block:
                     nm=str(row.get("IDX_NM",""))
-                    if "코스피" in nm and "200" not in nm and "100" not in nm and "50" not in nm:
-                        try:
-                            v=float(str(row.get("CLSPRC_IDX","0")).replace(",",""))
-                            if v>0:kospi_data[pd.Timestamp(date_str)]=v
-                        except:pass
+                    if nm=="코스피":
+                        raw=str(row.get("CLSPRC_IDX","-")).replace(",","").strip()
+                        if raw and raw!="-":
+                            try:
+                                v=float(raw)
+                                if v>0:kospi_data[pd.Timestamp(date_str)]=v
+                            except:pass
                         break
             else:
                 if not _kospi_logged:
@@ -348,11 +350,13 @@ if __name__=="__main__":
                     _kosdaq_logged=True
                 for row in block:
                     nm=str(row.get("IDX_NM",""))
-                    if "코스닥" in nm and "150" not in nm and "Mid" not in nm:
-                        try:
-                            v=float(str(row.get("CLSPRC_IDX","0")).replace(",",""))
-                            if v>0:kosdaq_data[pd.Timestamp(date_str)]=v
-                        except:pass
+                    if nm=="코스닥":
+                        raw=str(row.get("CLSPRC_IDX","-")).replace(",","").strip()
+                        if raw and raw!="-":
+                            try:
+                                v=float(raw)
+                                if v>0:kosdaq_data[pd.Timestamp(date_str)]=v
+                            except:pass
                         break
             else:
                 if not _kosdaq_logged:
