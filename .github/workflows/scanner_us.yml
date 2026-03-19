@@ -1,30 +1,33 @@
-name: 미너비니 스캐너 미국 데일리
+name: 미국 스캐너 데일리
 
 on:
   schedule:
-    - cron: '0 22 * * 1-5'   # KST 07:00
+    - cron: '0 23 * * 1-5'   # KST 08:00 (UTC 23:00, 월~금)
   workflow_dispatch:
 
 jobs:
   scan:
     runs-on: ubuntu-latest
+    timeout-minutes: 180
 
     steps:
-      - name: 코드 체크아웃
-        uses: actions/checkout@v3
-
-      - name: Python 설치
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-
-      - name: 라이브러리 설치
-        run: pip install -r requirements.txt
+      - run: pip install -r requirements.txt
 
       - name: 스캐너 실행
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TIINGO_TOKEN:     ${{ secrets.TIINGO_TOKEN }}
           MASSIVE_TOKEN:    ${{ secrets.MASSIVE_TOKEN }}
         run: python scanner_us.py
+
+      - name: CSV 레포에 자동 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add scanner_us_raw.csv
+          git diff --staged --quiet || git commit -m "scanner_us: $(date +'%Y-%m-%d') 스캔 결과"
+          git push
