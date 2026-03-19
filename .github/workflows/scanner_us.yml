@@ -2,7 +2,7 @@ name: 미국 스캐너 데일리
 
 on:
   schedule:
-    - cron: '0 23 * * 1-5'   # KST 08:00 (UTC 23:00, 월~금)
+    - cron: '0 23 * * 1-5'
   workflow_dispatch:
 
 permissions:
