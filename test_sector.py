@@ -1,9 +1,13 @@
 """
-KRX 업종분류 데이터 테스트
+pykrx 업종분류 테스트
 GitHub Actions에서 실행해서 결과 확인
 """
-import requests
+import subprocess
+subprocess.run(["pip", "install", "pykrx", "-q"])
+
+from pykrx import stock
 from datetime import datetime, timedelta
+import pandas as pd
 
 def get_trading_day():
     d = datetime.today()
@@ -11,80 +15,46 @@ def get_trading_day():
         d -= timedelta(days=1)
     return d.strftime("%Y%m%d")
 
-def get_sector_map(market="STK"):
-    """
-    market: STK=KOSPI, KSQ=KOSDAQ
-    반환: {종목코드: 업종명}
-    """
-    today = get_trading_day()
-    print(f"조회 날짜: {today}, 시장: {market}")
-
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        "Referer": "http://data.krx.co.kr/contents/MDC/STAT/standard/MDCSTAT03901.cmd",
-        "Content-Type": "application/x-www-form-urlencoded"
-    }
-
-    # 1단계: OTP 발급
-    otp_resp = requests.post(
-        "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd",
-        data={
-            "mktId": market,
-            "trdDd": today,
-            "money": "1",
-            "csvxls_isNo": "false",
-            "name": "fileDown",
-            "url": "dbms/MDC/STAT/standard/MDCSTAT03901"
-        },
-        headers=headers,
-        timeout=30
-    )
-    print(f"OTP 응답: {otp_resp.status_code} / {otp_resp.text[:50]}")
-
-    if otp_resp.status_code != 200 or not otp_resp.text.strip():
-        print("OTP 발급 실패")
-        return {}
-
-    # 2단계: CSV 다운로드
-    csv_resp = requests.post(
-        "http://data.krx.co.kr/comm/fileDn/download_csv/download.cmd",
-        data={"code": otp_resp.text.strip()},
-        headers=headers,
-        timeout=30
-    )
-    print(f"CSV 응답: {csv_resp.status_code} / 크기: {len(csv_resp.content)}bytes")
-
-    if csv_resp.status_code != 200:
-        print("CSV 다운로드 실패")
-        return {}
-
-    # CSV 파싱
-    import io, pandas as pd
-    try:
-        df = pd.read_csv(io.BytesIO(csv_resp.content), encoding="euc-kr")
-        print(f"컬럼: {list(df.columns)}")
-        print(f"샘플:\n{df.head(5).to_string()}")
-
-        # 종목코드 → 업종명 딕셔너리
-        # 컬럼명 확인 후 매핑
-        code_col = [c for c in df.columns if "코드" in c or "Code" in c.lower()]
-        sector_col = [c for c in df.columns if "업종" in c or "sector" in c.lower()]
-        print(f"\n코드 컬럼 후보: {code_col}")
-        print(f"업종 컬럼 후보: {sector_col}")
-
-        return df
-    except Exception as e:
-        print(f"파싱 오류: {e}")
-        # 원본 텍스트 일부 출력
-        try:
-            print(csv_resp.content[:500].decode("euc-kr"))
-        except:
-            print(csv_resp.content[:500])
-        return {}
-
 if __name__ == "__main__":
-    print("=== KOSPI 업종분류 테스트 ===")
-    kospi = get_sector_map("STK")
-    print()
-    print("=== KOSDAQ 업종분류 테스트 ===")
-    kosdaq = get_sector_map("KSQ")
+    today = get_trading_day()
+    print(f"조회 날짜: {today}")
+
+    # KOSPI 업종분류
+    print("\n=== KOSPI 업종분류 ===")
+    try:
+        df_kospi = stock.get_market_sector_classifications(today, "KOSPI")
+        print(f"성공! {len(df_kospi)}개 종목")
+        print(f"컬럼: {list(df_kospi.columns)}")
+        print(df_kospi.head(10).to_string())
+
+        # 업종명 유니크 목록
+        for col in df_kospi.columns:
+            if "업종" in col or "sector" in col.lower():
+                print(f"\n업종 유니크값({col}): {df_kospi[col].unique()[:20]}")
+    except Exception as e:
+        print(f"KOSPI 실패: {e}")
+
+    # KOSDAQ 업종분류
+    print("\n=== KOSDAQ 업종분류 ===")
+    try:
+        df_kosdaq = stock.get_market_sector_classifications(today, "KOSDAQ")
+        print(f"성공! {len(df_kosdaq)}개 종목")
+        print(f"컬럼: {list(df_kosdaq.columns)}")
+        print(df_kosdaq.head(10).to_string())
+    except Exception as e:
+        print(f"KOSDAQ 실패: {e}")
+
+    # 특정 종목 업종 테스트
+    print("\n=== 특정 종목 테스트 ===")
+    test_tickers = ["005930", "000660", "035720", "263750"]  # 삼성전자, SK하이닉스, 카카오, 펄어비스
+    for ticker in test_tickers:
+        try:
+            info = stock.get_market_sector_classifications(today, "KOSPI")
+            if ticker in info.index:
+                print(f"{ticker}: {info.loc[ticker].to_dict()}")
+            else:
+                info2 = stock.get_market_sector_classifications(today, "KOSDAQ")
+                if ticker in info2.index:
+                    print(f"{ticker}(KOSDAQ): {info2.loc[ticker].to_dict()}")
+        except Exception as e:
+            print(f"{ticker} 실패: {e}")
