@@ -3,7 +3,7 @@
 - 날짜별 전종목 일괄 호출 (하루 2번 = KOSPI + KOSDAQ)
 - 420일 × 2 = 840번 호출 (하루 10,000건 한도 내)
 """
-import os,time,warnings,requests,json
+import os,time,warnings,requests,json,re
 import numpy as np,pandas as pd
 from datetime import datetime,timedelta
 warnings.filterwarnings("ignore")
@@ -14,6 +14,36 @@ KRX=os.environ.get("KRX_TOKEN","")
 SCAN_DAYS=7
 HISTORY_DAYS=420
 _row_meta={}  # ticker -> {name, sector}
+
+def get_naver_sector_map():
+    """네이버 업종번호→업종명 매핑 (스캐너 시작 시 1회 호출)"""
+    try:
+        url="https://finance.naver.com/sise/sise_group.naver?type=upjong"
+        headers={"User-Agent":"Mozilla/5.0"}
+        resp=requests.get(url,headers=headers,timeout=15)
+        resp.encoding="euc-kr"
+        matches=re.findall(r'upjong&amp;no=(\d+)">([^<]+)</a>',resp.text)
+        if not matches:
+            matches=re.findall(r'upjong&no=(\d+)">([^<]+)</a>',resp.text)
+        sector_map={no:name.strip() for no,name in matches if name.strip() and not name.strip().startswith("/")}
+        print(f"업종 맵 로딩: {len(sector_map)}개")
+        return sector_map
+    except Exception as e:
+        print(f"업종 맵 실패: {e}")
+        return {}
+
+def get_ticker_sector(ticker, sector_map):
+    """종목코드 → 업종명"""
+    if not sector_map:return "기타"
+    try:
+        url=f"https://finance.naver.com/item/main.naver?code={ticker}"
+        headers={"User-Agent":"Mozilla/5.0"}
+        resp=requests.get(url,headers=headers,timeout=10)
+        match=re.search(r'type=upjong&no=(\d+)',resp.text)
+        if match:
+            return sector_map.get(match.group(1),"기타")
+    except:pass
+    return "기타"
 
 def send_file(filepath, caption=""):
     if TOK:
@@ -443,7 +473,8 @@ if __name__=="__main__":
             mkt_lbl="🔵코스피"if r["market"]=="KOSPI"else"🟢코스닥"
             past=format_past(r["history"])
             grade_emoji={"S":"🏆","A":"🥇","B":"🥈","C":"🥉","D":"📊"}.get(r["grade"],"📊")
-            blk=(f"[{r['sig_date']}] {mkt_lbl} {r['sector']}\n"
+            ticker_sector=get_ticker_sector(r["ticker"],sector_map) if sector_map else r.get("sector","기타")
+            blk=(f"[{r['sig_date']}] {mkt_lbl} {ticker_sector}\n"
                  f"🔹{r['name']}({r['ticker']})\n"
                  f"  AI점수: {grade_emoji}{r['score']}점({r['grade']}등급)\n"
                  f"  현재가:{r['cur']:,.0f}원\n"
@@ -466,7 +497,7 @@ if __name__=="__main__":
                 "ticker":r["ticker"],
                 "name":r.get("name",r["ticker"]),
                 "market":r["market"],
-                "sector":r.get("sector","기타"),
+                "sector":get_ticker_sector(r["ticker"],sector_map) if sector_map else r.get("sector","기타"),
                 "cur":r["cur"],"pivot":r["pivot"],
                 "cup_depth":r["cd"],"handle_depth":r["hd"],
                 "cup_days":r["cdays"],"handle_days":r["hdays"],
