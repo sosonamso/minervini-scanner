@@ -308,63 +308,48 @@ if __name__=="__main__":
 
     # KOSPI + KOSDAQ 지수 수집
     kospi_data={};kosdaq_data={}
-    # 지수 대신 ETF 사용 (이미 수집된 OHLCV 활용)
-    # KODEX 200(069500) → 코스피 추종 / KODEX 코스닥150(229200) → 코스닥 추종
-    KOSPI_ETF="069500"; KOSDAQ_ETF="229200"
-    _kospi_logged=False;_kosdaq_logged=False
-    if KOSPI_ETF in all_ohlcv:
-        kospi_df=all_ohlcv[KOSPI_ETF]["df"][["Close"]].copy()
-        print(f"코스피 지수(KODEX200): {len(kospi_df)}일치")
-    else:
-        print("KODEX200 데이터 없음 - 지수 API 직접 호출")
-        for date_str in trading_dates:
-            try:
-                url_k="https://data-dbg.krx.co.kr/svc/apis/idx/kospi_dd_trd"
-                resp=requests.post(url_k,
-                    headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
-                    json={"basDd":date_str},timeout=30)
-                if resp.status_code==200:
-                    block=resp.json().get("OutBlock_1",[])
-                    for row in block:
-                        if str(row.get("IDX_NM",""))=="코스피":
-                            raw=str(row.get("CLSPRC_IDX","-")).replace(",","").strip()
-                            if raw and raw!="-":
-                                try:
-                                    v=float(raw)
-                                    if v>0:kospi_data[pd.Timestamp(date_str)]=v
-                                except:pass
-                            break
-            except:pass
-            time.sleep(0.3)
-        kospi_df=pd.DataFrame({"Close":kospi_data}).T.sort_index() if len(kospi_data)>10 else None
-        print(f"코스피 지수(API): {len(kospi_df) if kospi_df is not None else 0}일치")
+    # 지수 대신 ETF 사용 (이름으로 검색)
+    kospi_df=None;kosdaq_df=None
+    for ticker,info in all_ohlcv.items():
+        name=info.get("name","")
+        if kospi_df is None and ("KODEX 200" in name or "KODEX200" in name or name=="KODEX 200"):
+            kospi_df=info["df"][["Close"]].copy()
+            print(f"코스피 지수 ETF: {name}({ticker}) {len(kospi_df)}일치")
+        if kosdaq_df is None and ("KODEX 코스닥150" in name or "KODEX코스닥150" in name):
+            kosdaq_df=info["df"][["Close"]].copy()
+            print(f"코스닥 지수 ETF: {name}({ticker}) {len(kosdaq_df)}일치")
+        if kospi_df is not None and kosdaq_df is not None:
+            break
 
-    if KOSDAQ_ETF in all_ohlcv:
-        kosdaq_df=all_ohlcv[KOSDAQ_ETF]["df"][["Close"]].copy()
-        print(f"코스닥 지수(KODEX코스닥150): {len(kosdaq_df)}일치")
-    else:
-        print("KODEX코스닥150 데이터 없음 - 지수 API 직접 호출")
-        for date_str in trading_dates:
-            try:
-                url_q="https://data-dbg.krx.co.kr/svc/apis/idx/kosdaq_dd_trd"
-                resp=requests.post(url_q,
-                    headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
-                    json={"basDd":date_str},timeout=30)
-                if resp.status_code==200:
-                    block=resp.json().get("OutBlock_1",[])
-                    for row in block:
-                        if str(row.get("IDX_NM",""))=="코스닥":
-                            raw=str(row.get("CLSPRC_IDX","-")).replace(",","").strip()
-                            if raw and raw!="-":
-                                try:
-                                    v=float(raw)
-                                    if v>0:kosdaq_data[pd.Timestamp(date_str)]=v
-                                except:pass
-                            break
-            except:pass
-            time.sleep(0.3)
-        kosdaq_df=pd.DataFrame({"Close":kosdaq_data}).T.sort_index() if len(kosdaq_data)>10 else None
-        print(f"코스닥 지수(API): {len(kosdaq_df) if kosdaq_df is not None else 0}일치")
+    # ETF 못찾으면 이름에 포함된 것으로 재검색
+    if kospi_df is None:
+        for ticker,info in all_ohlcv.items():
+            name=info.get("name","")
+            if "KODEX" in name and "200" in name and "레버리지" not in name and "인버스" not in name:
+                kospi_df=info["df"][["Close"]].copy()
+                print(f"코스피 지수 ETF(대체): {name}({ticker}) {len(kospi_df)}일치")
+                break
+    if kosdaq_df is None:
+        for ticker,info in all_ohlcv.items():
+            name=info.get("name","")
+            if "KODEX" in name and "코스닥" in name and "레버리지" not in name and "인버스" not in name:
+                kosdaq_df=info["df"][["Close"]].copy()
+                print(f"코스닥 지수 ETF(대체): {name}({ticker}) {len(kosdaq_df)}일치")
+                break
+
+    if kospi_df is None:
+        print("코스피 ETF 없음 → 코스피 종목 전체 평균으로 대체")
+        kospi_tickers=[t for t,v in all_ohlcv.items() if v["market"]=="KOSPI"][:50]
+        closes=pd.concat([all_ohlcv[t]["df"]["Close"].rename(t) for t in kospi_tickers],axis=1)
+        kospi_df=closes.mean(axis=1).to_frame("Close")
+    if kosdaq_df is None:
+        print("코스닥 ETF 없음 → 코스닥 종목 전체 평균으로 대체")
+        kosdaq_tickers=[t for t,v in all_ohlcv.items() if v["market"]=="KOSDAQ"][:50]
+        closes=pd.concat([all_ohlcv[t]["df"]["Close"].rename(t) for t in kosdaq_tickers],axis=1)
+        kosdaq_df=closes.mean(axis=1).to_frame("Close")
+
+    print(f"코스피 지수: {len(kospi_df)}일치")
+    print(f"코스닥 지수: {len(kosdaq_df)}일치")
     mkt_df=kospi_df
     print(f"코스피 지수: {len(kospi_df) if kospi_df is not None else 0}일치")
     print(f"코스닥 지수: {len(kosdaq_df) if kosdaq_df is not None else 0}일치")
