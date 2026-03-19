@@ -308,68 +308,63 @@ if __name__=="__main__":
 
     # KOSPI + KOSDAQ 지수 수집
     kospi_data={};kosdaq_data={}
+    # 지수 대신 ETF 사용 (이미 수집된 OHLCV 활용)
+    # KODEX 200(069500) → 코스피 추종 / KODEX 코스닥150(229200) → 코스닥 추종
+    KOSPI_ETF="069500"; KOSDAQ_ETF="229200"
     _kospi_logged=False;_kosdaq_logged=False
-    for date_str in trading_dates:
-        try:
-            url_k="https://data-dbg.krx.co.kr/svc/apis/idx/kospi_dd_trd"
-            resp=requests.post(url_k,
-                headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
-                json={"basDd":date_str},timeout=30)
-            if resp.status_code==200:
-                block=resp.json().get("OutBlock_1",[])
-                if block and not _kospi_logged:
-                    print(f"[지수] KOSPI IDX_NM 샘플: {[r.get('IDX_NM') for r in block[:3]]}")
-                    _kospi_logged=True
-                for row in block:
-                    nm=str(row.get("IDX_NM",""))
-                    if nm=="코스피":
-                        raw=str(row.get("CLSPRC_IDX","-")).replace(",","").strip()
-                        if raw and raw!="-":
-                            try:
-                                v=float(raw)
-                                if v>0:kospi_data[pd.Timestamp(date_str)]=v
-                            except:pass
-                        break
-            else:
-                if not _kospi_logged:
-                    print(f"[지수] KOSPI 응답오류: {resp.status_code}")
-                    _kospi_logged=True
-        except Exception as e:
-            if not _kospi_logged:
-                print(f"[지수] KOSPI 예외: {e}")
-                _kospi_logged=True
-        try:
-            url_q="https://data-dbg.krx.co.kr/svc/apis/idx/kosdaq_dd_trd"
-            resp=requests.post(url_q,
-                headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
-                json={"basDd":date_str},timeout=30)
-            if resp.status_code==200:
-                block=resp.json().get("OutBlock_1",[])
-                if block and not _kosdaq_logged:
-                    print(f"[지수] KOSDAQ IDX_NM 샘플: {[r.get('IDX_NM') for r in block[:3]]}")
-                    _kosdaq_logged=True
-                for row in block:
-                    nm=str(row.get("IDX_NM",""))
-                    if nm=="코스닥":
-                        raw=str(row.get("CLSPRC_IDX","-")).replace(",","").strip()
-                        if raw and raw!="-":
-                            try:
-                                v=float(raw)
-                                if v>0:kosdaq_data[pd.Timestamp(date_str)]=v
-                            except:pass
-                        break
-            else:
-                if not _kosdaq_logged:
-                    print(f"[지수] KOSDAQ 응답오류: {resp.status_code}")
-                    _kosdaq_logged=True
-        except Exception as e:
-            if not _kosdaq_logged:
-                print(f"[지수] KOSDAQ 예외: {e}")
-                _kosdaq_logged=True
-        time.sleep(0.3)
+    if KOSPI_ETF in all_ohlcv:
+        kospi_df=all_ohlcv[KOSPI_ETF]["df"][["Close"]].copy()
+        print(f"코스피 지수(KODEX200): {len(kospi_df)}일치")
+    else:
+        print("KODEX200 데이터 없음 - 지수 API 직접 호출")
+        for date_str in trading_dates:
+            try:
+                url_k="https://data-dbg.krx.co.kr/svc/apis/idx/kospi_dd_trd"
+                resp=requests.post(url_k,
+                    headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
+                    json={"basDd":date_str},timeout=30)
+                if resp.status_code==200:
+                    block=resp.json().get("OutBlock_1",[])
+                    for row in block:
+                        if str(row.get("IDX_NM",""))=="코스피":
+                            raw=str(row.get("CLSPRC_IDX","-")).replace(",","").strip()
+                            if raw and raw!="-":
+                                try:
+                                    v=float(raw)
+                                    if v>0:kospi_data[pd.Timestamp(date_str)]=v
+                                except:pass
+                            break
+            except:pass
+            time.sleep(0.3)
+        kospi_df=pd.DataFrame({"Close":kospi_data}).T.sort_index() if len(kospi_data)>10 else None
+        print(f"코스피 지수(API): {len(kospi_df) if kospi_df is not None else 0}일치")
 
-    kospi_df=pd.DataFrame({"Close":kospi_data}).T.sort_index() if len(kospi_data)>10 else None
-    kosdaq_df=pd.DataFrame({"Close":kosdaq_data}).T.sort_index() if len(kosdaq_data)>10 else None
+    if KOSDAQ_ETF in all_ohlcv:
+        kosdaq_df=all_ohlcv[KOSDAQ_ETF]["df"][["Close"]].copy()
+        print(f"코스닥 지수(KODEX코스닥150): {len(kosdaq_df)}일치")
+    else:
+        print("KODEX코스닥150 데이터 없음 - 지수 API 직접 호출")
+        for date_str in trading_dates:
+            try:
+                url_q="https://data-dbg.krx.co.kr/svc/apis/idx/kosdaq_dd_trd"
+                resp=requests.post(url_q,
+                    headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
+                    json={"basDd":date_str},timeout=30)
+                if resp.status_code==200:
+                    block=resp.json().get("OutBlock_1",[])
+                    for row in block:
+                        if str(row.get("IDX_NM",""))=="코스닥":
+                            raw=str(row.get("CLSPRC_IDX","-")).replace(",","").strip()
+                            if raw and raw!="-":
+                                try:
+                                    v=float(raw)
+                                    if v>0:kosdaq_data[pd.Timestamp(date_str)]=v
+                                except:pass
+                            break
+            except:pass
+            time.sleep(0.3)
+        kosdaq_df=pd.DataFrame({"Close":kosdaq_data}).T.sort_index() if len(kosdaq_data)>10 else None
+        print(f"코스닥 지수(API): {len(kosdaq_df) if kosdaq_df is not None else 0}일치")
     mkt_df=kospi_df
     print(f"코스피 지수: {len(kospi_df) if kospi_df is not None else 0}일치")
     print(f"코스닥 지수: {len(kosdaq_df) if kosdaq_df is not None else 0}일치")
