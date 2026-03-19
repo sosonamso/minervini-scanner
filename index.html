@@ -323,7 +323,28 @@
           const text = await res.text();
           const data = parseCSV(text);
           setDatasets(d=>({...d,[tabId]:data}));
-          setLastUpdated(u=>({...u,[tabId]:new Date().toLocaleTimeString("ko-KR")}));
+
+          // GitHub API로 파일 마지막 커밋 시간 가져오기
+          const fileName = DATA_FILES[tabId].split("/").pop().split("?")[0];
+          try {
+            const ghRes = await fetch(
+              `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?path=${fileName}&per_page=1`
+            );
+            if (ghRes.ok) {
+              const ghData = await ghRes.json();
+              if (ghData[0]) {
+                const commitTime = new Date(ghData[0].commit.committer.date);
+                const kstTime = new Date(commitTime.getTime() + 9*60*60*1000);
+                const formatted = `${kstTime.getMonth()+1}/${kstTime.getDate()} ${String(kstTime.getHours()).padStart(2,"0")}:${String(kstTime.getMinutes()).padStart(2,"0")} (KST)`;
+                setLastUpdated(u=>({...u,[tabId]:formatted}));
+              }
+            } else {
+              setLastUpdated(u=>({...u,[tabId]:"업데이트 시간 불명"}));
+            }
+          } catch {
+            setLastUpdated(u=>({...u,[tabId]:"업데이트 시간 불명"}));
+          }
+
           setLoadState(s=>({...s,[tabId]:"done"}));
         } catch {
           setLoadState(s=>({...s,[tabId]:"error"}));
