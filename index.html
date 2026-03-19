@@ -33,6 +33,7 @@
       kr_scanner:  `${RAW}/scanner_kr_raw.csv`,
       kr_backtest: `${RAW}/backtest_raw.csv`,
       us_scanner:  `${RAW}/scanner_us_raw.csv`,
+      us_small:    `${RAW}/scanner_us_small_raw.csv`,
       us_backtest: `${RAW}/backtest_us_raw.csv`,
     };
 
@@ -295,16 +296,17 @@
     }
 
     const TABS=[
-      {id:"kr_scanner", label:"🇰🇷 국장 스캐너",  market:"KR", type:"scanner"},
-      {id:"kr_backtest",label:"🇰🇷 국장 백테스트", market:"KR", type:"backtest"},
-      {id:"us_scanner", label:"🇺🇸 미장 스캐너",  market:"US", type:"scanner"},
-      {id:"us_backtest",label:"🇺🇸 미장 백테스트", market:"US", type:"backtest"},
+      {id:"kr_scanner",     label:"🇰🇷 국장 스캐너",      market:"KR", type:"scanner"},
+      {id:"kr_backtest",    label:"🇰🇷 국장 백테스트",     market:"KR", type:"backtest"},
+      {id:"us_scanner",     label:"🇺🇸 미장 S&P1500",     market:"US", type:"scanner"},
+      {id:"us_small",       label:"🇺🇸 미장 소형주",       market:"US", type:"scanner"},
+      {id:"us_backtest",    label:"🇺🇸 미장 백테스트",     market:"US", type:"backtest"},
     ];
 
     function App() {
       const [activeTab, setActiveTab] = useState("kr_scanner");
-      const [datasets, setDatasets] = useState({kr_scanner:[],kr_backtest:[],us_scanner:[],us_backtest:[]});
-      const [loadState, setLoadState] = useState({kr_scanner:"idle",kr_backtest:"idle",us_scanner:"idle",us_backtest:"idle"});
+      const [datasets, setDatasets] = useState({kr_scanner:[],kr_backtest:[],us_scanner:[],us_small:[],us_backtest:[]});
+      const [loadState, setLoadState] = useState({kr_scanner:"idle",kr_backtest:"idle",us_scanner:"idle",us_small:"idle",us_backtest:"idle"});
       const [lastUpdated, setLastUpdated] = useState({});
 
       const fetchCSV = useCallback(async (tabId) => {
