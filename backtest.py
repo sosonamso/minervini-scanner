@@ -18,12 +18,12 @@ MAX_HOLD=90         # 최대 보유일
 _row_meta={}        # ticker -> {name, sector}
 
 def send_file(filepath, caption=""):
-    if TELEGRAM_TOKEN:
+    if TOK:
         try:
             with open(filepath,"rb") as f:
                 requests.post(
-                    f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendDocument",
-                    data={"chat_id":TELEGRAM_CHAT_ID,"caption":caption},
+                    f"https://api.telegram.org/bot{TOK}/sendDocument",
+                    data={"chat_id":CID,"caption":caption},
                     files={"document":f},
                     timeout=30
                 )
