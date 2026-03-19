@@ -15,6 +15,19 @@ SCAN_DAYS=7
 HISTORY_DAYS=420
 _row_meta={}  # ticker -> {name, sector}
 
+def send_file(filepath, caption=""):
+    if TOK:
+        try:
+            with open(filepath,"rb") as f:
+                requests.post(
+                    f"https://api.telegram.org/bot{TOK}/sendDocument",
+                    data={"chat_id":CID,"caption":caption},
+                    files={"document":f},
+                    timeout=30
+                )
+        except Exception as e:
+            print(f"파일 전송 실패: {e}")
+
 def send(text):
     print(text)
     if TOK:
@@ -447,3 +460,4 @@ if __name__=="__main__":
             })
         pd.DataFrame(rows).to_csv("scanner_kr_raw.csv",index=False,encoding="utf-8-sig")
         print(f"RAW 저장 완료: scanner_kr_raw.csv ({len(rows)}건)")
+        send_file("scanner_kr_raw.csv", f"📊 국장 스캐너 RAW ({len(rows)}건) {datetime.today().strftime('%Y-%m-%d')}")
