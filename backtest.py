@@ -17,6 +17,19 @@ HISTORY_DAYS=800    # 데이터 수집 기간
 MAX_HOLD=90         # 최대 보유일
 _row_meta={}        # ticker -> {name, sector}
 
+def send_file(filepath, caption=""):
+    if TELEGRAM_TOKEN:
+        try:
+            with open(filepath,"rb") as f:
+                requests.post(
+                    f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendDocument",
+                    data={"chat_id":TELEGRAM_CHAT_ID,"caption":caption},
+                    files={"document":f},
+                    timeout=30
+                )
+        except Exception as e:
+            print(f"파일 전송 실패: {e}")
+
 def send(text):
     print(text)
     if TOK:
@@ -340,6 +353,8 @@ if __name__=="__main__":
         json.dump(daily_json,f,ensure_ascii=False,indent=2)
 
     print("RAW 저장 완료")
+    send_file("backtest_raw.csv", f"📊 국장 백테스트 RAW ({len(all_signals)}건)")
+    send_file("backtest_daily.json", f"📋 국장 백테스트 일별수익률 ({len(all_signals)}건)")
 
     if not all_signals:
         send("시그널 없음 — 조건 충족 종목이 없어요.")
