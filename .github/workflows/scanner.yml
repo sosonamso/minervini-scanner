@@ -2,7 +2,7 @@ name: 미너비니 스캐너 데일리
 
 on:
   schedule:
-    - cron: '0 23 * * 0-4'   # KST 08:00 (UTC 23:00, 일~목)
+    - cron: '0 23 * * 0-4'   # KST 08:00
   workflow_dispatch:
 
 jobs:
@@ -10,16 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 코드 체크아웃
-        uses: actions/checkout@v3
-
-      - name: Python 설치
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-
-      - name: 라이브러리 설치
-        run: pip install -r requirements.txt
+      - run: pip install -r requirements.txt
 
       - name: 스캐너 실행
         env:
@@ -27,3 +22,11 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           KRX_TOKEN:        ${{ secrets.KRX_TOKEN }}
         run: python scanner.py
+
+      - name: 결과 파일 저장
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scanner-kr-results-${{ github.run_number }}
+          path: scanner_kr_raw.csv
+          retention-days: 30
