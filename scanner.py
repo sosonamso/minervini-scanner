@@ -117,6 +117,7 @@ def get_krx_data(date_str, market="KOSPI"):
                         "Low":float(str(row.get("TDD_LWPRC","0")).replace(",","")),
                         "Close":float(str(row.get("TDD_CLSPRC","0")).replace(",","")),
                         "Volume":float(str(row.get("ACC_TRDVOL","0")).replace(",","")),
+                        "TrdVal":float(str(row.get("ACC_TRDVAL","0")).replace(",","")),
                     }
                 except:pass
             return result
@@ -180,7 +181,7 @@ def build_ohlcv(trading_dates):
         rows=info["rows"]
         if len(rows)<100:continue
         df=pd.DataFrame(rows).set_index("date").sort_index()
-        df=df[["Open","High","Low","Close","Volume"]].astype(float)
+        df=df[["Open","High","Low","Close","Volume","TrdVal"]].astype(float)
         df=df[df["Close"]>0].dropna()
         if len(df)>=100:
             meta=_row_meta.get(ticker,{})
@@ -449,6 +450,7 @@ if __name__=="__main__":
                 "cdays":pat["cdays"],"hdays":pat["hdays"],
                 "vr":pat["vr"],"vs":pat["vs"],
                 "rs":rs,"score":score,"grade":grade,
+                "trdval_20":trdval_20,
                 "history":history,
             })
             break
@@ -480,7 +482,7 @@ if __name__=="__main__":
                  f"  현재가:{r['cur']:,.0f}원\n"
                  f"  피벗:{r['pivot']:,.0f}원({up:+.1f}%)\n"
                  f"  컵:{r['cd']}%/{r['cdays']}일 핸들:{r['hd']}%/{r['hdays']}일\n"
-                 f"  거래량:{r['vr']}x🔥 RS:{r['rs']:+.1f}%\n"
+                 f"  거래량:{r['vr']}x🔥 RS:{r['rs']:+.1f}% 거래대금:{r.get('trdval_20',0):.0f}억\n"
                  +(past+"\n" if past else "")+"\n")
             if len(msg)+len(blk)>4000:
                 send(msg);msg="(이어서)\n\n"+blk
@@ -502,6 +504,7 @@ if __name__=="__main__":
                 "cup_depth":r["cd"],"handle_depth":r["hd"],
                 "cup_days":r["cdays"],"handle_days":r["hdays"],
                 "vol_ratio":r["vr"],"rs":r["rs"],
+                "trdval_20":r.get("trdval_20",0),
                 "score":r["score"],"grade":r["grade"],
             })
         pd.DataFrame(rows).to_csv("scanner_kr_raw.csv",index=False,encoding="utf-8-sig")
