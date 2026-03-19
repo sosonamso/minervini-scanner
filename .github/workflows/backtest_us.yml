@@ -3,6 +3,9 @@ name: 미국 백테스트 (수동실행)
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   backtest:
     runs-on: ubuntu-latest
@@ -21,6 +24,14 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           MASSIVE_TOKEN:    ${{ secrets.MASSIVE_TOKEN }}
         run: python backtest_us.py
+
+      - name: CSV 레포에 자동 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add backtest_us_raw.csv backtest_us_daily.json
+          git diff --staged --quiet || git commit -m "backtest_us: $(date +'%Y-%m-%d') 결과"
+          git push
 
       - name: 결과 파일 저장
         uses: actions/upload-artifact@v4
