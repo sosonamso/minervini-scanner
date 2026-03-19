@@ -308,6 +308,7 @@ if __name__=="__main__":
 
     # KOSPI + KOSDAQ 지수 수집
     kospi_data={};kosdaq_data={}
+    _kospi_logged=False;_kosdaq_logged=False
     for date_str in trading_dates:
         try:
             url_k="https://data-dbg.krx.co.kr/svc/apis/idx/kospi_dd_trd"
@@ -316,12 +317,25 @@ if __name__=="__main__":
                 json={"basDd":date_str},timeout=30)
             if resp.status_code==200:
                 block=resp.json().get("OutBlock_1",[])
+                if block and not _kospi_logged:
+                    print(f"[지수] KOSPI IDX_NM 샘플: {[r.get('IDX_NM') for r in block[:3]]}")
+                    _kospi_logged=True
                 for row in block:
-                    if str(row.get("IDX_NM",""))=="코스피":
-                        v=float(str(row.get("CLSPRC_IDX","0")).replace(",",""))
-                        if v>0:kospi_data[pd.Timestamp(date_str)]=v
+                    nm=str(row.get("IDX_NM",""))
+                    if "코스피" in nm and "200" not in nm and "100" not in nm and "50" not in nm:
+                        try:
+                            v=float(str(row.get("CLSPRC_IDX","0")).replace(",",""))
+                            if v>0:kospi_data[pd.Timestamp(date_str)]=v
+                        except:pass
                         break
-        except:pass
+            else:
+                if not _kospi_logged:
+                    print(f"[지수] KOSPI 응답오류: {resp.status_code}")
+                    _kospi_logged=True
+        except Exception as e:
+            if not _kospi_logged:
+                print(f"[지수] KOSPI 예외: {e}")
+                _kospi_logged=True
         try:
             url_q="https://data-dbg.krx.co.kr/svc/apis/idx/kosdaq_dd_trd"
             resp=requests.post(url_q,
@@ -329,12 +343,25 @@ if __name__=="__main__":
                 json={"basDd":date_str},timeout=30)
             if resp.status_code==200:
                 block=resp.json().get("OutBlock_1",[])
+                if block and not _kosdaq_logged:
+                    print(f"[지수] KOSDAQ IDX_NM 샘플: {[r.get('IDX_NM') for r in block[:3]]}")
+                    _kosdaq_logged=True
                 for row in block:
-                    if str(row.get("IDX_NM",""))=="코스닥":
-                        v=float(str(row.get("CLSPRC_IDX","0")).replace(",",""))
-                        if v>0:kosdaq_data[pd.Timestamp(date_str)]=v
+                    nm=str(row.get("IDX_NM",""))
+                    if "코스닥" in nm and "150" not in nm and "Mid" not in nm:
+                        try:
+                            v=float(str(row.get("CLSPRC_IDX","0")).replace(",",""))
+                            if v>0:kosdaq_data[pd.Timestamp(date_str)]=v
+                        except:pass
                         break
-        except:pass
+            else:
+                if not _kosdaq_logged:
+                    print(f"[지수] KOSDAQ 응답오류: {resp.status_code}")
+                    _kosdaq_logged=True
+        except Exception as e:
+            if not _kosdaq_logged:
+                print(f"[지수] KOSDAQ 예외: {e}")
+                _kosdaq_logged=True
         time.sleep(0.3)
 
     kospi_df=pd.DataFrame({"Close":kospi_data}).T.sort_index() if len(kospi_data)>10 else None
