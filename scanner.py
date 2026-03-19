@@ -3,7 +3,7 @@
 - 날짜별 전종목 일괄 호출 (하루 2번 = KOSPI + KOSDAQ)
 - 420일 × 2 = 840번 호출 (하루 10,000건 한도 내)
 """
-import os,time,warnings,requests
+import os,time,warnings,requests,json
 import numpy as np,pandas as pd
 from datetime import datetime,timedelta
 warnings.filterwarnings("ignore")
@@ -427,3 +427,23 @@ if __name__=="__main__":
                 send(msg);msg="(이어서)\n\n"+blk
             else:msg+=blk
         send(msg)
+
+    # RAW 데이터 저장
+    if res:
+        import pandas as pd
+        rows=[]
+        for r in res:
+            rows.append({
+                "date":r["sig_date"],
+                "ticker":r["ticker"],
+                "name":r.get("name",r["ticker"]),
+                "market":r["market"],
+                "sector":r.get("sector","기타"),
+                "cur":r["cur"],"pivot":r["pivot"],
+                "cup_depth":r["cd"],"handle_depth":r["hd"],
+                "cup_days":r["cdays"],"handle_days":r["hdays"],
+                "vol_ratio":r["vr"],"rs":r["rs"],
+                "score":r["score"],"grade":r["grade"],
+            })
+        pd.DataFrame(rows).to_csv("scanner_kr_raw.csv",index=False,encoding="utf-8-sig")
+        print(f"RAW 저장 완료: scanner_kr_raw.csv ({len(rows)}건)")
