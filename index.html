@@ -15,15 +15,27 @@
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
     input[type=range] { accent-color: #fb923c; }
     select option { background: #1e293b; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 1s linear infinite; display: inline-block; }
   </style>
 </head>
 <body>
   <div id="root"></div>
-
   <script type="text/babel">
-    const { useState, useCallback, useMemo } = React;
+    const { useState, useCallback, useMemo, useEffect } = React;
 
-    // ─── 유틸 ───────────────────────────────
+    const GITHUB_USER = "sosonamso";
+    const GITHUB_REPO = "minervini-scanner";
+    const BRANCH = "main";
+    const RAW = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}`;
+
+    const DATA_FILES = {
+      kr_scanner:  `${RAW}/scanner_kr_raw.csv`,
+      kr_backtest: `${RAW}/backtest_raw.csv`,
+      us_scanner:  `${RAW}/scanner_us_raw.csv`,
+      us_backtest: `${RAW}/backtest_us_raw.csv`,
+    };
+
     function parseCSV(text) {
       const lines = text.split("\n").filter(Boolean);
       if (lines.length < 2) return [];
@@ -39,18 +51,18 @@
       }).filter(r => Object.values(r).some(v => v !== null));
     }
 
-    function fmt(v, digits = 1) {
+    function fmt(v) {
       if (v === null || v === undefined || isNaN(v)) return "-";
-      return (v >= 0 ? "+" : "") + Number(v).toFixed(digits) + "%";
+      return (v >= 0 ? "+" : "") + Number(v).toFixed(1) + "%";
     }
 
     function cellStyle(v) {
       if (v === null || v === undefined || isNaN(v)) return {};
-      if (v > 10) return { background: "#14532d", color: "#86efac", fontWeight: 700 };
-      if (v > 5)  return { background: "#166534", color: "#bbf7d0", fontWeight: 700 };
-      if (v > 0)  return { background: "#1a2e05", color: "#86efac", fontWeight: 600 };
-      if (v > -5) return { background: "#450a0a", color: "#fca5a5", fontWeight: 600 };
-      return { background: "#7f1d1d", color: "#fecaca", fontWeight: 700 };
+      if (v > 10) return { background:"#14532d", color:"#86efac", fontWeight:700 };
+      if (v > 5)  return { background:"#166534", color:"#bbf7d0", fontWeight:700 };
+      if (v > 0)  return { background:"#1a2e05", color:"#86efac", fontWeight:600 };
+      if (v > -5) return { background:"#450a0a", color:"#fca5a5", fontWeight:600 };
+      return { background:"#7f1d1d", color:"#fecaca", fontWeight:700 };
     }
 
     function mean(arr) {
@@ -64,7 +76,6 @@
       return v.length%2 ? v[m] : (v[m-1]+v[m])/2;
     }
 
-    // ─── 공통 컴포넌트 ───────────────────────
     function StatBadge({ label, value, sub, color }) {
       return (
         <div style={{ background:"#1e293b", borderRadius:10, padding:"12px 16px", minWidth:100 }}>
@@ -80,32 +91,29 @@
       return (
         <th onClick={()=>onSort(col)} style={{
           padding:"10px 12px", cursor:"pointer", whiteSpace:"nowrap", userSelect:"none",
-          background: active?"#1e3a5f":"#0f172a",
-          color: active?"#fb923c":"#94a3b8",
-          fontWeight:700, fontSize:12, textAlign:center?"center":"left",
-          position:"sticky", top:0
+          background:active?"#1e3a5f":"#0f172a", color:active?"#fb923c":"#94a3b8",
+          fontWeight:700, fontSize:12, textAlign:center?"center":"left", position:"sticky", top:0
         }}>
           {label}{active?(sortState.dir===-1?" ↓":" ↑"):""}
         </th>
       );
     }
 
-    // ─── 스캐너 뷰 ───────────────────────────
     function ScannerView({ data, market }) {
       const [sort, setSort] = useState({ col:"score", dir:-1 });
       const [filter, setFilter] = useState({ search:"", minScore:0 });
       const handleSort = col => setSort(s=>s.col===col?{col,dir:-s.dir}:{col,dir:-1});
-      const isKR = market === "KR";
+      const isKR = market==="KR";
 
-      const filtered = useMemo(() => data.filter(r => {
-        if (filter.search && !String(r.ticker||r.name||"").toLowerCase().includes(filter.search.toLowerCase())) return false;
-        if ((r.score||0) < filter.minScore) return false;
+      const filtered = useMemo(()=>data.filter(r=>{
+        if(filter.search&&!String(r.ticker||r.name||"").toLowerCase().includes(filter.search.toLowerCase()))return false;
+        if((r.score||0)<filter.minScore)return false;
         return true;
       }).sort((a,b)=>{
-        const av=a[sort.col], bv=b[sort.col];
-        if(av==null)return 1; if(bv==null)return -1;
-        return (av>bv?1:-1)*sort.dir;
-      }), [data,filter,sort]);
+        const av=a[sort.col],bv=b[sort.col];
+        if(av==null)return 1;if(bv==null)return -1;
+        return(av>bv?1:-1)*sort.dir;
+      }),[data,filter,sort]);
 
       return (
         <div>
@@ -115,7 +123,6 @@
             <StatBadge label="평균 RS" value={fmt(mean(filtered.map(r=>r.rs)))}
               color={mean(filtered.map(r=>r.rs))>0?"#22c55e":"#ef4444"} />
           </div>
-
           <div style={{ display:"flex", gap:10, marginBottom:12, flexWrap:"wrap", alignItems:"center" }}>
             <input placeholder="검색..." value={filter.search}
               onChange={e=>setFilter(f=>({...f,search:e.target.value}))}
@@ -129,61 +136,39 @@
             </div>
             <span style={{ fontSize:12, color:"#475569", marginLeft:"auto" }}>{filtered.length}/{data.length}건</span>
           </div>
-
           <div style={{ overflowX:"auto", borderRadius:10 }}>
             <table style={{ width:"100%", borderCollapse:"collapse", fontSize:12 }}>
-              <thead>
-                <tr>
-                  {[["date","날짜"],["ticker","코드"],
-                    isKR?["name","종목명"]:["cap","구분"],
-                    isKR?["sector","섹터"]:null,
-                    ["score","점수"],["rs","RS"],["vol_ratio","거래량"],
-                    ["cup_depth","컵깊이"],["handle_depth","핸들"],
-                    ["cur","현재가"],["pivot","피벗"]
-                  ].filter(Boolean).map(([col,label])=>(
-                    <SortTh key={col} col={col} label={label} sortState={sort} onSort={handleSort}
-                      center={!["date","ticker","name","sector","cap"].includes(col)} />
-                  ))}
-                </tr>
-              </thead>
+              <thead><tr>
+                {[["date","날짜"],["ticker","코드"],isKR?["name","종목명"]:["cap","구분"],
+                  isKR?["sector","섹터"]:null,["score","점수"],["rs","RS"],["vol_ratio","거래량"],
+                  ["cup_depth","컵깊이"],["handle_depth","핸들"],["cur","현재가"],["pivot","피벗"]
+                ].filter(Boolean).map(([col,label])=>(
+                  <SortTh key={col} col={col} label={label} sortState={sort} onSort={handleSort}
+                    center={!["date","ticker","name","sector","cap"].includes(col)} />
+                ))}
+              </tr></thead>
               <tbody>
                 {filtered.map((row,i)=>(
-                  <tr key={i} style={{ borderBottom:"1px solid #1e293b",
-                    background:i%2===0?"#0f172a":"#111827" }}>
+                  <tr key={i} style={{ borderBottom:"1px solid #1e293b", background:i%2===0?"#0f172a":"#111827" }}>
                     <td style={{ padding:"8px 12px", color:"#475569", whiteSpace:"nowrap" }}>{row.date}</td>
                     <td style={{ padding:"8px 12px", fontWeight:900, color:"#f1f5f9" }}>{row.ticker}</td>
-                    {isKR && <td style={{ padding:"8px 12px", color:"#94a3b8" }}>{row.name}</td>}
-                    {isKR && <td style={{ padding:"8px 12px", color:"#64748b", fontSize:11 }}>{row.sector}</td>}
-                    {!isKR && (
-                      <td style={{ padding:"8px 12px" }}>
-                        <span style={{ borderRadius:6, padding:"2px 6px", fontSize:11, fontWeight:700,
-                          background:"#1e3a5f", color:"#60a5fa" }}>
-                          {row.cap==="SmallCap600"?"Small":row.cap==="MidCap400"?"Mid":"S&P500"}
-                        </span>
-                      </td>
-                    )}
-                    <td style={{ padding:"8px 12px", textAlign:"center", fontWeight:800,
-                      color:(row.score||0)>=80?"#fb923c":(row.score||0)>=70?"#f1f5f9":"#475569" }}>
-                      {row.score||"-"}
-                    </td>
-                    <td style={{ padding:"8px 12px", textAlign:"center",
-                      color:(row.rs||0)>0?"#22c55e":"#ef4444" }}>{fmt(row.rs)}</td>
-                    <td style={{ padding:"8px 12px", textAlign:"center", color:"#64748b" }}>
-                      {row.vol_ratio?Number(row.vol_ratio).toFixed(2)+"x":"-"}
-                    </td>
-                    <td style={{ padding:"8px 12px", textAlign:"center", color:"#94a3b8" }}>
-                      {row.cup_depth?row.cup_depth+"%":"-"}
-                    </td>
-                    <td style={{ padding:"8px 12px", textAlign:"center", color:"#94a3b8" }}>
-                      {row.handle_depth?row.handle_depth+"%":"-"}
-                    </td>
+                    {isKR&&<td style={{ padding:"8px 12px", color:"#94a3b8" }}>{row.name}</td>}
+                    {isKR&&<td style={{ padding:"8px 12px", color:"#64748b", fontSize:11 }}>{row.sector}</td>}
+                    {!isKR&&<td style={{ padding:"8px 12px" }}>
+                      <span style={{ borderRadius:6, padding:"2px 6px", fontSize:11, fontWeight:700, background:"#1e3a5f", color:"#60a5fa" }}>
+                        {row.cap==="SmallCap600"?"Small":row.cap==="MidCap400"?"Mid":"S&P500"}
+                      </span>
+                    </td>}
+                    <td style={{ padding:"8px 12px", textAlign:"center", fontWeight:800, color:(row.score||0)>=80?"#fb923c":(row.score||0)>=70?"#f1f5f9":"#475569" }}>{row.score||"-"}</td>
+                    <td style={{ padding:"8px 12px", textAlign:"center", color:(row.rs||0)>0?"#22c55e":"#ef4444" }}>{fmt(row.rs)}</td>
+                    <td style={{ padding:"8px 12px", textAlign:"center", color:"#64748b" }}>{row.vol_ratio?Number(row.vol_ratio).toFixed(2)+"x":"-"}</td>
+                    <td style={{ padding:"8px 12px", textAlign:"center", color:"#94a3b8" }}>{row.cup_depth?row.cup_depth+"%":"-"}</td>
+                    <td style={{ padding:"8px 12px", textAlign:"center", color:"#94a3b8" }}>{row.handle_depth?row.handle_depth+"%":"-"}</td>
                     <td style={{ padding:"8px 12px", textAlign:"right", color:"#f1f5f9" }}>
-                      {isKR?(row.cur?Number(row.cur).toLocaleString()+"원":"-")
-                           :(row.cur?"$"+Number(row.cur).toFixed(2):"-")}
+                      {isKR?(row.cur?Number(row.cur).toLocaleString()+"원":"-"):(row.cur?"$"+Number(row.cur).toFixed(2):"-")}
                     </td>
                     <td style={{ padding:"8px 12px", textAlign:"right", color:"#fb923c", fontWeight:700 }}>
-                      {isKR?(row.pivot?Number(row.pivot).toLocaleString()+"원":"-")
-                           :(row.pivot?"$"+Number(row.pivot).toFixed(2):"-")}
+                      {isKR?(row.pivot?Number(row.pivot).toLocaleString()+"원":"-"):(row.pivot?"$"+Number(row.pivot).toFixed(2):"-")}
                     </td>
                   </tr>
                 ))}
@@ -194,14 +179,13 @@
       );
     }
 
-    // ─── 백테스트 뷰 ─────────────────────────
     function BacktestView({ data, market }) {
       const [sort, setSort] = useState({ col:"r20", dir:-1 });
       const [filter, setFilter] = useState({ search:"", minScore:0, cap:"전체" });
       const handleSort = col => setSort(s=>s.col===col?{col,dir:-s.dir}:{col,dir:-1});
-      const isKR = market === "KR";
-      const DAYS = [5,10,15,20];
-      const caps = ["전체",...new Set(data.map(r=>r.cap||r.market).filter(Boolean))];
+      const isKR = market==="KR";
+      const DAYS=[5,10,15,20];
+      const caps=["전체",...new Set(data.map(r=>r.cap||r.market).filter(Boolean))];
 
       const filtered = useMemo(()=>data.filter(r=>{
         if(filter.search&&!String(r.ticker||"").toLowerCase().includes(filter.search.toLowerCase()))return false;
@@ -211,14 +195,13 @@
       }).sort((a,b)=>{
         const av=a[sort.col],bv=b[sort.col];
         if(av==null)return 1;if(bv==null)return -1;
-        return (av>bv?1:-1)*sort.dir;
+        return(av>bv?1:-1)*sort.dir;
       }),[data,filter,sort]);
 
-      const winStats = DAYS.map(d=>{
+      const winStats=DAYS.map(d=>{
         const vals=filtered.map(r=>r[`r${d}`]).filter(v=>v!==null&&!isNaN(v));
-        return { day:d, vals, win:vals.filter(v=>v>0).length, total:vals.length,
-          rate:vals.length?Math.round(vals.filter(v=>v>0).length/vals.length*100):0,
-          avg:mean(vals), med:median(vals) };
+        return{day:d,vals,win:vals.filter(v=>v>0).length,total:vals.length,
+          rate:vals.length?Math.round(vals.filter(v=>v>0).length/vals.length*100):0,avg:mean(vals)};
       });
 
       return (
@@ -231,7 +214,6 @@
                 color={s.rate>=65?"#22c55e":s.rate>=50?"#eab308":"#ef4444"} />
             ))}
           </div>
-
           <div style={{ display:"flex", gap:10, marginBottom:12, flexWrap:"wrap", alignItems:"center" }}>
             <input placeholder="티커 검색..." value={filter.search}
               onChange={e=>setFilter(f=>({...f,search:e.target.value}))}
@@ -252,13 +234,11 @@
             </div>
             <span style={{ fontSize:12, color:"#475569", marginLeft:"auto" }}>{filtered.length}/{data.length}건</span>
           </div>
-
           <div style={{ overflowX:"auto", borderRadius:10 }}>
             <table style={{ width:"100%", borderCollapse:"collapse", fontSize:12 }}>
               <thead>
                 <tr>
-                  {[["date","날짜"],["ticker","티커"],
-                    isKR?["name","종목명"]:["cap","구분"],
+                  {[["date","날짜"],["ticker","티커"],isKR?["name","종목명"]:["cap","구분"],
                     ["score","점수"],["rs","RS"],["vol_ratio","거래량"],
                     ["r5","5일"],["r10","10일"],["r15","15일"],["r20","20일"]
                   ].map(([col,label])=>(
@@ -267,7 +247,7 @@
                   ))}
                 </tr>
                 <tr style={{ background:"#1e293b" }}>
-                  <td colSpan={6} style={{ padding:"5px 12px", color:"#475569", fontSize:11, fontWeight:700 }}>승률</td>
+                  <td colSpan={7} style={{ padding:"5px 12px", color:"#475569", fontSize:11, fontWeight:700 }}>승률</td>
                   {winStats.map(s=>(
                     <td key={s.day} style={{ padding:"5px 10px", textAlign:"center" }}>
                       <span style={{ borderRadius:99, padding:"2px 7px", fontSize:11, fontWeight:700,
@@ -281,48 +261,30 @@
               </thead>
               <tbody>
                 {filtered.map((row,i)=>(
-                  <tr key={i} style={{ borderBottom:"1px solid #1e293b",
-                    background:i%2===0?"#0f172a":"#111827" }}>
+                  <tr key={i} style={{ borderBottom:"1px solid #1e293b", background:i%2===0?"#0f172a":"#111827" }}>
                     <td style={{ padding:"7px 12px", color:"#475569", whiteSpace:"nowrap" }}>{row.date}</td>
                     <td style={{ padding:"7px 12px", fontWeight:900, color:"#f1f5f9" }}>{row.ticker}</td>
-                    {isKR?(
-                      <td style={{ padding:"7px 12px", color:"#94a3b8", fontSize:11 }}>{row.name}</td>
-                    ):(
-                      <td style={{ padding:"7px 12px" }}>
-                        <span style={{ borderRadius:6, padding:"2px 6px", fontSize:11, fontWeight:700,
-                          background:"#1e3a5f", color:"#60a5fa" }}>
-                          {row.cap==="SmallCap600"?"Small":row.cap==="MidCap400"?"Mid":"S&P500"}
-                        </span>
-                      </td>
-                    )}
-                    <td style={{ padding:"7px 12px", textAlign:"center", fontWeight:800,
-                      color:(row.score||0)>=80?"#fb923c":(row.score||0)>=70?"#f1f5f9":"#475569" }}>
-                      {row.score||"-"}
-                    </td>
-                    <td style={{ padding:"7px 12px", textAlign:"center",
-                      color:(row.rs||0)>0?"#22c55e":"#ef4444" }}>{fmt(row.rs)}</td>
-                    <td style={{ padding:"7px 12px", textAlign:"center", color:"#64748b" }}>
-                      {row.vol_ratio?Number(row.vol_ratio).toFixed(2)+"x":"-"}
-                    </td>
+                    {isKR?<td style={{ padding:"7px 12px", color:"#94a3b8", fontSize:11 }}>{row.name}</td>
+                         :<td style={{ padding:"7px 12px" }}>
+                            <span style={{ borderRadius:6, padding:"2px 6px", fontSize:11, fontWeight:700, background:"#1e3a5f", color:"#60a5fa" }}>
+                              {row.cap==="SmallCap600"?"Small":row.cap==="MidCap400"?"Mid":"S&P500"}
+                            </span>
+                          </td>}
+                    <td style={{ padding:"7px 12px", textAlign:"center", fontWeight:800, color:(row.score||0)>=80?"#fb923c":(row.score||0)>=70?"#f1f5f9":"#475569" }}>{row.score||"-"}</td>
+                    <td style={{ padding:"7px 12px", textAlign:"center", color:(row.rs||0)>0?"#22c55e":"#ef4444" }}>{fmt(row.rs)}</td>
+                    <td style={{ padding:"7px 12px", textAlign:"center", color:"#64748b" }}>{row.vol_ratio?Number(row.vol_ratio).toFixed(2)+"x":"-"}</td>
                     {DAYS.map(d=>{
                       const v=row[`r${d}`];
-                      return(
-                        <td key={d} style={{ padding:"7px 10px", textAlign:"center", ...cellStyle(v) }}>
-                          {fmt(v)}
-                        </td>
-                      );
+                      return<td key={d} style={{ padding:"7px 10px", textAlign:"center", ...cellStyle(v) }}>{fmt(v)}</td>;
                     })}
                   </tr>
                 ))}
               </tbody>
               <tfoot>
                 <tr style={{ background:"#1e293b", borderTop:"2px solid #334155" }}>
-                  <td colSpan={6} style={{ padding:"8px 12px", fontWeight:800, color:"#f1f5f9", fontSize:13 }}>평균</td>
+                  <td colSpan={7} style={{ padding:"8px 12px", fontWeight:800, color:"#f1f5f9", fontSize:13 }}>평균</td>
                   {winStats.map(s=>(
-                    <td key={s.day} style={{ padding:"8px 10px", textAlign:"center",
-                      fontWeight:800, fontSize:13, ...cellStyle(s.avg) }}>
-                      {fmt(s.avg)}
-                    </td>
+                    <td key={s.day} style={{ padding:"8px 10px", textAlign:"center", fontWeight:800, fontSize:13, ...cellStyle(s.avg) }}>{fmt(s.avg)}</td>
                   ))}
                 </tr>
               </tfoot>
@@ -332,94 +294,104 @@
       );
     }
 
-    // ─── 메인 앱 ─────────────────────────────
-    const TABS = [
-      { id:"kr_scanner",  label:"🇰🇷 국장 스캐너",   market:"KR", type:"scanner"  },
-      { id:"kr_backtest", label:"🇰🇷 국장 백테스트",  market:"KR", type:"backtest" },
-      { id:"us_scanner",  label:"🇺🇸 미장 스캐너",   market:"US", type:"scanner"  },
-      { id:"us_backtest", label:"🇺🇸 미장 백테스트",  market:"US", type:"backtest" },
+    const TABS=[
+      {id:"kr_scanner", label:"🇰🇷 국장 스캐너",  market:"KR", type:"scanner"},
+      {id:"kr_backtest",label:"🇰🇷 국장 백테스트", market:"KR", type:"backtest"},
+      {id:"us_scanner", label:"🇺🇸 미장 스캐너",  market:"US", type:"scanner"},
+      {id:"us_backtest",label:"🇺🇸 미장 백테스트", market:"US", type:"backtest"},
     ];
-
-    const FILE_HINT = {
-      kr_scanner:  "scanner_kr_raw.csv",
-      kr_backtest: "backtest_raw.csv",
-      us_scanner:  "scanner_us_raw.csv",
-      us_backtest: "backtest_us_raw.csv",
-    };
 
     function App() {
       const [activeTab, setActiveTab] = useState("kr_scanner");
-      const [datasets, setDatasets] = useState({
-        kr_scanner:[], kr_backtest:[], us_scanner:[], us_backtest:[]
-      });
+      const [datasets, setDatasets] = useState({kr_scanner:[],kr_backtest:[],us_scanner:[],us_backtest:[]});
+      const [loadState, setLoadState] = useState({kr_scanner:"idle",kr_backtest:"idle",us_scanner:"idle",us_backtest:"idle"});
+      const [lastUpdated, setLastUpdated] = useState({});
+
+      const fetchCSV = useCallback(async (tabId) => {
+        setLoadState(s=>({...s,[tabId]:"loading"}));
+        try {
+          const res = await fetch(DATA_FILES[tabId]+"?t="+Date.now());
+          if (!res.ok) throw new Error();
+          const text = await res.text();
+          const data = parseCSV(text);
+          setDatasets(d=>({...d,[tabId]:data}));
+          setLastUpdated(u=>({...u,[tabId]:new Date().toLocaleTimeString("ko-KR")}));
+          setLoadState(s=>({...s,[tabId]:"done"}));
+        } catch {
+          setLoadState(s=>({...s,[tabId]:"error"}));
+        }
+      }, []);
+
+      useEffect(()=>{ TABS.forEach(t=>fetchCSV(t.id)); }, []);
 
       const handleUpload = useCallback((tabId)=>(e)=>{
-        const file = e.target.files[0];
-        if(!file)return;
-        const reader = new FileReader();
-        reader.onload = ev => {
-          const data = parseCSV(ev.target.result);
+        const file=e.target.files[0]; if(!file)return;
+        const reader=new FileReader();
+        reader.onload=ev=>{
+          const data=parseCSV(ev.target.result);
           setDatasets(d=>({...d,[tabId]:data}));
+          setLastUpdated(u=>({...u,[tabId]:"직접 업로드"}));
+          setLoadState(s=>({...s,[tabId]:"done"}));
           setActiveTab(tabId);
         };
         reader.readAsText(file);
       },[]);
 
-      const active = datasets[activeTab];
-      const activeInfo = TABS.find(t=>t.id===activeTab);
+      const active=datasets[activeTab];
+      const activeInfo=TABS.find(t=>t.id===activeTab);
 
       return (
         <div>
-          {/* 헤더 */}
-          <div style={{ background:"linear-gradient(90deg,#0f172a,#0c1a3a,#0f172a)",
-            borderBottom:"1px solid #1e293b", padding:"16px 20px",
-            display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
-            <div>
-              <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                <span style={{ fontSize:20 }}>⚡</span>
-                <span style={{ fontSize:17, fontWeight:900, letterSpacing:"-0.5px",
-                  background:"linear-gradient(90deg,#fb923c,#f59e0b)",
-                  WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
-                  MINERVINI DASHBOARD
-                </span>
+          <div style={{ background:"linear-gradient(90deg,#0f172a,#0c1a3a,#0f172a)", borderBottom:"1px solid #1e293b", padding:"14px 20px" }}>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
+              <div>
+                <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+                  <span style={{ fontSize:20 }}>⚡</span>
+                  <span style={{ fontSize:17, fontWeight:900, letterSpacing:"-0.5px",
+                    background:"linear-gradient(90deg,#fb923c,#f59e0b)",
+                    WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+                    MINERVINI DASHBOARD
+                  </span>
+                </div>
+                <div style={{ fontSize:10, color:"#475569", marginTop:2, letterSpacing:"2px" }}>
+                  sosonamso/minervini-scanner · 자동 업데이트
+                </div>
               </div>
-              <div style={{ fontSize:10, color:"#475569", marginTop:2, letterSpacing:"2px" }}>
-                KR + US · SCANNER & BACKTEST VIEWER
-              </div>
-            </div>
-
-            {/* 업로드 버튼 4개 */}
-            <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-              {TABS.map(t=>(
-                <label key={t.id} title={FILE_HINT[t.id]} style={{ cursor:"pointer" }}>
-                  <div style={{ padding:"6px 12px", borderRadius:8, fontSize:11, fontWeight:700,
-                    background:datasets[t.id].length>0?"#14532d":"#1e293b",
-                    color:datasets[t.id].length>0?"#86efac":"#64748b",
-                    border:"1px solid "+(datasets[t.id].length>0?"#16a34a":"#334155"),
-                    transition:"all 0.2s" }}>
-                    {t.label.split(" ")[0]} {datasets[t.id].length>0?`${datasets[t.id].length}건`:"업로드"}
+              <div style={{ display:"flex", gap:8, flexWrap:"wrap", alignItems:"center" }}>
+                {TABS.map(t=>(
+                  <div key={t.id} style={{ fontSize:11, color:"#475569", display:"flex", alignItems:"center", gap:4 }}>
+                    {t.label.split(" ")[0]}
+                    <span>{loadState[t.id]==="loading"?"⏳":loadState[t.id]==="done"?"✅":"❌"}</span>
+                    {datasets[t.id].length>0&&<span style={{ color:"#22c55e", fontSize:10 }}>{datasets[t.id].length}건</span>}
                   </div>
-                  <input type="file" accept=".csv" onChange={handleUpload(t.id)} style={{ display:"none" }} />
-                </label>
-              ))}
+                ))}
+                <button onClick={()=>TABS.forEach(t=>fetchCSV(t.id))}
+                  style={{ padding:"6px 14px", borderRadius:8, border:"1px solid #334155",
+                    background:"#1e293b", color:"#94a3b8", cursor:"pointer", fontSize:12, fontFamily:"inherit", fontWeight:700 }}>
+                  🔄 새로고침
+                </button>
+              </div>
             </div>
+            {Object.keys(lastUpdated).length>0&&(
+              <div style={{ marginTop:6, fontSize:10, color:"#334155" }}>
+                {TABS.filter(t=>lastUpdated[t.id]).map(t=>(
+                  <span key={t.id} style={{ marginRight:12 }}>{t.label}: {lastUpdated[t.id]}</span>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* 탭 */}
-          <div style={{ display:"flex", borderBottom:"1px solid #1e293b",
-            background:"#0a0f1e", overflowX:"auto" }}>
+          <div style={{ display:"flex", borderBottom:"1px solid #1e293b", background:"#0a0f1e", overflowX:"auto" }}>
             {TABS.map(t=>(
               <button key={t.id} onClick={()=>setActiveTab(t.id)} style={{
                 padding:"12px 20px", border:"none", cursor:"pointer", whiteSpace:"nowrap",
                 background:activeTab===t.id?"#0f172a":"transparent",
                 color:activeTab===t.id?"#fb923c":"#475569",
                 fontWeight:700, fontSize:13, fontFamily:"inherit",
-                borderBottom:activeTab===t.id?"2px solid #fb923c":"2px solid transparent",
-                transition:"all 0.2s" }}>
+                borderBottom:activeTab===t.id?"2px solid #fb923c":"2px solid transparent" }}>
                 {t.label}
                 {datasets[t.id].length>0&&(
-                  <span style={{ marginLeft:6, background:"#1e293b", borderRadius:99,
-                    padding:"1px 6px", fontSize:10, color:"#22c55e" }}>
+                  <span style={{ marginLeft:6, background:"#1e293b", borderRadius:99, padding:"1px 6px", fontSize:10, color:"#22c55e" }}>
                     {datasets[t.id].length}
                   </span>
                 )}
@@ -427,27 +399,33 @@
             ))}
           </div>
 
-          {/* 컨텐츠 */}
           <div style={{ padding:20 }}>
-            {active.length===0?(
+            {loadState[activeTab]==="loading"?(
               <div style={{ textAlign:"center", padding:"60px 20px" }}>
-                <div style={{ fontSize:52, marginBottom:16 }}>
-                  {activeTab.startsWith("kr")?"🇰🇷":"🇺🇸"}
+                <div style={{ fontSize:36, marginBottom:12 }} className="spin">⏳</div>
+                <div style={{ fontSize:14, color:"#64748b" }}>데이터 불러오는 중...</div>
+              </div>
+            ):active.length===0?(
+              <div style={{ textAlign:"center", padding:"60px 20px" }}>
+                <div style={{ fontSize:52, marginBottom:16 }}>{activeTab.startsWith("kr")?"🇰🇷":"🇺🇸"}</div>
+                <div style={{ fontSize:15, fontWeight:700, color:"#94a3b8", marginBottom:6 }}>{activeInfo.label} 데이터 없음</div>
+                <div style={{ fontSize:12, color:"#475569", marginBottom:16 }}>
+                  {loadState[activeTab]==="error"?"스캐너를 먼저 실행하면 자동으로 로드돼요.":"스캐너 실행 후 자동으로 로드돼요."}
                 </div>
-                <div style={{ fontSize:15, fontWeight:700, color:"#94a3b8", marginBottom:6 }}>
-                  {activeInfo.label} 데이터 없음
+                <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
+                  <button onClick={()=>fetchCSV(activeTab)}
+                    style={{ padding:"10px 20px", borderRadius:10, border:"1px solid #334155",
+                      background:"#1e293b", color:"#94a3b8", cursor:"pointer", fontSize:13, fontFamily:"inherit", fontWeight:700 }}>
+                    🔄 다시 시도
+                  </button>
+                  <label style={{ cursor:"pointer" }}>
+                    <div style={{ padding:"10px 20px", borderRadius:10,
+                      background:"linear-gradient(90deg,#fb923c,#f59e0b)", color:"#000", fontSize:13, fontWeight:800 }}>
+                      📂 직접 업로드
+                    </div>
+                    <input type="file" accept=".csv" onChange={handleUpload(activeTab)} style={{ display:"none" }} />
+                  </label>
                 </div>
-                <div style={{ fontSize:12, color:"#475569", marginBottom:24 }}>
-                  텔레그램에서 받은 <code style={{ background:"#1e293b", padding:"2px 6px",
-                    borderRadius:4, color:"#fb923c" }}>{FILE_HINT[activeTab]}</code> 파일을 업로드하세요
-                </div>
-                <label style={{ cursor:"pointer", display:"inline-block",
-                  background:"linear-gradient(90deg,#fb923c,#f59e0b)",
-                  color:"#000", padding:"12px 28px", borderRadius:10,
-                  fontWeight:800, fontSize:14, fontFamily:"inherit" }}>
-                  📂 CSV 업로드
-                  <input type="file" accept=".csv" onChange={handleUpload(activeTab)} style={{ display:"none" }} />
-                </label>
               </div>
             ):activeInfo.type==="scanner"?(
               <ScannerView data={active} market={activeInfo.market} />
