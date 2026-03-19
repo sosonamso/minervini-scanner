@@ -2,7 +2,7 @@ name: 미너비니 스캐너 데일리
 
 on:
   schedule:
-    - cron: '0 23 * * 0-4'   # KST 08:00
+    - cron: '0 23 * * 0-4'
   workflow_dispatch:
 
 jobs:
@@ -23,10 +23,10 @@ jobs:
           KRX_TOKEN:        ${{ secrets.KRX_TOKEN }}
         run: python scanner.py
 
-      - name: 결과 파일 저장
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: scanner-kr-results-${{ github.run_number }}
-          path: scanner_kr_raw.csv
-          retention-days: 30
+      - name: CSV 레포에 자동 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add scanner_kr_raw.csv
+          git diff --staged --quiet || git commit -m "scanner: $(date +'%Y-%m-%d') 스캔 결과"
+          git push
