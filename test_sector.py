@@ -1,56 +1,55 @@
 """
-네이버 금융 업종 크롤링 테스트 v3
+네이버 금융 미국 종목 섹터 테스트
 """
 import requests
 import re
-from html.parser import HTMLParser
 
-def get_naver_sector_map():
-    """네이버 업종 목록 전체 가져오기"""
-    url = "https://finance.naver.com/sise/sise_group.naver?type=upjong"
-    headers = {"User-Agent": "Mozilla/5.0", "Accept-Charset": "euc-kr"}
-    resp = requests.get(url, headers=headers, timeout=10)
-    resp.encoding = "euc-kr"
-    text = resp.text
-
-    # 패턴: upjong&no=숫자">업종명</a>
-    matches = re.findall(r'upjong&amp;no=(\d+)">([^<]+)</a>', text)
-    if not matches:
-        matches = re.findall(r'upjong&no=(\d+)">([^<]+)</a>', text)
-
-    sector_map = {}
-    for no, name in matches:
-        name_clean = name.strip()
-        if name_clean and not name_clean.startswith('/'):
-            sector_map[no] = name_clean
-
-    print(f"업종 수: {len(sector_map)}개")
-    if sector_map:
-        print(f"샘플: {dict(list(sector_map.items())[:10])}")
-    else:
-        # HTML 일부 출력해서 구조 확인
-        idx = text.find("upjong")
-        if idx > 0:
-            print(f"HTML 샘플:\n{text[idx-100:idx+300]}")
-    return sector_map
-
-def get_naver_sector(ticker, sector_map):
-    url = f"https://finance.naver.com/item/main.naver?code={ticker}"
+def get_us_sector_naver(ticker):
+    """네이버 금융에서 미국 종목 섹터 가져오기"""
+    # 방법 1: 해외주식 검색
+    url = f"https://finance.naver.com/world/sise/delayQuote.naver?symbol={ticker}&fdtc=0"
     headers = {"User-Agent": "Mozilla/5.0"}
-    resp = requests.get(url, headers=headers, timeout=10)
-    resp.encoding = "euc-kr"
-    match = re.search(r'type=upjong&no=(\d+)', resp.text)
-    if match:
-        no = match.group(1)
-        return sector_map.get(no, f"업종{no}")
-    return "기타"
+    try:
+        resp = requests.get(url, headers=headers, timeout=10)
+        resp.encoding = "utf-8"
+        # 업종/섹터 패턴 찾기
+        idx = resp.text.find("섹터")
+        if idx > 0:
+            print(f"  '섹터' 발견 위치 주변: {resp.text[idx-50:idx+100]}")
+        idx2 = resp.text.find("업종")
+        if idx2 > 0:
+            print(f"  '업종' 발견 위치 주변: {resp.text[idx2-50:idx2+100]}")
+        idx3 = resp.text.find("sector")
+        if idx3 > 0:
+            print(f"  'sector' 발견: {resp.text[idx3-50:idx3+100]}")
+        return resp.status_code, len(resp.text)
+    except Exception as e:
+        return None, str(e)
+
+def get_us_sector_financialmodelingprep(ticker):
+    """무료 API로 섹터 가져오기 (로그인 불필요)"""
+    # Yahoo Finance 비공식 API
+    url = f"https://query2.finance.yahoo.com/v11/finance/quoteSummary/{ticker}?modules=summaryProfile"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    try:
+        resp = requests.get(url, headers=headers, timeout=10)
+        data = resp.json()
+        sector = data.get("quoteSummary",{}).get("result",[{}])[0].get("summaryProfile",{}).get("sector","")
+        industry = data.get("quoteSummary",{}).get("result",[{}])[0].get("summaryProfile",{}).get("industry","")
+        return sector, industry
+    except Exception as e:
+        return None, str(e)
 
 if __name__ == "__main__":
-    print("업종 목록 로딩...")
-    sector_map = get_naver_sector_map()
+    test_tickers = ["AAPL", "NVDA", "TSLA", "MU", "ELAN", "AMAT"]
 
-    if sector_map:
-        print("\n=== 종목별 업종 ===")
-        for ticker, name in [("263750","펄어비스"),("282720","금양그린파워"),("000440","중앙에너비스")]:
-            sector = get_naver_sector(ticker, sector_map)
-            print(f"{ticker} {name}: {sector}")
+    print("=== Yahoo Finance API 테스트 ===")
+    for ticker in test_tickers:
+        sector, industry = get_us_sector_financialmodelingprep(ticker)
+        print(f"{ticker}: {sector} / {industry}")
+
+    print("\n=== 네이버 해외주식 테스트 ===")
+    for ticker in test_tickers[:2]:
+        print(f"\n{ticker}:")
+        code, size = get_us_sector_naver(ticker)
+        print(f"  상태: {code}, 크기: {size}")
