@@ -164,13 +164,27 @@ def build_ohlcv(trading_dates):
 # 미너비니 로직
 # ─────────────────────────────────────
 def check_market(df):
-    """코스피 200MA 위에 있는지"""
-    if df is None or len(df)<200:return True
+    """코스피 정배열 확인 (미너비니 정석)
+    완전 상승장: 현재가>50MA>150MA>200MA AND 200MA 상승
+    부분 상승장: 현재가>200MA
+    하락장: 현재가<200MA
+    """
+    if df is None or len(df)<200:return True,"데이터부족"
     c=df["Close"]
-    ma200=c.rolling(200).mean()
-    cur=float(c.iloc[-1]);ma=float(ma200.iloc[-1])
-    if pd.isna(ma):return True
-    return cur>ma
+    m50=float(c.rolling(50).mean().iloc[-1])
+    m150=float(c.rolling(150).mean().iloc[-1])
+    m200=float(c.rolling(200).mean().iloc[-1])
+    cur=float(c.iloc[-1])
+    m200v=c.rolling(200).mean().dropna()
+    m200_21=float(m200v.iloc[-21]) if len(m200v)>=21 else m200
+    if any(pd.isna([m50,m150,m200])):return True,"데이터부족"
+    if all([cur>m50,m50>m150,m150>m200,m200>m200_21]):
+        return True,"완전 상승장(정배열)"
+    elif cur>m200:
+        return True,"부분 상승장(200MA 위)"
+    else:
+        return False,"하락장(200MA 하방)"
+
 
 def check_trend(df):
     if len(df)<200:return False
@@ -354,8 +368,7 @@ if __name__=="__main__":
     print(f"코스피 지수: {len(kospi_df) if kospi_df is not None else 0}일치")
     print(f"코스닥 지수: {len(kosdaq_df) if kosdaq_df is not None else 0}일치")
 
-    market_ok=check_market(mkt_df)
-    market_str="상승장(KOSPI>200MA)" if market_ok else "하락장(KOSPI<200MA)"
+    market_ok,market_str=check_market(mkt_df)
 
     # 유효 데이터 통계
     kospi_cnt=sum(1 for v in all_ohlcv.values() if v["market"]=="KOSPI")
