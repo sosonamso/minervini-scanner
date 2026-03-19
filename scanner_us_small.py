@@ -20,6 +20,19 @@ SP600 = [
     "ACAD","ACLS","ADMA","ADUS","AEHR","AHCO","AIRC","ALCO","ALGT","ALRM","AMBC","AMEH","AMKR","AMMO","AMSC","ANF","ANGO","AORT","AOSL","APAM","APPN","APLE","ARKO","ARLO","ARRY","ARWR","ASLE","ASND","ASPS","ASRT","ASTE","ATEN","ATNI","ATSG","AUBN","AUPH","AVNW","AWI","AXNX","AXSM","BAND","BANF","BANR","BCEL","BCPC","BFS","BGFV","BKD","BLDR","BLFS","BLNK","BMTC","BNL","BOOT","BPOP","BRKL","BRSP","BSIG","BSRR","BSVN","BURL","BUSE","BZH","CACC","CAKE","CALM","CARA","CARE","CARS","CASH","CASY","CATO","CBAN","CBRL","CBSH","CC","CCNE","CDMO","CDNA","CDRE","CEIX","CENT","CENX","CEVA","CFFI","CFFN","CHCO","CHDN","CHEF","CHUY","CIVB","CLAR","CLB","CLBK","CLDT","CLNE","CLPR","CMAX","CMCO","COHU","COLM","COOP","COUR","CPRI","CPRX","CRAI","CRDX","CRK","CRSP","CRVL","CSGS","CSII","CSTR","CTBI","CTLP","CTMX","CTRE","CTRN","CUBI","CULP","CUTR","CW","CWCO","DAKT","DAVA","DCOM","DFIN","DGII","DH","DHIL","DINO","DIOD","DK","DKL","DLX","DNOW","DORM","DRH","DRVN","DSP","DXC","DXPE","DXYN","EAF","EARN","EBC","EBMT","EFC","EGP","EIG","ELAN","ELY","EPC","EPRT","ESS","ESTE","EVTC","EXLS","EXPI","EXTN","EYE","EZPW","FARO","FBNC","FBRT","FCFS","FELE","FFBC","FFIN","FN","FORM","FOUR","FRAF","FRME","FULT","GBX","GCI","GFF","GHC","GKOS","GMS","GOLF","GOOD","GPX","GRPN","GSBC","GTLS","GWRE","HAFC","HAIN","HASI","HBI","HBT","HCSG","HFWA","HIBB","HIMS","HLNE","HMN","HNI","HOFT","HOMB","HQY","HRMY","HSII","HTH","HTLD","HTLF","HUBG","HWC","HZO","IART","IBCP","IBOC","IBTX","IDCC","IDEX","IESC","IIIN","IMKTA","IMXI","INDB","INFU","INGN","INMD","INSP","INSW","IRBT","IRWD","ISBA","ITRI","JACK","JBLU","JBSS","JELD","JOUT","JWN","KAI","KALU","KFY","KMPR","KNSA","KREF","KRNT","KSS","KTOS","KW","LADR","LAUR","LCNB","LGIH","LGND","LKFN","LMB","LNTH","LOPE","LSTR","LWAY","LXP","MAIN","MATV","MBIN","MBUU","MCBS","MCF","MCRI","MDGL","MED","MEDP","MEI","MERC","MFIN","MGY","MKSI","MLAB","MLKN","MMI","MMSI","MNRO","MOD","MOFG","MRC","MRCY","MSEX","MSTR","MTG","MTSI","MTRN","MTRX","MVBF","MYR","MYRG","NATH","NBTB","NCOM","NCNO","NEO","NEOG","NFBK","NHC","NMIH","NNBR","NPO","NRC","NRIM","NRP","NTST","NVT","NVTS","NWE","NXST","OBK","OCFC","OCSL","OFG","OGE","OII","OIS","ONTO","OPBK","OPCH","OSPN","OTTR","OUT","OXM","PAHC","PATK","PBF","PBPB","PDCO","PEGA","PENN","PFBC","PFIS","PFSI","PGNY","PHR","PKST","PLBC","PLMR","PLNT","PNM","POOL","POWL","PPBI","PRAA","PRDO","PRGO","PRIM","PRK","PRKS","PSN","PTCT","PTEN","PTLO","PTVE","PUMP","QCRH","QDEL","QGEN","QTWO","RBC","RCKT","RCKY","RCM","RDNT","RES","REVG","RGEN","RGP","RICK","RILY","RMBS","RMNI","RMR","RPRX","RRR","RUSHA","RWT","RYAM","SAFE","SANM","SASR","SBCF","SBSI","SCVL","SEIC","SF","SFST","SHAK","SHBI","SHO","SIG","SIGI","SIT","SITM","SKX","SLG","SLGN","SLVM","SM","SMBC","SNCY","SNDR","SNEX","SOFI","SPFI","SPOK","SRC","SRI","SSBK","SSRM","STBA","STLD","STRA","SUPN","SWX","SYBT","SYNA","TALO","TBNK","TCBK","TCMD","TEX","TFSL","TGI","TILE","TNDM","TOWN","TPIC","TREX","TRNO","TRMK","TROW","TRUP","TTGT","TTMI","TWI","TXRH","UBCP","UCBI","UFPI","ULCC","UNFI","UNVR","UPST","USPH","UVV","VBTX","VCEL","VCYT","VECO","VICR","VIRT","VLGEA","VRTS","VSAT","VSEC","WAFD","WASH","WD","WDFC","WERN","WFRD","WINA","WMS","WOOF","WOR","WPC","WSFS","WTS","XRX"
 ]
 
+def send_file(filepath, caption=""):
+    if TOK:
+        try:
+            with open(filepath,"rb") as f:
+                requests.post(
+                    f"https://api.telegram.org/bot{TOK}/sendDocument",
+                    data={"chat_id":CID,"caption":caption},
+                    files={"document":f},
+                    timeout=30
+                )
+        except Exception as e:
+            print(f"파일 전송 실패: {e}")
+
 def send(text):
     print(text)
     if TOK:
@@ -390,6 +403,22 @@ if __name__=="__main__":
             seen.add(r["ticker"]);deduped.append(r)
     res=deduped
     print(f"완료: {len(res)}개 발견")
+
+    # RAW 저장
+    if res:
+        rows=[]
+        for r in res:
+            rows.append({
+                "date":r["sig_date"],"ticker":r["ticker"],
+                "cap":r["cap"],"cur":r["cur"],"pivot":r["pivot"],
+                "cup_depth":r["cd"],"handle_depth":r["hd"],
+                "cup_days":r["cdays"],"handle_days":r["hdays"],
+                "vol_ratio":r["vr"],"rs":r["rs"],
+                "score":r["score"],"grade":r["grade"],
+            })
+        pd.DataFrame(rows).to_csv("scanner_us_small_raw.csv",index=False,encoding="utf-8-sig")
+        print(f"RAW 저장: scanner_us_small_raw.csv ({len(rows)}건)")
+        send_file("scanner_us_small_raw.csv",f"🇺🇸 미장 소형주 RAW ({len(rows)}건) {datetime.today().strftime('%Y-%m-%d')}")
 
     send(f"스캔 완료\n데이터 수신: {data_ok}/{len(all_tickers)}개\n{date_stat}\n트렌드 통과: {trend_pass}개\n패턴+거래량+RS: {len(res)}개")
 
