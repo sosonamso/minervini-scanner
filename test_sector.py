@@ -1,60 +1,64 @@
 """
-pykrx 업종분류 테스트
-GitHub Actions에서 실행해서 결과 확인
+네이버 금융 업종 크롤링 테스트
+시그널 종목에 대해서만 호출 (소수 종목)
 """
-import subprocess
-subprocess.run(["pip", "install", "pykrx", "-q"])
+import requests
+import re
 
-from pykrx import stock
-from datetime import datetime, timedelta
-import pandas as pd
+def get_naver_sector(ticker):
+    """네이버 금융에서 업종명 가져오기"""
+    url = f"https://finance.naver.com/item/main.naver?code={ticker}"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    try:
+        resp = requests.get(url, headers=headers, timeout=10)
+        # 업종 정보 파싱
+        match = re.search(r'업종명[^"]*"([^"]+)"', resp.text)
+        if match:
+            return match.group(1)
+        # 대안 패턴
+        match2 = re.search(r'코스피\s*/\s*([^\n<]+)', resp.text)
+        if match2:
+            return match2.group(1).strip()
+        match3 = re.search(r'코스닥\s*/\s*([^\n<]+)', resp.text)
+        if match3:
+            return match3.group(1).strip()
+        # 더 직접적인 패턴
+        match4 = re.search(r'<em class="coinfo_item_title">업종</em>.*?<em class="coinfo_item_value">(.*?)</em>', resp.text, re.DOTALL)
+        if match4:
+            return match4.group(1).strip()
+        return None
+    except Exception as e:
+        return None
 
-def get_trading_day():
-    d = datetime.today()
-    while d.weekday() >= 5:
-        d -= timedelta(days=1)
-    return d.strftime("%Y%m%d")
+def get_sector_from_krx_index(ticker):
+    """KRX 섹터 지수 구성종목으로 업종 파악"""
+    # KRX 섹터 지수 코드
+    sector_indices = {
+        "1028": "IT",
+        "1033": "금융",
+        "1034": "헬스케어",
+        "1035": "소비재",
+        "1036": "산업재",
+        "1037": "에너지화학",
+        "1038": "소재",
+        "1039": "유틸리티",
+        "1040": "커뮤니케이션",
+    }
+    # 향후 구현 가능
 
 if __name__ == "__main__":
-    today = get_trading_day()
-    print(f"조회 날짜: {today}")
+    test_tickers = [
+        ("005930", "삼성전자"),
+        ("000660", "SK하이닉스"),
+        ("035420", "NAVER"),
+        ("035720", "카카오"),
+        ("263750", "펄어비스"),
+        ("282720", "금양그린파워"),
+        ("336260", "두산퓨얼셀"),
+        ("000440", "중앙에너비스"),
+    ]
 
-    # KOSPI 업종분류
-    print("\n=== KOSPI 업종분류 ===")
-    try:
-        df_kospi = stock.get_market_sector_classifications(today, "KOSPI")
-        print(f"성공! {len(df_kospi)}개 종목")
-        print(f"컬럼: {list(df_kospi.columns)}")
-        print(df_kospi.head(10).to_string())
-
-        # 업종명 유니크 목록
-        for col in df_kospi.columns:
-            if "업종" in col or "sector" in col.lower():
-                print(f"\n업종 유니크값({col}): {df_kospi[col].unique()[:20]}")
-    except Exception as e:
-        print(f"KOSPI 실패: {e}")
-
-    # KOSDAQ 업종분류
-    print("\n=== KOSDAQ 업종분류 ===")
-    try:
-        df_kosdaq = stock.get_market_sector_classifications(today, "KOSDAQ")
-        print(f"성공! {len(df_kosdaq)}개 종목")
-        print(f"컬럼: {list(df_kosdaq.columns)}")
-        print(df_kosdaq.head(10).to_string())
-    except Exception as e:
-        print(f"KOSDAQ 실패: {e}")
-
-    # 특정 종목 업종 테스트
-    print("\n=== 특정 종목 테스트 ===")
-    test_tickers = ["005930", "000660", "035720", "263750"]  # 삼성전자, SK하이닉스, 카카오, 펄어비스
-    for ticker in test_tickers:
-        try:
-            info = stock.get_market_sector_classifications(today, "KOSPI")
-            if ticker in info.index:
-                print(f"{ticker}: {info.loc[ticker].to_dict()}")
-            else:
-                info2 = stock.get_market_sector_classifications(today, "KOSDAQ")
-                if ticker in info2.index:
-                    print(f"{ticker}(KOSDAQ): {info2.loc[ticker].to_dict()}")
-        except Exception as e:
-            print(f"{ticker} 실패: {e}")
+    print("=== 네이버 금융 업종 크롤링 테스트 ===\n")
+    for ticker, name in test_tickers:
+        sector = get_naver_sector(ticker)
+        print(f"{ticker} {name}: {sector}")
