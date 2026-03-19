@@ -318,12 +318,12 @@ if __name__=="__main__":
                 block=resp.json().get("OutBlock_1",[])
                 for row in block:
                     if str(row.get("IDX_NM",""))=="코스피":
-                        v=float(str(row.get("CLSPRC","0")).replace(",",""))
+                        v=float(str(row.get("CLSPRC_IDX","0")).replace(",",""))
                         if v>0:kospi_data[pd.Timestamp(date_str)]=v
                         break
         except:pass
         try:
-            url_q="https://data-dbg.krx.co.kr/svc/apis/idx/ksq_dd_trd"
+            url_q="https://data-dbg.krx.co.kr/svc/apis/idx/kosdaq_dd_trd"
             resp=requests.post(url_q,
                 headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
                 json={"basDd":date_str},timeout=30)
@@ -331,7 +331,7 @@ if __name__=="__main__":
                 block=resp.json().get("OutBlock_1",[])
                 for row in block:
                     if str(row.get("IDX_NM",""))=="코스닥":
-                        v=float(str(row.get("CLSPRC","0")).replace(",",""))
+                        v=float(str(row.get("CLSPRC_IDX","0")).replace(",",""))
                         if v>0:kosdaq_data[pd.Timestamp(date_str)]=v
                         break
         except:pass
