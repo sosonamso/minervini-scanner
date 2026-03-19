@@ -5,6 +5,9 @@ on:
     - cron: '0 23 * * 1-5'   # KST 08:00 (UTC 23:00, 월~금)
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   scan:
     runs-on: ubuntu-latest
