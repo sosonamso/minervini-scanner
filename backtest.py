@@ -81,7 +81,7 @@ def get_krx_index(date_str,index_name="코스피"):
         block=resp.json().get("OutBlock_1",[])
         for row in block:
             if str(row.get("IDX_NM",""))==index_name:
-                return float(str(row.get("CLSPRC","0")).replace(",","")),index_name
+                return float(str(row.get("CLSPRC_IDX","0")).replace(",","")),index_name
     except:pass
     return None,None
 
@@ -142,13 +142,13 @@ def build_index(trading_dates):
                 block=resp.json().get("OutBlock_1",[])
                 for row in block:
                     if str(row.get("IDX_NM",""))=="코스피":
-                        v=float(str(row.get("CLSPRC","0")).replace(",",""))
+                        v=float(str(row.get("CLSPRC_IDX","0")).replace(",",""))
                         if v>0:kospi_data[pd.Timestamp(date_str)]=v
                         break
         except:pass
         # KOSDAQ 지수
         try:
-            url_q="https://data-dbg.krx.co.kr/svc/apis/idx/ksq_dd_trd"
+            url_q="https://data-dbg.krx.co.kr/svc/apis/idx/kosdaq_dd_trd"
             resp=requests.post(url_q,
                 headers={"AUTH_KEY":KRX.strip(),"Content-Type":"application/json"},
                 json={"basDd":date_str},timeout=30)
@@ -156,7 +156,7 @@ def build_index(trading_dates):
                 block=resp.json().get("OutBlock_1",[])
                 for row in block:
                     if str(row.get("IDX_NM",""))=="코스닥":
-                        v=float(str(row.get("CLSPRC","0")).replace(",",""))
+                        v=float(str(row.get("CLSPRC_IDX","0")).replace(",",""))
                         if v>0:kosdaq_data[pd.Timestamp(date_str)]=v
                         break
         except:pass
