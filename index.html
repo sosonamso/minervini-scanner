@@ -103,6 +103,7 @@
     function ScannerView({ data, market }) {
       const [sort, setSort] = useState({ col:"score", dir:-1 });
       const [filter, setFilter] = useState({ search:"", minScore:0 });
+      const [expanded, setExpanded] = useState(null);
       const handleSort = col => setSort(s=>s.col===col?{col,dir:-s.dir}:{col,dir:-1});
       const isKR = market==="KR";
 
@@ -174,6 +175,47 @@
                       {isKR?(row.pivot?Number(row.pivot).toLocaleString()+"원":"-"):(row.pivot?"$"+Number(row.pivot).toFixed(2):"-")}
                     </td>
                   </tr>
+                  {expanded===i && (
+                    <tr key={`exp-${i}`} style={{ background:"#0f172a" }}>
+                      <td colSpan={20} style={{ padding:"12px 20px", borderBottom:"1px solid #334155" }}>
+                        <div style={{ display:"flex", gap:20, flexWrap:"wrap" }}>
+                          <div>
+                            <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>컵&핸들 상세</div>
+                            <div style={{ fontSize:12, color:"#94a3b8" }}>
+                              컵: {row.cup_depth}% / {row.cup_days}일<br/>
+                              핸들: {row.handle_depth}% / {row.handle_days}일<br/>
+                              거래량배율: {row.vol_ratio}x
+                            </div>
+                          </div>
+                          {isKR && row.hist_count>0 && (
+                            <div>
+                              <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>
+                                과거이력 {row.hist_count}회 · 승률 <span style={{ color:"#22c55e", fontWeight:700 }}>{row.hist_winrate}%</span>
+                              </div>
+                              <div style={{ fontSize:12, color:"#94a3b8" }}>
+                                {(row.hist_detail||"").split("|").map((h,j)=>{
+                                  const parts = h.split(":");
+                                  const date = parts[0];
+                                  const returns = parts[1]||"";
+                                  const [r5,r20] = returns.split("/");
+                                  const win = r20 && parseFloat(r20)>0;
+                                  return (
+                                    <div key={j} style={{ marginBottom:2 }}>
+                                      <span style={{ color:"#475569" }}>{date}</span>
+                                      {" "}5일<span style={{ color:r5&&parseFloat(r5)>0?"#22c55e":"#ef4444" }}>{r5}</span>
+                                      {" "}20일<span style={{ color:win?"#22c55e":"#ef4444" }}>{r20}</span>
+                                      {" "}<span style={{ color:win?"#22c55e":"#ef4444" }}>{win?"✓":"✗"}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  </>
                 ))}
               </tbody>
             </table>
@@ -281,6 +323,47 @@
                       return<td key={d} style={{ padding:"7px 10px", textAlign:"center", ...cellStyle(v) }}>{fmt(v)}</td>;
                     })}
                   </tr>
+                  {expanded===i && (
+                    <tr key={`exp-${i}`} style={{ background:"#0f172a" }}>
+                      <td colSpan={20} style={{ padding:"12px 20px", borderBottom:"1px solid #334155" }}>
+                        <div style={{ display:"flex", gap:20, flexWrap:"wrap" }}>
+                          <div>
+                            <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>컵&핸들 상세</div>
+                            <div style={{ fontSize:12, color:"#94a3b8" }}>
+                              컵: {row.cup_depth}% / {row.cup_days}일<br/>
+                              핸들: {row.handle_depth}% / {row.handle_days}일<br/>
+                              거래량배율: {row.vol_ratio}x
+                            </div>
+                          </div>
+                          {isKR && row.hist_count>0 && (
+                            <div>
+                              <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>
+                                과거이력 {row.hist_count}회 · 승률 <span style={{ color:"#22c55e", fontWeight:700 }}>{row.hist_winrate}%</span>
+                              </div>
+                              <div style={{ fontSize:12, color:"#94a3b8" }}>
+                                {(row.hist_detail||"").split("|").map((h,j)=>{
+                                  const parts = h.split(":");
+                                  const date = parts[0];
+                                  const returns = parts[1]||"";
+                                  const [r5,r20] = returns.split("/");
+                                  const win = r20 && parseFloat(r20)>0;
+                                  return (
+                                    <div key={j} style={{ marginBottom:2 }}>
+                                      <span style={{ color:"#475569" }}>{date}</span>
+                                      {" "}5일<span style={{ color:r5&&parseFloat(r5)>0?"#22c55e":"#ef4444" }}>{r5}</span>
+                                      {" "}20일<span style={{ color:win?"#22c55e":"#ef4444" }}>{r20}</span>
+                                      {" "}<span style={{ color:win?"#22c55e":"#ef4444" }}>{win?"✓":"✗"}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  </>
                 ))}
               </tbody>
               <tfoot>
