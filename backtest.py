@@ -12,8 +12,8 @@ TOK=os.environ.get("TELEGRAM_TOKEN","")
 CID=os.environ.get("TELEGRAM_CHAT_ID","")
 KRX=os.environ.get("KRX_TOKEN","")
 
-LOOKBACK_DAYS=365   # 시그널 탐색 기간
-HISTORY_DAYS=800    # 데이터 수집 기간
+LOOKBACK_DAYS=900   # 시그널 탐색 기간
+HISTORY_DAYS=1500   # 데이터 수집 기간
 MAX_HOLD=90         # 최대 보유일
 _row_meta={}        # ticker -> {name, sector}
 
