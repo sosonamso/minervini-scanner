@@ -215,8 +215,47 @@
                       </td>
                     </tr>
                   )}
-                  </>
                 ))}
+                {/* 펼침 행 - tbody 내부에서 별도 렌더링 */}
+                {filtered.map((row,i)=> expanded===i ? (
+                  <tr key={`exp-${i}`} style={{ background:"#0a0f1e" }}>
+                    <td colSpan={20} style={{ padding:"12px 20px", borderBottom:"2px solid #334155" }}>
+                      <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
+                        <div>
+                          <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>📐 컵&핸들 상세</div>
+                          <div style={{ fontSize:12, color:"#94a3b8", lineHeight:1.8 }}>
+                            컵: {row.cup_depth}% / {row.cup_days}일<br/>
+                            핸들: {row.handle_depth}% / {row.handle_days}일<br/>
+                            거래량배율: {row.vol_ratio}x
+                          </div>
+                        </div>
+                        {isKR && row.hist_count>0 && (
+                          <div>
+                            <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>
+                              📈 과거이력 {row.hist_count}회 · 승률{" "}
+                              <span style={{ color:"#22c55e", fontWeight:700 }}>{row.hist_winrate}%</span>
+                            </div>
+                            <div style={{ fontSize:12, color:"#94a3b8", lineHeight:1.8 }}>
+                              {(row.hist_detail||"").split("|").filter(Boolean).map((h,j)=>{
+                                const [date,ret] = h.split(":");
+                                const [r5,r20] = (ret||"").split("/");
+                                const win = r20 && !isNaN(parseFloat(r20)) && parseFloat(r20)>0;
+                                return (
+                                  <div key={j}>
+                                    <span style={{ color:"#475569" }}>{date}</span>
+                                    {" "}5일<span style={{ color:r5&&parseFloat(r5)>0?"#22c55e":"#ef4444" }}>{r5}</span>
+                                    {" "}20일<span style={{ color:win?"#22c55e":"#ef4444" }}>{r20||"-"}</span>
+                                    {" "}<span style={{ color:win?"#22c55e":"#ef4444" }}>{win?"✓":"✗"}</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ) : null)}
               </tbody>
             </table>
           </div>
@@ -363,8 +402,47 @@
                       </td>
                     </tr>
                   )}
-                  </>
                 ))}
+                {/* 펼침 행 - tbody 내부에서 별도 렌더링 */}
+                {filtered.map((row,i)=> expanded===i ? (
+                  <tr key={`exp-${i}`} style={{ background:"#0a0f1e" }}>
+                    <td colSpan={20} style={{ padding:"12px 20px", borderBottom:"2px solid #334155" }}>
+                      <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
+                        <div>
+                          <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>📐 컵&핸들 상세</div>
+                          <div style={{ fontSize:12, color:"#94a3b8", lineHeight:1.8 }}>
+                            컵: {row.cup_depth}% / {row.cup_days}일<br/>
+                            핸들: {row.handle_depth}% / {row.handle_days}일<br/>
+                            거래량배율: {row.vol_ratio}x
+                          </div>
+                        </div>
+                        {isKR && row.hist_count>0 && (
+                          <div>
+                            <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>
+                              📈 과거이력 {row.hist_count}회 · 승률{" "}
+                              <span style={{ color:"#22c55e", fontWeight:700 }}>{row.hist_winrate}%</span>
+                            </div>
+                            <div style={{ fontSize:12, color:"#94a3b8", lineHeight:1.8 }}>
+                              {(row.hist_detail||"").split("|").filter(Boolean).map((h,j)=>{
+                                const [date,ret] = h.split(":");
+                                const [r5,r20] = (ret||"").split("/");
+                                const win = r20 && !isNaN(parseFloat(r20)) && parseFloat(r20)>0;
+                                return (
+                                  <div key={j}>
+                                    <span style={{ color:"#475569" }}>{date}</span>
+                                    {" "}5일<span style={{ color:r5&&parseFloat(r5)>0?"#22c55e":"#ef4444" }}>{r5}</span>
+                                    {" "}20일<span style={{ color:win?"#22c55e":"#ef4444" }}>{r20||"-"}</span>
+                                    {" "}<span style={{ color:win?"#22c55e":"#ef4444" }}>{win?"✓":"✗"}</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ) : null)}
               </tbody>
               <tfoot>
                 <tr style={{ background:"#1e293b", borderTop:"2px solid #334155" }}>
