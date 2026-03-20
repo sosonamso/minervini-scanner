@@ -312,7 +312,11 @@ if __name__=="__main__":
 
     send(f"스캔 완료\n데이터 수신: {data_ok}/{len(all_tickers)}개\n{date_stat}\n트렌드 통과: {trend_pass}개\n패턴+거래량+RS: {len(res)}개")
 
+    # 시그널 0개여도 빈 CSV 저장 (자동 커밋용)
     if not res:
+        import pandas as pd
+        pd.DataFrame(columns=['date', 'ticker', 'cap', 'cur', 'pivot', 'cup_depth', 'handle_depth', 'cup_days', 'handle_days', 'vol_ratio', 'rs', 'score', 'grade']).to_csv("scanner_us_raw.csv",index=False,encoding="utf-8-sig")
+        print(f"빈 CSV 저장: scanner_us_raw.csv")
         send(f"🇺🇸 미국 스캐너\n최근 {SCAN_DAYS}거래일 | {market_str}\n조건 충족 종목 없음\n(거래량급증+RS양수 기준)")
     else:
         hdr=f"🇺🇸 미너비니 컵&핸들(미국)\n최근 {SCAN_DAYS}거래일 | {market_str}\n{len(res)}개 발견(점수순)\n"+"─"*24+"\n"
