@@ -466,6 +466,9 @@ if __name__=="__main__":
 
     send(f"스캔 완료\n종목 수: {len(ticker_list)}개\n트렌드 통과: {trend_pass}개\n패턴+거래량+RS: {len(res)}개")
 
+    # 네이버 업종 맵 로딩
+    sector_map=get_naver_sector_map()
+
     if not res:
         send(f"📊 미너비니 스캐너\n최근 {SCAN_DAYS}거래일 | {market_str}\n⚠️ 조건 충족 종목 없음")
     else:
