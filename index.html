@@ -161,7 +161,7 @@ function ScannerView({ data, market }) {
     return (av>bv?1:-1)*sort.dir;
   }), [data, filter, sort]);
 
-  const colCount = isKR ? 10 : 8;
+  const colCount = isKR ? 11 : 8;
 
   return (
     <div>
@@ -193,6 +193,7 @@ function ScannerView({ data, market }) {
               <SortTh col="rs" label="RS" sortState={sort} onSort={handleSort} center />
               <SortTh col="vol_ratio" label="거래량" sortState={sort} onSort={handleSort} center />
               {isKR && <SortTh col="trdval_20" label="거래대금" sortState={sort} onSort={handleSort} center />}
+              <SortTh col="handle_depth" label="핸들" sortState={sort} onSort={handleSort} center />
               <SortTh col="cur" label="현재가" sortState={sort} onSort={handleSort} center />
               <SortTh col="pivot" label="피벗" sortState={sort} onSort={handleSort} center />
             </tr>
@@ -202,7 +203,9 @@ function ScannerView({ data, market }) {
               <React.Fragment key={i}>
                 <tr onClick={() => setExpanded(expanded===i ? null : i)}
                   style={{ borderBottom:"1px solid #1e293b", background:i%2===0?"#0f172a":"#111827", cursor:"pointer" }}>
-                  <td style={{ padding:"8px 12px", color:"#475569", whiteSpace:"nowrap" }}>{row.date}</td>
+                  <td style={{ padding:"8px 10px", color:"#475569", whiteSpace:"nowrap", fontSize:11 }}>
+                    {row.date ? row.date.replace(/^20(\d{2})-0?(\d+)-0?(\d+)$/,"$1.$2.$3") : "-"}
+                  </td>
                   <td style={{ padding:"8px 12px", fontWeight:900 }}>
                     <span style={{ color:"#f1f5f9" }}>{row.ticker}</span>
                     <div style={{ display:"flex", gap:4, marginTop:3 }}>
@@ -241,6 +244,11 @@ function ScannerView({ data, market }) {
                       {row.trdval_20?row.trdval_20+"억":"-"}
                     </td>
                   )}
+                  <td style={{ padding:"8px 10px", textAlign:"center",
+                    color:(row.handle_depth||0)>=10?"#ef4444":"#94a3b8",
+                    fontWeight:(row.handle_depth||0)>=10?700:400 }}>
+                    {row.handle_depth?(row.handle_depth+"%"+((row.handle_depth>=10)?" ⚠️":"")):"-"}
+                  </td>
                   <td style={{ padding:"8px 12px", textAlign:"right", color:"#f1f5f9" }}>
                     {isKR?(row.cur?Number(row.cur).toLocaleString()+"원":"-"):(row.cur?"$"+Number(row.cur).toFixed(2):"-")}
                   </td>
@@ -340,7 +348,9 @@ function BacktestView({ data, market }) {
           <tbody>
             {filtered.map((row,i) => (
               <tr key={i} style={{ borderBottom:"1px solid #1e293b", background:i%2===0?"#0f172a":"#111827" }}>
-                <td style={{ padding:"7px 12px", color:"#475569", whiteSpace:"nowrap" }}>{row.date}</td>
+                <td style={{ padding:"7px 10px", color:"#475569", whiteSpace:"nowrap", fontSize:11 }}>
+                  {row.date ? row.date.replace(/^20(\d{2})-0?(\d+)-0?(\d+)$/,"$1.$2.$3") : "-"}
+                </td>
                 <td style={{ padding:"7px 12px", fontWeight:900 }}>
                     <span style={{ color:"#f1f5f9" }}>{row.ticker}</span>
                     <div style={{ display:"flex", gap:4, marginTop:3 }}>
