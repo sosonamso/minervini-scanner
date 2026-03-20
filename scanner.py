@@ -510,6 +510,9 @@ if __name__=="__main__":
                 "vol_ratio":r["vr"],"rs":r["rs"],
                 "trdval_20":r.get("trdval_20",0),
                 "score":r["score"],"grade":r["grade"],
+                "hist_count":len(r.get("history",[])),
+                "hist_winrate":round(sum(1 for h in r.get("history",[]) if h.get("r20") is not None and h["r20"]>0)/max(len([h for h in r.get("history",[]) if h.get("r20") is not None]),1)*100) if r.get("history") else 0,
+                "hist_detail":"|".join([f"{h['date']}:{h.get('r5','?')}/{h.get('r20','?')}" for h in r.get("history",[])[-5:]]),
             })
         pd.DataFrame(rows).to_csv("scanner_kr_raw.csv",index=False,encoding="utf-8-sig")
         print(f"RAW 저장 완료: scanner_kr_raw.csv ({len(rows)}건)")
