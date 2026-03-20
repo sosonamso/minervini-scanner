@@ -9,623 +9,495 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #020617; color: #f1f5f9; font-family: 'SF Mono', 'Fira Code', monospace; }
+    body { background: #020617; color: #f1f5f9; font-family: 'SF Mono', monospace; }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #0f172a; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
     input[type=range] { accent-color: #fb923c; }
-    select option { background: #1e293b; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spin { animation: spin 1s linear infinite; display: inline-block; }
   </style>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="text/babel">
-    const { useState, useCallback, useMemo, useEffect } = React;
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useCallback, useMemo, useEffect } = React;
 
-    const GITHUB_USER = "sosonamso";
-    const GITHUB_REPO = "minervini-scanner";
-    const BRANCH = "main";
-    const RAW = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}`;
+const GITHUB_USER = "sosonamso";
+const GITHUB_REPO = "minervini-scanner";
+const BRANCH = "main";
+const RAW = "https://raw.githubusercontent.com/" + GITHUB_USER + "/" + GITHUB_REPO + "/" + BRANCH;
 
-    const DATA_FILES = {
-      kr_scanner:  `${RAW}/scanner_kr_raw.csv`,
-      kr_backtest: `${RAW}/backtest_raw.csv`,
-      us_scanner:  `${RAW}/scanner_us_raw.csv`,
-      us_small:    `${RAW}/scanner_us_small_raw.csv`,
-      us_backtest: `${RAW}/backtest_us_raw.csv`,
-    };
+const DATA_FILES = {
+  kr_scanner:  RAW + "/scanner_kr_raw.csv",
+  kr_backtest: RAW + "/backtest_raw.csv",
+  us_scanner:  RAW + "/scanner_us_raw.csv",
+  us_small:    RAW + "/scanner_us_small_raw.csv",
+  us_backtest: RAW + "/backtest_us_raw.csv",
+};
 
-    function parseCSV(text) {
-      const lines = text.split("\n").filter(Boolean);
-      if (lines.length < 2) return [];
-      const headers = lines[0].split(",").map(h => h.trim().replace(/^\uFEFF/, ""));
-      return lines.slice(1).map(line => {
-        const vals = line.split(",");
-        const obj = {};
-        headers.forEach((h, i) => {
-          const v = vals[i]?.trim();
-          obj[h] = v === "" || v === undefined ? null : isNaN(v) ? v : Number(v);
-        });
-        return obj;
-      }).filter(r => Object.values(r).some(v => v !== null));
-    }
+function parseCSV(text) {
+  const lines = text.split("\n").filter(Boolean);
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(",").map(h => h.trim().replace(/^\uFEFF/, ""));
+  return lines.slice(1).map(line => {
+    const vals = line.split(",");
+    const obj = {};
+    headers.forEach((h, i) => {
+      const v = vals[i] ? vals[i].trim() : "";
+      obj[h] = v === "" ? null : isNaN(v) ? v : Number(v);
+    });
+    return obj;
+  }).filter(r => Object.values(r).some(v => v !== null));
+}
 
-    function fmt(v) {
-      if (v === null || v === undefined || isNaN(v)) return "-";
-      return (v >= 0 ? "+" : "") + Number(v).toFixed(1) + "%";
-    }
+function fmt(v) {
+  if (v === null || v === undefined || isNaN(v)) return "-";
+  return (v >= 0 ? "+" : "") + Number(v).toFixed(1) + "%";
+}
 
-    function cellStyle(v) {
-      if (v === null || v === undefined || isNaN(v)) return {};
-      if (v > 10) return { background:"#14532d", color:"#86efac", fontWeight:700 };
-      if (v > 5)  return { background:"#166534", color:"#bbf7d0", fontWeight:700 };
-      if (v > 0)  return { background:"#1a2e05", color:"#86efac", fontWeight:600 };
-      if (v > -5) return { background:"#450a0a", color:"#fca5a5", fontWeight:600 };
-      return { background:"#7f1d1d", color:"#fecaca", fontWeight:700 };
-    }
+function cellStyle(v) {
+  if (v === null || v === undefined || isNaN(v)) return {};
+  if (v > 10) return { background: "#14532d", color: "#86efac", fontWeight: 700 };
+  if (v > 5)  return { background: "#166534", color: "#bbf7d0", fontWeight: 700 };
+  if (v > 0)  return { background: "#1a2e05", color: "#86efac", fontWeight: 600 };
+  if (v > -5) return { background: "#450a0a", color: "#fca5a5", fontWeight: 600 };
+  return { background: "#7f1d1d", color: "#fecaca", fontWeight: 700 };
+}
 
-    function mean(arr) {
-      const v = arr.filter(x => x !== null && !isNaN(x));
-      return v.length ? v.reduce((a,b)=>a+b,0)/v.length : null;
-    }
-    function median(arr) {
-      const v = [...arr.filter(x=>x!==null&&!isNaN(x))].sort((a,b)=>a-b);
-      if (!v.length) return null;
-      const m = Math.floor(v.length/2);
-      return v.length%2 ? v[m] : (v[m-1]+v[m])/2;
-    }
+function mean(arr) {
+  const v = arr.filter(x => x !== null && !isNaN(x));
+  return v.length ? v.reduce((a,b) => a+b, 0) / v.length : null;
+}
 
-    function StatBadge({ label, value, sub, color }) {
-      return (
-        <div style={{ background:"#1e293b", borderRadius:10, padding:"12px 16px", minWidth:100 }}>
-          <div style={{ fontSize:11, color:"#64748b", marginBottom:4 }}>{label}</div>
-          <div style={{ fontSize:20, fontWeight:900, color:color||"#f1f5f9" }}>{value}</div>
-          {sub && <div style={{ fontSize:11, color:"#64748b", marginTop:2 }}>{sub}</div>}
-        </div>
-      );
-    }
+function StatBadge({ label, value, sub, color }) {
+  return (
+    <div style={{ background:"#1e293b", borderRadius:10, padding:"12px 16px", minWidth:100 }}>
+      <div style={{ fontSize:11, color:"#64748b", marginBottom:4 }}>{label}</div>
+      <div style={{ fontSize:20, fontWeight:900, color:color||"#f1f5f9" }}>{value}</div>
+      {sub && <div style={{ fontSize:11, color:"#64748b", marginTop:2 }}>{sub}</div>}
+    </div>
+  );
+}
 
-    function SortTh({ col, label, sortState, onSort, center }) {
-      const active = sortState.col === col;
-      return (
-        <th onClick={()=>onSort(col)} style={{
-          padding:"10px 12px", cursor:"pointer", whiteSpace:"nowrap", userSelect:"none",
-          background:active?"#1e3a5f":"#0f172a", color:active?"#fb923c":"#94a3b8",
-          fontWeight:700, fontSize:12, textAlign:center?"center":"left", position:"sticky", top:0
-        }}>
-          {label}{active?(sortState.dir===-1?" ↓":" ↑"):""}
-        </th>
-      );
-    }
+function SortTh({ col, label, sortState, onSort, center }) {
+  const active = sortState.col === col;
+  return (
+    <th onClick={() => onSort(col)} style={{
+      padding:"10px 12px", cursor:"pointer", whiteSpace:"nowrap", userSelect:"none",
+      background: active ? "#1e3a5f" : "#0f172a",
+      color: active ? "#fb923c" : "#94a3b8",
+      fontWeight:700, fontSize:12, textAlign:center?"center":"left", position:"sticky", top:0
+    }}>
+      {label}{active ? (sortState.dir===-1 ? " v" : " ^") : ""}
+    </th>
+  );
+}
 
-    function ScannerView({ data, market }) {
-      const [sort, setSort] = useState({ col:"score", dir:-1 });
-      const [filter, setFilter] = useState({ search:"", minScore:0 });
-      const [expanded, setExpanded] = useState(null);
-      const handleSort = col => setSort(s=>s.col===col?{col,dir:-s.dir}:{col,dir:-1});
-      const isKR = market==="KR";
-
-      const filtered = useMemo(()=>data.filter(r=>{
-        if(filter.search&&!String(r.ticker||r.name||"").toLowerCase().includes(filter.search.toLowerCase()))return false;
-        if((r.score||0)<filter.minScore)return false;
-        return true;
-      }).sort((a,b)=>{
-        const av=a[sort.col],bv=b[sort.col];
-        if(av==null)return 1;if(bv==null)return -1;
-        return(av>bv?1:-1)*sort.dir;
-      }),[data,filter,sort]);
-
-      return (
-        <div>
-          <div style={{ display:"flex", gap:10, marginBottom:16, flexWrap:"wrap" }}>
-            <StatBadge label="시그널" value={`${filtered.length}건`} />
-            <StatBadge label="평균 점수" value={Math.round(mean(filtered.map(r=>r.score))||0)} color="#fb923c" />
-            <StatBadge label="평균 RS" value={fmt(mean(filtered.map(r=>r.rs)))}
-              color={mean(filtered.map(r=>r.rs))>0?"#22c55e":"#ef4444"} />
-          </div>
-          <div style={{ display:"flex", gap:10, marginBottom:12, flexWrap:"wrap", alignItems:"center" }}>
-            <input placeholder="검색..." value={filter.search}
-              onChange={e=>setFilter(f=>({...f,search:e.target.value}))}
-              style={{ padding:"6px 12px", borderRadius:8, border:"1px solid #334155",
-                background:"#1e293b", color:"#f1f5f9", fontSize:13, outline:"none", width:140 }} />
-            <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-              <span style={{ fontSize:12, color:"#64748b" }}>최소점수:</span>
-              <input type="range" min="0" max="90" step="10" value={filter.minScore}
-                onChange={e=>setFilter(f=>({...f,minScore:Number(e.target.value)}))} style={{ width:70 }} />
-              <span style={{ fontSize:13, fontWeight:800, color:"#fb923c" }}>{filter.minScore}+</span>
+function ExpandedRow({ row, isKR, colCount }) {
+  const histItems = (row.hist_detail||"").split("|").filter(Boolean);
+  return (
+    <tr style={{ background:"#0a0f1e" }}>
+      <td colSpan={colCount} style={{ padding:"12px 20px", borderBottom:"2px solid #334155" }}>
+        <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
+          <div>
+            <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>상세 정보</div>
+            <div style={{ fontSize:12, color:"#94a3b8" }}>
+              {"컵: "+(row.cup_depth||"-")+"% / "+(row.cup_days||"-")+"일"}<br/>
+              {"핸들: "+(row.handle_depth||"-")+"% / "+(row.handle_days||"-")+"일"}<br/>
+              {"거래량배율: "+(row.vol_ratio||"-")+"x"}
             </div>
-            <span style={{ fontSize:12, color:"#475569", marginLeft:"auto" }}>{filtered.length}/{data.length}건</span>
           </div>
-          <div style={{ overflowX:"auto", borderRadius:10 }}>
-            <table style={{ width:"100%", borderCollapse:"collapse", fontSize:12 }}>
-              <thead><tr>
-                {[["date","날짜"],["ticker","코드"],isKR?["name","종목명"]:["cap","구분"],
-                  isKR?["sector","섹터"]:null,["score","점수"],["rs","RS"],["vol_ratio","거래량"],
-                  ["cup_depth","컵깊이"],["handle_depth","핸들"],["cur","현재가"],["pivot","피벗"]
-                ].filter(Boolean).map(([col,label])=>(
-                  <SortTh key={col} col={col} label={label} sortState={sort} onSort={handleSort}
-                    center={!["date","ticker","name","sector","cap"].includes(col)} />
-                ))}
-              </tr></thead>
-              <tbody>
-                {filtered.map((row,i)=>(
-                  <tr key={i} style={{ borderBottom:"1px solid #1e293b", background:i%2===0?"#0f172a":"#111827" }}>
-                    <td style={{ padding:"8px 12px", color:"#475569", whiteSpace:"nowrap" }}>{row.date}</td>
-                    <td style={{ padding:"8px 12px", fontWeight:900, color:"#f1f5f9" }}>{row.ticker}</td>
-                    {isKR&&<td style={{ padding:"8px 12px", color:"#94a3b8" }}>{row.name}</td>}
-                    {isKR&&<td style={{ padding:"8px 12px", color:"#94a3b8", fontSize:12 }}>
-                      {row.sector||"-"}
-                    </td>}
-                    {!isKR&&<td style={{ padding:"8px 12px" }}>
+          {isKR && row.hist_count > 0 && (
+            <div>
+              <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>
+                {"과거이력 "+(row.hist_count||0)+"회 · 승률 "}
+                <span style={{ color:"#22c55e", fontWeight:700 }}>{(row.hist_winrate||0)+"%"}</span>
+              </div>
+              <div style={{ fontSize:12, color:"#94a3b8" }}>
+                {histItems.map((h, j) => {
+                  const p = h.indexOf(":");
+                  const date = p>=0 ? h.substring(0,p) : h;
+                  const ret = p>=0 ? h.substring(p+1) : "";
+                  const s = ret.indexOf("/");
+                  const r5 = s>=0 ? ret.substring(0,s) : ret;
+                  const r20 = s>=0 ? ret.substring(s+1) : "-";
+                  const win = r20 !== "-" && !isNaN(parseFloat(r20)) && parseFloat(r20) > 0;
+                  return (
+                    <div key={j} style={{ marginBottom:2 }}>
+                      <span style={{ color:"#475569" }}>{date}</span>
+                      <span style={{ color:"#64748b" }}> 5일</span>
+                      <span style={{ color:parseFloat(r5)>0?"#22c55e":"#ef4444" }}>{r5}</span>
+                      <span style={{ color:"#64748b" }}> 20일</span>
+                      <span style={{ color:win?"#22c55e":"#ef4444" }}>{r20}</span>
+                      <span style={{ color:win?"#22c55e":"#ef4444" }}>{win?" v":" x"}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+function ScannerView({ data, market }) {
+  const [sort, setSort] = useState({ col:"score", dir:-1 });
+  const [filter, setFilter] = useState({ search:"", minScore:0 });
+  const [expanded, setExpanded] = useState(null);
+  const handleSort = col => setSort(s => s.col===col ? {col,dir:-s.dir} : {col,dir:-1});
+  const isKR = market === "KR";
+
+  const filtered = useMemo(() => data.filter(r => {
+    if (filter.search && !String(r.ticker||r.name||"").toLowerCase().includes(filter.search.toLowerCase())) return false;
+    if ((r.score||0) < filter.minScore) return false;
+    return true;
+  }).sort((a,b) => {
+    const av=a[sort.col], bv=b[sort.col];
+    if (av==null) return 1; if (bv==null) return -1;
+    return (av>bv?1:-1)*sort.dir;
+  }), [data, filter, sort]);
+
+  const colCount = isKR ? 10 : 8;
+
+  return (
+    <div>
+      <div style={{ display:"flex", gap:10, marginBottom:16, flexWrap:"wrap" }}>
+        <StatBadge label="시그널" value={filtered.length+"건"} />
+        <StatBadge label="평균 점수" value={Math.round(mean(filtered.map(r=>r.score))||0)} color="#fb923c" />
+        <StatBadge label="평균 RS" value={fmt(mean(filtered.map(r=>r.rs)))} color={mean(filtered.map(r=>r.rs))>0?"#22c55e":"#ef4444"} />
+      </div>
+      <div style={{ display:"flex", gap:10, marginBottom:12, flexWrap:"wrap", alignItems:"center" }}>
+        <input placeholder="검색..." value={filter.search} onChange={e=>setFilter(f=>({...f,search:e.target.value}))}
+          style={{ padding:"6px 12px", borderRadius:8, border:"1px solid #334155", background:"#1e293b", color:"#f1f5f9", fontSize:13, outline:"none", width:140 }} />
+        <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+          <span style={{ fontSize:12, color:"#64748b" }}>최소점수:</span>
+          <input type="range" min="0" max="90" step="10" value={filter.minScore} onChange={e=>setFilter(f=>({...f,minScore:Number(e.target.value)}))} style={{ width:70 }} />
+          <span style={{ fontSize:13, fontWeight:800, color:"#fb923c" }}>{filter.minScore}+</span>
+        </div>
+        <span style={{ fontSize:12, color:"#475569", marginLeft:"auto" }}>{filtered.length}/{data.length}건</span>
+      </div>
+      <div style={{ overflowX:"auto", borderRadius:10 }}>
+        <table style={{ width:"100%", borderCollapse:"collapse", fontSize:12 }}>
+          <thead>
+            <tr>
+              <SortTh col="date" label="날짜" sortState={sort} onSort={handleSort} />
+              <SortTh col="ticker" label="코드" sortState={sort} onSort={handleSort} />
+              {isKR && <SortTh col="name" label="종목명" sortState={sort} onSort={handleSort} />}
+              {isKR && <SortTh col="sector" label="섹터" sortState={sort} onSort={handleSort} />}
+              {!isKR && <SortTh col="cap" label="구분" sortState={sort} onSort={handleSort} center />}
+              <SortTh col="score" label="점수" sortState={sort} onSort={handleSort} center />
+              <SortTh col="rs" label="RS" sortState={sort} onSort={handleSort} center />
+              <SortTh col="vol_ratio" label="거래량" sortState={sort} onSort={handleSort} center />
+              {isKR && <SortTh col="trdval_20" label="거래대금" sortState={sort} onSort={handleSort} center />}
+              <SortTh col="cur" label="현재가" sortState={sort} onSort={handleSort} center />
+              <SortTh col="pivot" label="피벗" sortState={sort} onSort={handleSort} center />
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((row, i) => (
+              <React.Fragment key={i}>
+                <tr onClick={() => setExpanded(expanded===i ? null : i)}
+                  style={{ borderBottom:"1px solid #1e293b", background:i%2===0?"#0f172a":"#111827", cursor:"pointer" }}>
+                  <td style={{ padding:"8px 12px", color:"#475569", whiteSpace:"nowrap" }}>{row.date}</td>
+                  <td style={{ padding:"8px 12px", fontWeight:900, color:"#f1f5f9" }}>{row.ticker}</td>
+                  {isKR && <td style={{ padding:"8px 12px", color:"#94a3b8" }}>{row.name}</td>}
+                  {isKR && <td style={{ padding:"8px 12px", color:"#64748b", fontSize:11 }}>{row.sector||"-"}</td>}
+                  {!isKR && (
+                    <td style={{ padding:"8px 12px", textAlign:"center" }}>
                       <span style={{ borderRadius:6, padding:"2px 6px", fontSize:11, fontWeight:700, background:"#1e3a5f", color:"#60a5fa" }}>
                         {row.cap==="SmallCap600"?"Small":row.cap==="MidCap400"?"Mid":"S&P500"}
                       </span>
-                    </td>}
-                    <td style={{ padding:"8px 12px", textAlign:"center", fontWeight:800, color:(row.score||0)>=80?"#fb923c":(row.score||0)>=70?"#f1f5f9":"#475569" }}>{row.score||"-"}</td>
-                    <td style={{ padding:"8px 12px", textAlign:"center", color:(row.rs||0)>0?"#22c55e":"#ef4444" }}>{fmt(row.rs)}</td>
-                    <td style={{ padding:"8px 12px", textAlign:"center", color:"#64748b" }}>{row.vol_ratio?Number(row.vol_ratio).toFixed(2)+"x":"-"}</td>
-                    <td style={{ padding:"8px 12px", textAlign:"center", color:"#94a3b8" }}>{row.cup_depth?row.cup_depth+"%":"-"}</td>
-                    <td style={{ padding:"8px 12px", textAlign:"center", color:"#94a3b8" }}>{row.handle_depth?row.handle_depth+"%":"-"}</td>
-                    <td style={{ padding:"8px 12px", textAlign:"right", color:"#f1f5f9" }}>
-                      {isKR?(row.cur?Number(row.cur).toLocaleString()+"원":"-"):(row.cur?"$"+Number(row.cur).toFixed(2):"-")}
                     </td>
-                    <td style={{ padding:"8px 12px", textAlign:"right", color:"#fb923c", fontWeight:700 }}>
-                      {isKR?(row.pivot?Number(row.pivot).toLocaleString()+"원":"-"):(row.pivot?"$"+Number(row.pivot).toFixed(2):"-")}
-                    </td>
-                  </tr>
-                  {expanded===i && (
-                    <tr key={`exp-${i}`} style={{ background:"#0f172a" }}>
-                      <td colSpan={20} style={{ padding:"12px 20px", borderBottom:"1px solid #334155" }}>
-                        <div style={{ display:"flex", gap:20, flexWrap:"wrap" }}>
-                          <div>
-                            <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>컵&핸들 상세</div>
-                            <div style={{ fontSize:12, color:"#94a3b8" }}>
-                              컵: {row.cup_depth}% / {row.cup_days}일<br/>
-                              핸들: {row.handle_depth}% / {row.handle_days}일<br/>
-                              거래량배율: {row.vol_ratio}x
-                            </div>
-                          </div>
-                          {isKR && row.hist_count>0 && (
-                            <div>
-                              <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>
-                                과거이력 {row.hist_count}회 · 승률 <span style={{ color:"#22c55e", fontWeight:700 }}>{row.hist_winrate}%</span>
-                              </div>
-                              <div style={{ fontSize:12, color:"#94a3b8" }}>
-                                {(row.hist_detail||"").split("|").map((h,j)=>{
-                                  const parts = h.split(":");
-                                  const date = parts[0];
-                                  const returns = parts[1]||"";
-                                  const [r5,r20] = returns.split("/");
-                                  const win = r20 && parseFloat(r20)>0;
-                                  return (
-                                    <div key={j} style={{ marginBottom:2 }}>
-                                      <span style={{ color:"#475569" }}>{date}</span>
-                                      {" "}5일<span style={{ color:r5&&parseFloat(r5)>0?"#22c55e":"#ef4444" }}>{r5}</span>
-                                      {" "}20일<span style={{ color:win?"#22c55e":"#ef4444" }}>{r20}</span>
-                                      {" "}<span style={{ color:win?"#22c55e":"#ef4444" }}>{win?"✓":"✗"}</span>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
                   )}
-                ))}
-                {/* 펼침 행 - tbody 내부에서 별도 렌더링 */}
-                {filtered.map((row,i)=> expanded===i ? (
-                  <tr key={`exp-${i}`} style={{ background:"#0a0f1e" }}>
-                    <td colSpan={20} style={{ padding:"12px 20px", borderBottom:"2px solid #334155" }}>
-                      <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
-                        <div>
-                          <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>📐 컵&핸들 상세</div>
-                          <div style={{ fontSize:12, color:"#94a3b8", lineHeight:1.8 }}>
-                            컵: {row.cup_depth}% / {row.cup_days}일<br/>
-                            핸들: {row.handle_depth}% / {row.handle_days}일<br/>
-                            거래량배율: {row.vol_ratio}x
-                          </div>
-                        </div>
-                        {isKR && row.hist_count>0 && (
-                          <div>
-                            <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>
-                              📈 과거이력 {row.hist_count}회 · 승률{" "}
-                              <span style={{ color:"#22c55e", fontWeight:700 }}>{row.hist_winrate}%</span>
-                            </div>
-                            <div style={{ fontSize:12, color:"#94a3b8", lineHeight:1.8 }}>
-                              {(row.hist_detail||"").split("|").filter(Boolean).map((h,j)=>{
-                                const [date,ret] = h.split(":");
-                                const [r5,r20] = (ret||"").split("/");
-                                const win = r20 && !isNaN(parseFloat(r20)) && parseFloat(r20)>0;
-                                return (
-                                  <div key={j}>
-                                    <span style={{ color:"#475569" }}>{date}</span>
-                                    {" "}5일<span style={{ color:r5&&parseFloat(r5)>0?"#22c55e":"#ef4444" }}>{r5}</span>
-                                    {" "}20일<span style={{ color:win?"#22c55e":"#ef4444" }}>{r20||"-"}</span>
-                                    {" "}<span style={{ color:win?"#22c55e":"#ef4444" }}>{win?"✓":"✗"}</span>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                  <td style={{ padding:"8px 12px", textAlign:"center", fontWeight:800, color:(row.score||0)>=80?"#fb923c":(row.score||0)>=70?"#f1f5f9":"#475569" }}>{row.score||"-"}</td>
+                  <td style={{ padding:"8px 12px", textAlign:"center", color:(row.rs||0)>0?"#22c55e":"#ef4444" }}>{fmt(row.rs)}</td>
+                  <td style={{ padding:"8px 12px", textAlign:"center", color:"#64748b" }}>{row.vol_ratio?Number(row.vol_ratio).toFixed(2)+"x":"-"}</td>
+                  {isKR && (
+                    <td style={{ padding:"8px 12px", textAlign:"center", fontWeight:600, color:(row.trdval_20||0)>=10?"#f1f5f9":(row.trdval_20||0)>=5?"#94a3b8":"#ef4444" }}>
+                      {row.trdval_20?row.trdval_20+"억":"-"}
                     </td>
-                  </tr>
-                ) : null)}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      );
-    }
-
-    function BacktestView({ data, market }) {
-      const [sort, setSort] = useState({ col:"r20", dir:-1 });
-      const [filter, setFilter] = useState({ search:"", minScore:0, cap:"전체" });
-      const handleSort = col => setSort(s=>s.col===col?{col,dir:-s.dir}:{col,dir:-1});
-      const isKR = market==="KR";
-      const DAYS=[5,10,15,20];
-      const caps=["전체",...new Set(data.map(r=>r.cap||r.market).filter(Boolean))];
-
-      const filtered = useMemo(()=>data.filter(r=>{
-        if(filter.search&&!String(r.ticker||"").toLowerCase().includes(filter.search.toLowerCase()))return false;
-        if((r.score||0)<filter.minScore)return false;
-        if(filter.cap!=="전체"&&(r.cap||r.market)!==filter.cap)return false;
-        return true;
-      }).sort((a,b)=>{
-        const av=a[sort.col],bv=b[sort.col];
-        if(av==null)return 1;if(bv==null)return -1;
-        return(av>bv?1:-1)*sort.dir;
-      }),[data,filter,sort]);
-
-      const winStats=DAYS.map(d=>{
-        const vals=filtered.map(r=>r[`r${d}`]).filter(v=>v!==null&&!isNaN(v));
-        return{day:d,vals,win:vals.filter(v=>v>0).length,total:vals.length,
-          rate:vals.length?Math.round(vals.filter(v=>v>0).length/vals.length*100):0,avg:mean(vals)};
-      });
-
-      return (
-        <div>
-          <div style={{ display:"flex", gap:10, marginBottom:16, flexWrap:"wrap" }}>
-            <StatBadge label="총 시그널" value={`${filtered.length}건`} />
-            {winStats.map(s=>(
-              <StatBadge key={s.day} label={`${s.day}일 승률`} value={`${s.rate}%`}
-                sub={`${s.win}/${s.total} · avg ${fmt(s.avg)}`}
-                color={s.rate>=65?"#22c55e":s.rate>=50?"#eab308":"#ef4444"} />
+                  )}
+                  <td style={{ padding:"8px 12px", textAlign:"right", color:"#f1f5f9" }}>
+                    {isKR?(row.cur?Number(row.cur).toLocaleString()+"원":"-"):(row.cur?"$"+Number(row.cur).toFixed(2):"-")}
+                  </td>
+                  <td style={{ padding:"8px 12px", textAlign:"right", color:"#fb923c", fontWeight:700 }}>
+                    {isKR?(row.pivot?Number(row.pivot).toLocaleString()+"원":"-"):(row.pivot?"$"+Number(row.pivot).toFixed(2):"-")}
+                  </td>
+                </tr>
+                {expanded === i && <ExpandedRow row={row} isKR={isKR} colCount={colCount} />}
+              </React.Fragment>
             ))}
-          </div>
-          <div style={{ display:"flex", gap:10, marginBottom:12, flexWrap:"wrap", alignItems:"center" }}>
-            <input placeholder="티커 검색..." value={filter.search}
-              onChange={e=>setFilter(f=>({...f,search:e.target.value}))}
-              style={{ padding:"6px 12px", borderRadius:8, border:"1px solid #334155",
-                background:"#1e293b", color:"#f1f5f9", fontSize:13, outline:"none", width:120 }} />
-            {caps.length>2&&(
-              <select value={filter.cap} onChange={e=>setFilter(f=>({...f,cap:e.target.value}))}
-                style={{ padding:"6px 10px", borderRadius:8, border:"1px solid #334155",
-                  background:"#1e293b", color:"#f1f5f9", fontSize:13 }}>
-                {caps.map(c=><option key={c}>{c}</option>)}
-              </select>
-            )}
-            <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-              <span style={{ fontSize:12, color:"#64748b" }}>최소점수:</span>
-              <input type="range" min="0" max="90" step="10" value={filter.minScore}
-                onChange={e=>setFilter(f=>({...f,minScore:Number(e.target.value)}))} style={{ width:70 }} />
-              <span style={{ fontSize:13, fontWeight:800, color:"#fb923c" }}>{filter.minScore}+</span>
-            </div>
-            <span style={{ fontSize:12, color:"#475569", marginLeft:"auto" }}>{filtered.length}/{data.length}건</span>
-          </div>
-          <div style={{ overflowX:"auto", borderRadius:10 }}>
-            <table style={{ width:"100%", borderCollapse:"collapse", fontSize:12 }}>
-              <thead>
-                <tr>
-                  {[["date","날짜"],["ticker","티커"],isKR?["name","종목명"]:["cap","구분"],
-                    ["score","점수"],["rs","RS"],["vol_ratio","거래량"],
-                    ["r5","5일"],["r10","10일"],["r15","15일"],["r20","20일"]
-                  ].map(([col,label])=>(
-                    <SortTh key={col} col={col} label={label} sortState={sort} onSort={handleSort}
-                      center={!["date","ticker","name","cap"].includes(col)} />
-                  ))}
-                </tr>
-                <tr style={{ background:"#1e293b" }}>
-                  <td colSpan={7} style={{ padding:"5px 12px", color:"#475569", fontSize:11, fontWeight:700 }}>승률</td>
-                  {winStats.map(s=>(
-                    <td key={s.day} style={{ padding:"5px 10px", textAlign:"center" }}>
-                      <span style={{ borderRadius:99, padding:"2px 7px", fontSize:11, fontWeight:700,
-                        background:s.rate>=65?"#14532d":s.rate>=50?"#422006":"#450a0a",
-                        color:s.rate>=65?"#86efac":s.rate>=50?"#fed7aa":"#fca5a5" }}>
-                        {s.win}/{s.total} ({s.rate}%)
-                      </span>
-                    </td>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((row,i)=>(
-                  <tr key={i} style={{ borderBottom:"1px solid #1e293b", background:i%2===0?"#0f172a":"#111827" }}>
-                    <td style={{ padding:"7px 12px", color:"#475569", whiteSpace:"nowrap" }}>{row.date}</td>
-                    <td style={{ padding:"7px 12px", fontWeight:900, color:"#f1f5f9" }}>{row.ticker}</td>
-                    {isKR?<td style={{ padding:"7px 12px", color:"#94a3b8", fontSize:11 }}>{row.name}</td>
-                         :<td style={{ padding:"7px 12px" }}>
-                            <span style={{ borderRadius:6, padding:"2px 6px", fontSize:11, fontWeight:700, background:"#1e3a5f", color:"#60a5fa" }}>
-                              {row.cap==="SmallCap600"?"Small":row.cap==="MidCap400"?"Mid":"S&P500"}
-                            </span>
-                          </td>}
-                    <td style={{ padding:"7px 12px", textAlign:"center", fontWeight:800, color:(row.score||0)>=80?"#fb923c":(row.score||0)>=70?"#f1f5f9":"#475569" }}>{row.score||"-"}</td>
-                    <td style={{ padding:"7px 12px", textAlign:"center", color:(row.rs||0)>0?"#22c55e":"#ef4444" }}>{fmt(row.rs)}</td>
-                    <td style={{ padding:"7px 12px", textAlign:"center", color:"#64748b" }}>{row.vol_ratio?Number(row.vol_ratio).toFixed(2)+"x":"-"}</td>
-                    {DAYS.map(d=>{
-                      const v=row[`r${d}`];
-                      return<td key={d} style={{ padding:"7px 10px", textAlign:"center", ...cellStyle(v) }}>{fmt(v)}</td>;
-                    })}
-                  </tr>
-                  {expanded===i && (
-                    <tr key={`exp-${i}`} style={{ background:"#0f172a" }}>
-                      <td colSpan={20} style={{ padding:"12px 20px", borderBottom:"1px solid #334155" }}>
-                        <div style={{ display:"flex", gap:20, flexWrap:"wrap" }}>
-                          <div>
-                            <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>컵&핸들 상세</div>
-                            <div style={{ fontSize:12, color:"#94a3b8" }}>
-                              컵: {row.cup_depth}% / {row.cup_days}일<br/>
-                              핸들: {row.handle_depth}% / {row.handle_days}일<br/>
-                              거래량배율: {row.vol_ratio}x
-                            </div>
-                          </div>
-                          {isKR && row.hist_count>0 && (
-                            <div>
-                              <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>
-                                과거이력 {row.hist_count}회 · 승률 <span style={{ color:"#22c55e", fontWeight:700 }}>{row.hist_winrate}%</span>
-                              </div>
-                              <div style={{ fontSize:12, color:"#94a3b8" }}>
-                                {(row.hist_detail||"").split("|").map((h,j)=>{
-                                  const parts = h.split(":");
-                                  const date = parts[0];
-                                  const returns = parts[1]||"";
-                                  const [r5,r20] = returns.split("/");
-                                  const win = r20 && parseFloat(r20)>0;
-                                  return (
-                                    <div key={j} style={{ marginBottom:2 }}>
-                                      <span style={{ color:"#475569" }}>{date}</span>
-                                      {" "}5일<span style={{ color:r5&&parseFloat(r5)>0?"#22c55e":"#ef4444" }}>{r5}</span>
-                                      {" "}20일<span style={{ color:win?"#22c55e":"#ef4444" }}>{r20}</span>
-                                      {" "}<span style={{ color:win?"#22c55e":"#ef4444" }}>{win?"✓":"✗"}</span>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                ))}
-                {/* 펼침 행 - tbody 내부에서 별도 렌더링 */}
-                {filtered.map((row,i)=> expanded===i ? (
-                  <tr key={`exp-${i}`} style={{ background:"#0a0f1e" }}>
-                    <td colSpan={20} style={{ padding:"12px 20px", borderBottom:"2px solid #334155" }}>
-                      <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
-                        <div>
-                          <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>📐 컵&핸들 상세</div>
-                          <div style={{ fontSize:12, color:"#94a3b8", lineHeight:1.8 }}>
-                            컵: {row.cup_depth}% / {row.cup_days}일<br/>
-                            핸들: {row.handle_depth}% / {row.handle_days}일<br/>
-                            거래량배율: {row.vol_ratio}x
-                          </div>
-                        </div>
-                        {isKR && row.hist_count>0 && (
-                          <div>
-                            <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>
-                              📈 과거이력 {row.hist_count}회 · 승률{" "}
-                              <span style={{ color:"#22c55e", fontWeight:700 }}>{row.hist_winrate}%</span>
-                            </div>
-                            <div style={{ fontSize:12, color:"#94a3b8", lineHeight:1.8 }}>
-                              {(row.hist_detail||"").split("|").filter(Boolean).map((h,j)=>{
-                                const [date,ret] = h.split(":");
-                                const [r5,r20] = (ret||"").split("/");
-                                const win = r20 && !isNaN(parseFloat(r20)) && parseFloat(r20)>0;
-                                return (
-                                  <div key={j}>
-                                    <span style={{ color:"#475569" }}>{date}</span>
-                                    {" "}5일<span style={{ color:r5&&parseFloat(r5)>0?"#22c55e":"#ef4444" }}>{r5}</span>
-                                    {" "}20일<span style={{ color:win?"#22c55e":"#ef4444" }}>{r20||"-"}</span>
-                                    {" "}<span style={{ color:win?"#22c55e":"#ef4444" }}>{win?"✓":"✗"}</span>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ) : null)}
-              </tbody>
-              <tfoot>
-                <tr style={{ background:"#1e293b", borderTop:"2px solid #334155" }}>
-                  <td colSpan={7} style={{ padding:"8px 12px", fontWeight:800, color:"#f1f5f9", fontSize:13 }}>평균</td>
-                  {winStats.map(s=>(
-                    <td key={s.day} style={{ padding:"8px 10px", textAlign:"center", fontWeight:800, fontSize:13, ...cellStyle(s.avg) }}>{fmt(s.avg)}</td>
-                  ))}
-                </tr>
-              </tfoot>
-            </table>
-          </div>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function BacktestView({ data, market }) {
+  const [sort, setSort] = useState({ col:"r20", dir:-1 });
+  const [filter, setFilter] = useState({ search:"", minScore:0, cap:"전체" });
+  const handleSort = col => setSort(s => s.col===col ? {col,dir:-s.dir} : {col,dir:-1});
+  const isKR = market === "KR";
+  const DAYS = [5,10,15,20];
+  const caps = ["전체",...new Set(data.map(r=>r.cap||r.market).filter(Boolean))];
+
+  const filtered = useMemo(() => data.filter(r => {
+    if (filter.search && !String(r.ticker||"").toLowerCase().includes(filter.search.toLowerCase())) return false;
+    if ((r.score||0) < filter.minScore) return false;
+    if (filter.cap !== "전체" && (r.cap||r.market) !== filter.cap) return false;
+    return true;
+  }).sort((a,b) => {
+    const av=a[sort.col], bv=b[sort.col];
+    if (av==null) return 1; if (bv==null) return -1;
+    return (av>bv?1:-1)*sort.dir;
+  }), [data, filter, sort]);
+
+  const winStats = DAYS.map(d => {
+    const vals = filtered.map(r=>r["r"+d]).filter(v=>v!==null&&!isNaN(v));
+    return { day:d, vals, win:vals.filter(v=>v>0).length, total:vals.length,
+      rate: vals.length ? Math.round(vals.filter(v=>v>0).length/vals.length*100) : 0,
+      avg: mean(vals) };
+  });
+
+  return (
+    <div>
+      <div style={{ display:"flex", gap:10, marginBottom:16, flexWrap:"wrap" }}>
+        <StatBadge label="총 시그널" value={filtered.length+"건"} />
+        {winStats.map(s => (
+          <StatBadge key={s.day} label={s.day+"일 승률"} value={s.rate+"%"}
+            sub={s.win+"/"+s.total+" avg "+fmt(s.avg)}
+            color={s.rate>=65?"#22c55e":s.rate>=50?"#eab308":"#ef4444"} />
+        ))}
+      </div>
+      <div style={{ display:"flex", gap:10, marginBottom:12, flexWrap:"wrap", alignItems:"center" }}>
+        <input placeholder="티커 검색..." value={filter.search} onChange={e=>setFilter(f=>({...f,search:e.target.value}))}
+          style={{ padding:"6px 12px", borderRadius:8, border:"1px solid #334155", background:"#1e293b", color:"#f1f5f9", fontSize:13, outline:"none", width:120 }} />
+        {caps.length>2 && (
+          <select value={filter.cap} onChange={e=>setFilter(f=>({...f,cap:e.target.value}))}
+            style={{ padding:"6px 10px", borderRadius:8, border:"1px solid #334155", background:"#1e293b", color:"#f1f5f9", fontSize:13 }}>
+            {caps.map(c => <option key={c}>{c}</option>)}
+          </select>
+        )}
+        <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+          <span style={{ fontSize:12, color:"#64748b" }}>최소점수:</span>
+          <input type="range" min="0" max="90" step="10" value={filter.minScore} onChange={e=>setFilter(f=>({...f,minScore:Number(e.target.value)}))} style={{ width:70 }} />
+          <span style={{ fontSize:13, fontWeight:800, color:"#fb923c" }}>{filter.minScore}+</span>
         </div>
-      );
-    }
+        <span style={{ fontSize:12, color:"#475569", marginLeft:"auto" }}>{filtered.length}/{data.length}건</span>
+      </div>
+      <div style={{ overflowX:"auto", borderRadius:10 }}>
+        <table style={{ width:"100%", borderCollapse:"collapse", fontSize:12 }}>
+          <thead>
+            <tr>
+              <SortTh col="date" label="날짜" sortState={sort} onSort={handleSort} />
+              <SortTh col="ticker" label="티커" sortState={sort} onSort={handleSort} />
+              {isKR ? <SortTh col="name" label="종목명" sortState={sort} onSort={handleSort} />
+                    : <SortTh col="cap" label="구분" sortState={sort} onSort={handleSort} center />}
+              <SortTh col="score" label="점수" sortState={sort} onSort={handleSort} center />
+              <SortTh col="rs" label="RS" sortState={sort} onSort={handleSort} center />
+              <SortTh col="vol_ratio" label="거래량" sortState={sort} onSort={handleSort} center />
+              <SortTh col="pivot" label="피벗" sortState={sort} onSort={handleSort} center />
+              {DAYS.map(d => <SortTh key={d} col={"r"+d} label={d+"일"} sortState={sort} onSort={handleSort} center />)}
+            </tr>
+            <tr style={{ background:"#1e293b" }}>
+              <td colSpan={7} style={{ padding:"5px 12px", color:"#475569", fontSize:11, fontWeight:700 }}>승률</td>
+              {winStats.map(s => (
+                <td key={s.day} style={{ padding:"5px 10px", textAlign:"center" }}>
+                  <span style={{ borderRadius:99, padding:"2px 7px", fontSize:11, fontWeight:700,
+                    background:s.rate>=65?"#14532d":s.rate>=50?"#422006":"#450a0a",
+                    color:s.rate>=65?"#86efac":s.rate>=50?"#fed7aa":"#fca5a5" }}>
+                    {s.win}/{s.total} ({s.rate}%)
+                  </span>
+                </td>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((row,i) => (
+              <tr key={i} style={{ borderBottom:"1px solid #1e293b", background:i%2===0?"#0f172a":"#111827" }}>
+                <td style={{ padding:"7px 12px", color:"#475569", whiteSpace:"nowrap" }}>{row.date}</td>
+                <td style={{ padding:"7px 12px", fontWeight:900, color:"#f1f5f9" }}>{row.ticker}</td>
+                {isKR ? <td style={{ padding:"7px 12px", color:"#94a3b8", fontSize:11 }}>{row.name}</td>
+                      : <td style={{ padding:"7px 12px", textAlign:"center" }}>
+                          <span style={{ borderRadius:6, padding:"2px 6px", fontSize:11, fontWeight:700, background:"#1e3a5f", color:"#60a5fa" }}>
+                            {row.cap==="SmallCap600"?"Small":row.cap==="MidCap400"?"Mid":"S&P500"}
+                          </span>
+                        </td>}
+                <td style={{ padding:"7px 12px", textAlign:"center", fontWeight:800, color:(row.score||0)>=80?"#fb923c":(row.score||0)>=70?"#f1f5f9":"#475569" }}>{row.score||"-"}</td>
+                <td style={{ padding:"7px 12px", textAlign:"center", color:(row.rs||0)>0?"#22c55e":"#ef4444" }}>{fmt(row.rs)}</td>
+                <td style={{ padding:"7px 12px", textAlign:"center", color:"#64748b" }}>{row.vol_ratio?Number(row.vol_ratio).toFixed(2)+"x":"-"}</td>
+                <td style={{ padding:"7px 12px", textAlign:"right", color:"#fb923c", fontWeight:700 }}>
+                  {isKR?(row.pivot?Number(row.pivot).toLocaleString()+"원":"-"):(row.pivot?"$"+Number(row.pivot).toFixed(2):"-")}
+                </td>
+                {DAYS.map(d => {
+                  const v = row["r"+d];
+                  return <td key={d} style={{ padding:"7px 10px", textAlign:"center", ...cellStyle(v) }}>{fmt(v)}</td>;
+                })}
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr style={{ background:"#1e293b", borderTop:"2px solid #334155" }}>
+              <td colSpan={7} style={{ padding:"8px 12px", fontWeight:800, color:"#f1f5f9", fontSize:13 }}>평균</td>
+              {winStats.map(s => (
+                <td key={s.day} style={{ padding:"8px 10px", textAlign:"center", fontWeight:800, fontSize:13, ...cellStyle(s.avg) }}>{fmt(s.avg)}</td>
+              ))}
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  );
+}
 
-    const TABS=[
-      {id:"kr_scanner",     label:"🇰🇷 국장 스캐너",      market:"KR", type:"scanner"},
-      {id:"kr_backtest",    label:"🇰🇷 국장 백테스트",     market:"KR", type:"backtest"},
-      {id:"us_scanner",     label:"🇺🇸 미장 S&P1500",     market:"US", type:"scanner"},
-      {id:"us_small",       label:"🇺🇸 미장 소형주",       market:"US", type:"scanner"},
-      {id:"us_backtest",    label:"🇺🇸 미장 백테스트",     market:"US", type:"backtest"},
-    ];
+const TABS = [
+  { id:"kr_scanner",  label:"KR 국장 스캐너",  market:"KR", type:"scanner"  },
+  { id:"kr_backtest", label:"KR 국장 백테스트", market:"KR", type:"backtest" },
+  { id:"us_scanner",  label:"US S&P1500",       market:"US", type:"scanner"  },
+  { id:"us_small",    label:"US 소형주",         market:"US", type:"scanner"  },
+  { id:"us_backtest", label:"US 백테스트",       market:"US", type:"backtest" },
+];
 
-    function App() {
-      const [activeTab, setActiveTab] = useState("kr_scanner");
-      const [datasets, setDatasets] = useState({kr_scanner:[],kr_backtest:[],us_scanner:[],us_small:[],us_backtest:[]});
-      const [loadState, setLoadState] = useState({kr_scanner:"idle",kr_backtest:"idle",us_scanner:"idle",us_small:"idle",us_backtest:"idle"});
-      const [lastUpdated, setLastUpdated] = useState({});
+function App() {
+  const [activeTab, setActiveTab] = useState("kr_scanner");
+  const [datasets, setDatasets] = useState({ kr_scanner:[], kr_backtest:[], us_scanner:[], us_small:[], us_backtest:[] });
+  const [loadState, setLoadState] = useState({ kr_scanner:"idle", kr_backtest:"idle", us_scanner:"idle", us_small:"idle", us_backtest:"idle" });
+  const [lastUpdated, setLastUpdated] = useState({});
 
-      const fetchCSV = useCallback(async (tabId) => {
-        setLoadState(s=>({...s,[tabId]:"loading"}));
-        try {
-          const res = await fetch(DATA_FILES[tabId]+"?t="+Date.now());
-          if (!res.ok) throw new Error();
-          const text = await res.text();
-          const data = parseCSV(text);
-          setDatasets(d=>({...d,[tabId]:data}));
-
-          // GitHub API로 파일 마지막 커밋 시간 가져오기
-          const fileName = DATA_FILES[tabId].split("/").pop().split("?")[0];
-          try {
-            const ghRes = await fetch(
-              `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?path=${fileName}&per_page=1`
-            );
-            if (ghRes.ok) {
-              const ghData = await ghRes.json();
-              if (ghData[0]) {
-                const commitTime = new Date(ghData[0].commit.committer.date);
-                const formatted = commitTime.toLocaleString("ko-KR", {
-                  month:"numeric", day:"numeric",
-                  hour:"2-digit", minute:"2-digit", hour12:false
-                }) + " (KST)";
-                setLastUpdated(u=>({...u,[tabId]:formatted}));
-              }
-            } else {
-              setLastUpdated(u=>({...u,[tabId]:"업데이트 시간 불명"}));
-            }
-          } catch {
-            setLastUpdated(u=>({...u,[tabId]:"업데이트 시간 불명"}));
+  const fetchCSV = useCallback(async (tabId) => {
+    setLoadState(s => ({...s, [tabId]:"loading"}));
+    try {
+      const res = await fetch(DATA_FILES[tabId] + "?t=" + Date.now());
+      if (!res.ok) throw new Error();
+      const text = await res.text();
+      const data = parseCSV(text);
+      setDatasets(d => ({...d, [tabId]:data}));
+      try {
+        const fileName = DATA_FILES[tabId].split("/").pop().split("?")[0];
+        const ghRes = await fetch("https://api.github.com/repos/" + GITHUB_USER + "/" + GITHUB_REPO + "/commits?path=" + fileName + "&per_page=1");
+        if (ghRes.ok) {
+          const ghData = await ghRes.json();
+          if (ghData[0]) {
+            const t = new Date(ghData[0].commit.committer.date);
+            const formatted = (t.getMonth()+1) + "/" + t.getDate() + " " + String(t.getHours()).padStart(2,"0") + ":" + String(t.getMinutes()).padStart(2,"0") + " (KST)";
+            setLastUpdated(u => ({...u, [tabId]:formatted}));
           }
-
-          setLoadState(s=>({...s,[tabId]:"done"}));
-        } catch {
-          setLoadState(s=>({...s,[tabId]:"error"}));
         }
-      }, []);
+      } catch(e) {
+        setLastUpdated(u => ({...u, [tabId]:new Date().toLocaleTimeString("ko-KR")}));
+      }
+      setLoadState(s => ({...s, [tabId]:"done"}));
+    } catch {
+      setLoadState(s => ({...s, [tabId]:"error"}));
+    }
+  }, []);
 
-      useEffect(()=>{ TABS.forEach(t=>fetchCSV(t.id)); }, []);
+  useEffect(() => { TABS.forEach(t => fetchCSV(t.id)); }, []);
 
-      const handleUpload = useCallback((tabId)=>(e)=>{
-        const file=e.target.files[0]; if(!file)return;
-        const reader=new FileReader();
-        reader.onload=ev=>{
-          const data=parseCSV(ev.target.result);
-          setDatasets(d=>({...d,[tabId]:data}));
-          setLastUpdated(u=>({...u,[tabId]:"직접 업로드"}));
-          setLoadState(s=>({...s,[tabId]:"done"}));
-          setActiveTab(tabId);
-        };
-        reader.readAsText(file);
-      },[]);
+  const handleUpload = useCallback((tabId) => (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const data = parseCSV(ev.target.result);
+      setDatasets(d => ({...d, [tabId]:data}));
+      setLastUpdated(u => ({...u, [tabId]:"직접 업로드"}));
+      setLoadState(s => ({...s, [tabId]:"done"}));
+      setActiveTab(tabId);
+    };
+    reader.readAsText(file);
+  }, []);
 
-      const active=datasets[activeTab];
-      const activeInfo=TABS.find(t=>t.id===activeTab);
+  const active = datasets[activeTab];
+  const activeInfo = TABS.find(t => t.id === activeTab);
 
-      return (
-        <div>
-          <div style={{ background:"linear-gradient(90deg,#0f172a,#0c1a3a,#0f172a)", borderBottom:"1px solid #1e293b", padding:"14px 20px" }}>
-            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
-              <div>
-                <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                  <span style={{ fontSize:20 }}>⚡</span>
-                  <span style={{ fontSize:17, fontWeight:900, letterSpacing:"-0.5px",
-                    background:"linear-gradient(90deg,#fb923c,#f59e0b)",
-                    WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
-                    MINERVINI DASHBOARD
-                  </span>
-                </div>
-                <div style={{ fontSize:10, color:"#475569", marginTop:2, letterSpacing:"2px" }}>
-                  sosonamso/minervini-scanner · 자동 업데이트
-                </div>
-              </div>
-              <div style={{ display:"flex", gap:8, flexWrap:"wrap", alignItems:"center" }}>
-                {TABS.map(t=>(
-                  <div key={t.id} style={{ fontSize:11, color:"#475569", display:"flex", alignItems:"center", gap:4 }}>
-                    {t.label.split(" ")[0]}
-                    <span>{loadState[t.id]==="loading"?"⏳":loadState[t.id]==="done"?"✅":"❌"}</span>
-                    {datasets[t.id].length>0&&<span style={{ color:"#22c55e", fontSize:10 }}>{datasets[t.id].length}건</span>}
-                  </div>
-                ))}
-                <button onClick={()=>TABS.forEach(t=>fetchCSV(t.id))}
-                  style={{ padding:"6px 14px", borderRadius:8, border:"1px solid #334155",
-                    background:"#1e293b", color:"#94a3b8", cursor:"pointer", fontSize:12, fontFamily:"inherit", fontWeight:700 }}>
-                  🔄 새로고침
-                </button>
-              </div>
+  return (
+    <div>
+      <div style={{ background:"linear-gradient(90deg,#0f172a,#0c1a3a,#0f172a)", borderBottom:"1px solid #1e293b", padding:"14px 20px" }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
+          <div>
+            <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+              <span style={{ fontSize:20 }}>⚡</span>
+              <span style={{ fontSize:17, fontWeight:900, background:"linear-gradient(90deg,#fb923c,#f59e0b)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+                MINERVINI DASHBOARD
+              </span>
             </div>
-            {Object.keys(lastUpdated).length>0&&(
-              <div style={{ marginTop:6, fontSize:10, color:"#334155" }}>
-                {TABS.filter(t=>lastUpdated[t.id]).map(t=>(
-                  <span key={t.id} style={{ marginRight:12 }}>{t.label}: {lastUpdated[t.id]}</span>
-                ))}
-              </div>
-            )}
+            <div style={{ fontSize:10, color:"#475569", marginTop:2 }}>sosonamso/minervini-scanner · 자동 업데이트</div>
           </div>
-
-          <div style={{ display:"flex", borderBottom:"1px solid #1e293b", background:"#0a0f1e", overflowX:"auto" }}>
-            {TABS.map(t=>(
-              <button key={t.id} onClick={()=>setActiveTab(t.id)} style={{
-                padding:"12px 20px", border:"none", cursor:"pointer", whiteSpace:"nowrap",
-                background:activeTab===t.id?"#0f172a":"transparent",
-                color:activeTab===t.id?"#fb923c":"#475569",
-                fontWeight:700, fontSize:13, fontFamily:"inherit",
-                borderBottom:activeTab===t.id?"2px solid #fb923c":"2px solid transparent" }}>
-                {t.label}
-                {datasets[t.id].length>0&&(
-                  <span style={{ marginLeft:6, background:"#1e293b", borderRadius:99, padding:"1px 6px", fontSize:10, color:"#22c55e" }}>
-                    {datasets[t.id].length}
-                  </span>
-                )}
-              </button>
+          <div style={{ display:"flex", gap:8, flexWrap:"wrap", alignItems:"center" }}>
+            {TABS.map(t => (
+              <div key={t.id} style={{ display:"flex", alignItems:"center", gap:4, fontSize:11 }}>
+                <span style={{ color:"#475569" }}>{t.id.split("_")[0].toUpperCase()}</span>
+                <span>{loadState[t.id]==="loading"?"⏳":loadState[t.id]==="done"?"✅":"❌"}</span>
+                {datasets[t.id].length>0 && <span style={{ color:"#22c55e", fontSize:10 }}>{datasets[t.id].length}건</span>}
+              </div>
             ))}
-          </div>
-
-          <div style={{ padding:20 }}>
-            {loadState[activeTab]==="loading"?(
-              <div style={{ textAlign:"center", padding:"60px 20px" }}>
-                <div style={{ fontSize:36, marginBottom:12 }} className="spin">⏳</div>
-                <div style={{ fontSize:14, color:"#64748b" }}>데이터 불러오는 중...</div>
-              </div>
-            ):active.length===0?(
-              <div style={{ textAlign:"center", padding:"60px 20px" }}>
-                <div style={{ fontSize:52, marginBottom:16 }}>{activeTab.startsWith("kr")?"🇰🇷":"🇺🇸"}</div>
-                <div style={{ fontSize:15, fontWeight:700, color:"#94a3b8", marginBottom:6 }}>{activeInfo.label} 데이터 없음</div>
-                <div style={{ fontSize:12, color:"#475569", marginBottom:16 }}>
-                  {loadState[activeTab]==="error"?"스캐너를 먼저 실행하면 자동으로 로드돼요.":"스캐너 실행 후 자동으로 로드돼요."}
-                </div>
-                <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
-                  <button onClick={()=>fetchCSV(activeTab)}
-                    style={{ padding:"10px 20px", borderRadius:10, border:"1px solid #334155",
-                      background:"#1e293b", color:"#94a3b8", cursor:"pointer", fontSize:13, fontFamily:"inherit", fontWeight:700 }}>
-                    🔄 다시 시도
-                  </button>
-                  <label style={{ cursor:"pointer" }}>
-                    <div style={{ padding:"10px 20px", borderRadius:10,
-                      background:"linear-gradient(90deg,#fb923c,#f59e0b)", color:"#000", fontSize:13, fontWeight:800 }}>
-                      📂 직접 업로드
-                    </div>
-                    <input type="file" accept=".csv" onChange={handleUpload(activeTab)} style={{ display:"none" }} />
-                  </label>
-                </div>
-              </div>
-            ):activeInfo.type==="scanner"?(
-              <ScannerView data={active} market={activeInfo.market} />
-            ):(
-              <BacktestView data={active} market={activeInfo.market} />
-            )}
+            <button onClick={() => TABS.forEach(t => fetchCSV(t.id))}
+              style={{ padding:"6px 14px", borderRadius:8, border:"1px solid #334155", background:"#1e293b", color:"#94a3b8", cursor:"pointer", fontSize:12, fontFamily:"inherit", fontWeight:700 }}>
+              새로고침
+            </button>
           </div>
         </div>
-      );
-    }
+        {Object.keys(lastUpdated).length > 0 && (
+          <div style={{ marginTop:6, fontSize:10, color:"#334155" }}>
+            {TABS.filter(t=>lastUpdated[t.id]).map(t => (
+              <span key={t.id} style={{ marginRight:12 }}>{t.label}: {lastUpdated[t.id]}</span>
+            ))}
+          </div>
+        )}
+      </div>
 
-    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-  </script>
+      <div style={{ display:"flex", borderBottom:"1px solid #1e293b", background:"#0a0f1e", overflowX:"auto" }}>
+        {TABS.map(t => (
+          <button key={t.id} onClick={() => setActiveTab(t.id)} style={{
+            padding:"12px 16px", border:"none", cursor:"pointer", whiteSpace:"nowrap",
+            background:activeTab===t.id?"#0f172a":"transparent",
+            color:activeTab===t.id?"#fb923c":"#475569",
+            fontWeight:700, fontSize:13, fontFamily:"inherit",
+            borderBottom:activeTab===t.id?"2px solid #fb923c":"2px solid transparent" }}>
+            {t.label}
+            {datasets[t.id].length > 0 && (
+              <span style={{ marginLeft:5, background:"#1e293b", borderRadius:99, padding:"1px 5px", fontSize:10, color:"#22c55e" }}>
+                {datasets[t.id].length}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ padding:20 }}>
+        {loadState[activeTab]==="loading" ? (
+          <div style={{ textAlign:"center", padding:"60px 20px", color:"#64748b" }}>⏳ 로딩 중...</div>
+        ) : active.length===0 ? (
+          <div style={{ textAlign:"center", padding:"60px 20px" }}>
+            <div style={{ fontSize:52, marginBottom:16 }}>{activeTab.startsWith("kr")?"🇰🇷":"🇺🇸"}</div>
+            <div style={{ fontSize:15, fontWeight:700, color:"#94a3b8", marginBottom:16 }}>{activeInfo.label} 데이터 없음</div>
+            <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
+              <button onClick={() => fetchCSV(activeTab)}
+                style={{ padding:"10px 20px", borderRadius:10, border:"1px solid #334155", background:"#1e293b", color:"#94a3b8", cursor:"pointer", fontSize:13, fontFamily:"inherit", fontWeight:700 }}>
+                다시 시도
+              </button>
+              <label style={{ cursor:"pointer" }}>
+                <div style={{ padding:"10px 20px", borderRadius:10, background:"linear-gradient(90deg,#fb923c,#f59e0b)", color:"#000", fontSize:13, fontWeight:800 }}>
+                  CSV 직접 업로드
+                </div>
+                <input type="file" accept=".csv" onChange={handleUpload(activeTab)} style={{ display:"none" }} />
+              </label>
+            </div>
+          </div>
+        ) : activeInfo.type==="scanner" ? (
+          <ScannerView data={active} market={activeInfo.market} />
+        ) : (
+          <BacktestView data={active} market={activeInfo.market} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
 </body>
 </html>
