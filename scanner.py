@@ -440,6 +440,7 @@ if __name__=="__main__":
             history=get_past_signals(df,sig_ts)
             score=calc_score(rs,pat["vr"],pat["cd"],pat["hd"])
             grade=score_grade(score)
+            trdval_20=round(float(sl["TrdVal"].tail(20).mean())/1e8,1) if "TrdVal" in sl.columns else 0.0
             res.append({
                 "sig_date":sig_str,"ticker":ticker,
                 "name":info.get("name",ticker),
