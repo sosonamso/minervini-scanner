@@ -470,7 +470,7 @@ function App() {
       <div style={{ padding:20 }}>
         {loadState[activeTab]==="loading" ? (
           <div style={{ textAlign:"center", padding:"60px 20px", color:"#64748b" }}>⏳ 로딩 중...</div>
-        ) : active.length===0 ? (
+        ) : loadState[activeTab]==="error" ? (
           <div style={{ textAlign:"center", padding:"60px 20px" }}>
             <div style={{ fontSize:52, marginBottom:16 }}>{activeTab.startsWith("kr")?"🇰🇷":"🇺🇸"}</div>
             <div style={{ fontSize:15, fontWeight:700, color:"#94a3b8", marginBottom:16 }}>{activeInfo.label} 데이터 없음</div>
