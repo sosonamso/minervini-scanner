@@ -276,6 +276,7 @@ function ScannerView({ data, market }) {
 function BacktestView({ data, market }) {
   const [sort, setSort] = useState({ col:"r20", dir:-1 });
   const [filter, setFilter] = useState({ search:"", minScore:0, cap:"전체" });
+  const [expanded, setExpanded] = useState(null);
   const handleSort = col => setSort(s => s.col===col ? {col,dir:-s.dir} : {col,dir:-1});
   const isKR = market === "KR";
   const DAYS = [5,10,15,20];
@@ -354,7 +355,9 @@ function BacktestView({ data, market }) {
           </thead>
           <tbody>
             {filtered.map((row,i) => (
-              <tr key={i} style={{ borderBottom:"1px solid #1e293b", background:i%2===0?"#0f172a":"#111827" }}>
+              <React.Fragment key={i}>
+              <tr onClick={()=>setExpanded(expanded===i?null:i)}
+                style={{ borderBottom:"1px solid #1e293b", background:i%2===0?"#0f172a":"#111827", cursor:"pointer" }}>
                 <td style={{ padding:"7px 10px", color:"#475569", whiteSpace:"nowrap", fontSize:11 }}>
                   {row.date ? row.date.replace(/^20(\d{2})-0?(\d+)-0?(\d+)$/,"$1.$2.$3") : "-"}
                 </td>
@@ -384,14 +387,66 @@ function BacktestView({ data, market }) {
                 <td style={{ padding:"7px 12px", textAlign:"center", fontWeight:800, color:(row.score||0)>=80?"#fb923c":(row.score||0)>=70?"#f1f5f9":"#475569" }}>{row.score||"-"}</td>
                 <td style={{ padding:"7px 12px", textAlign:"center", color:(row.rs||0)>0?"#22c55e":"#ef4444" }}>{fmt(row.rs)}</td>
                 <td style={{ padding:"7px 12px", textAlign:"center", color:"#64748b" }}>{row.vol_ratio?Number(row.vol_ratio).toFixed(2)+"x":"-"}</td>
-                <td style={{ padding:"7px 12px", textAlign:"right", color:"#fb923c", fontWeight:700 }}>
-                  {isKR?(row.pivot?Number(row.pivot).toLocaleString()+"원":"-"):(row.pivot?"$"+Number(row.pivot).toFixed(2):"-")}
+                <td style={{ padding:"7px 10px", textAlign:"right" }}>
+                  <div style={{ color:"#fb923c", fontWeight:700 }}>
+                    {isKR?(row.pivot?Number(row.pivot).toLocaleString():"-"):(row.pivot?"$"+Number(row.pivot).toFixed(2):"-")}
+                  </div>
+                  {row.pivot && <div style={{ color:"#ef4444", fontSize:10, marginTop:2 }}>
+                    {isKR?("↓"+Math.round(row.pivot*0.93).toLocaleString()):("↓$"+((row.pivot||0)*0.93).toFixed(2))}
+                  </div>}
                 </td>
                 {DAYS.map(d => {
                   const v = row["r"+d];
                   return <td key={d} style={{ padding:"7px 10px", textAlign:"center", ...cellStyle(v) }}>{fmt(v)}</td>;
                 })}
               </tr>
+              {expanded===i && (
+                <tr style={{ background:"#0a0f1e" }}>
+                  <td colSpan={20} style={{ padding:"12px 20px", borderBottom:"2px solid #334155" }}>
+                    <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
+                      <div>
+                        <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>상세 정보</div>
+                        <div style={{ fontSize:12, color:"#94a3b8" }}>
+                          {"컵: "+(row.cup_depth||"-")+"% / "+(row.cup_days||"-")+"일"}<br/>
+                          {"핸들: "+(row.handle_depth||"-")+"% / "+(row.handle_days||"-")+"일"}<br/>
+                          {"거래량배율: "+(row.vol_ratio||"-")+"x"}<br/>
+                          {"진입가: "+(isKR?Number(row.entry||0).toLocaleString():"$"+(row.entry||0).toFixed(2))}
+                        </div>
+                      </div>
+                      {isKR && row.hist_count>0 && (
+                        <div>
+                          <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>
+                            {"과거이력 "+(row.hist_count||0)+"회 · 승률 "}
+                            <span style={{ color:"#22c55e", fontWeight:700 }}>{(row.hist_winrate||0)+"%"}</span>
+                          </div>
+                          <div style={{ fontSize:12, color:"#94a3b8" }}>
+                            {(row.hist_detail||"").split("|").filter(Boolean).map((h,j)=>{
+                              const p=h.indexOf(":");
+                              const date=p>=0?h.substring(0,p):h;
+                              const ret=p>=0?h.substring(p+1):"";
+                              const s=ret.indexOf("/");
+                              const r5=s>=0?ret.substring(0,s):ret;
+                              const r20=s>=0?ret.substring(s+1):"-";
+                              const win=r20!=="-"&&!isNaN(parseFloat(r20))&&parseFloat(r20)>0;
+                              return (
+                                <div key={j} style={{ marginBottom:2 }}>
+                                  <span style={{ color:"#475569" }}>{date}</span>
+                                  <span style={{ color:"#64748b" }}> 5일</span>
+                                  <span style={{ color:parseFloat(r5)>0?"#22c55e":"#ef4444" }}>{r5}</span>
+                                  <span style={{ color:"#64748b" }}> 20일</span>
+                                  <span style={{ color:win?"#22c55e":"#ef4444" }}>{r20}</span>
+                                  <span style={{ color:win?"#22c55e":"#ef4444" }}>{win?" v":" x"}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              )}
+              </React.Fragment>
             ))}
           </tbody>
           <tfoot>
