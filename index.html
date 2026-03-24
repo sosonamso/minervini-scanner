@@ -46,6 +46,8 @@ function parseCSV(text) {
     headers.forEach((h, i) => {
       const v = vals[i] ? vals[i].trim() : "";
       if (v === "") { obj[h] = null; }
+      else if (v === "True" || v === "true") { obj[h] = true; }
+      else if (v === "False" || v === "false") { obj[h] = false; }
       else if (STR_COLS.has(h) || isNaN(v)) { obj[h] = v; }
       else { obj[h] = Number(v); }
     });
@@ -386,8 +388,8 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
           <div style={{ marginBottom:16 }}>
             <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>
               📈 트렌드 템플릿 (7가지 조건)
-              <span style={{ marginLeft:8, color:result.trend_ok?"#22c55e":"#ef4444" }}>
-                {result.trend_ok?"✅ 통과":"❌ 미통과"}
+              <span style={{ marginLeft:8, color:(result.trend_ok===true||result.trend_ok==="True"||result.trend_ok==="true")?"#22c55e":"#ef4444" }}>
+                {(result.trend_ok===true||result.trend_ok==="True"||result.trend_ok==="true")?"✅ 통과":"❌ 미통과"}
               </span>
             </div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:4 }}>
@@ -405,20 +407,20 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
             <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>
               🥤 컵&핸들 패턴
               <span style={{ marginLeft:8, color:result.pattern_ok?"#22c55e":"#ef4444" }}>
-                {result.pattern_ok?"✅ 감지":"❌ 미감지"}
+                {(result.pattern_ok===true||result.pattern_ok==="True"||result.pattern_ok==="true")?"✅ 감지":"❌ 미감지"}
               </span>
             </div>
-            {!result.pattern_ok && result.reason && (
+            {!(result.pattern_ok===true||result.pattern_ok==="True"||result.pattern_ok==="true") && result.reason && (
               <div style={{ fontSize:11, color:"#64748b", marginBottom:8 }}>미감지 이유: {result.reason}</div>
             )}
             {result.pattern_ok && (
               <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:10 }}>
                 {[
-                  ["컵 깊이", (result.cup_depth||0)+"%"],
-                  ["컵 기간", (result.cup_days||0)+"일"],
-                  ["핸들 깊이", (result.handle_depth||0)+"%"],
-                  ["핸들 기간", (result.handle_days||0)+"일"],
-                  ["거래량", (result.vol_ratio||0)+"x"],
+                  ["컵 깊이", (result.cup_depth||result.cd||0)+"%"],
+                  ["컵 기간", (result.cup_days||result.cdays||0)+"일"],
+                  ["핸들 깊이", (result.handle_depth||result.hd||0)+"%"],
+                  ["핸들 기간", (result.handle_days||result.hdays||0)+"일"],
+                  ["거래량", (result.vol_ratio||result.vr||0)+"x"],
                 ].map(([k,v]) => (
                   <div key={k} style={{ background:"#1e293b", borderRadius:6, padding:"4px 10px", fontSize:11 }}>
                     <span style={{ color:"#64748b" }}>{k} </span>
@@ -430,7 +432,7 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
           </div>
 
           {/* 피벗 + 손절 */}
-          {result.pattern_ok && result.pivot > 0 && (
+          {(result.pattern_ok===true||result.pattern_ok==="True"||result.pattern_ok==="true") && result.pivot > 0 && (
             <div style={{ marginBottom:16 }}>
               <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>📍 가격 정보</div>
               <div style={{ display:"flex", gap:8, flexWrap:"wrap", alignItems:"center" }}>
@@ -782,7 +784,8 @@ function App() {
   const getActiveData = () => {
     if (activeTab === "kr_scanner") {
       return (datasets.kr_all || []).filter(r => {
-        if (!r.signal) return false;
+        const sig = r.signal === true || r.signal === "True" || r.signal === "true" || r.signal === 1;
+        if (!sig) return false;
         const pivot = Number(r.pivot || 0);
         const cur = Number(r.cur || 0);
         if (pivot <= 0) return false;
