@@ -36,12 +36,3 @@ jobs:
           git push
 ```
 
----
-
-**3. scanner_us_small.yml 비활성화**
-
-GitHub에서 직접:
-```
-Actions 탭 → 미국 소형주 스캐너 데일리
-→ 오른쪽 상단 ⋯ 메뉴
-→ "Disable workflow" 클릭
