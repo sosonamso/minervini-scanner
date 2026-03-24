@@ -222,7 +222,7 @@ function ScannerView({ data=[], market }) {
                         onClick={e => e.stopPropagation()}>{isKR?"네이버":"야후"}</a>
                       <a href={isKR
                         ? "https://kr.tradingview.com/chart/?symbol=KRX:"+row.ticker
-                        : "https://kr.tradingview.com/chart/?symbol="+(row.exchange==="NASDAQ"?"NASDAQ":"NYSE")+":"+row.ticker}
+                        : "https://kr.tradingview.com/chart/?symbol="+row.ticker}
                         target="_blank" rel="noreferrer"
                         style={{ fontSize:10, color:"#60a5fa", textDecoration:"none", background:"#1e3a5f", borderRadius:4, padding:"1px 5px" }}
                         onClick={e => e.stopPropagation()}>TV</a>
@@ -595,7 +595,7 @@ function BacktestView({ data=[], market }) {
                         onClick={e => e.stopPropagation()}>{isKR?"네이버":"야후"}</a>
                       <a href={isKR
                         ? "https://kr.tradingview.com/chart/?symbol=KRX:"+row.ticker
-                        : "https://kr.tradingview.com/chart/?symbol="+(row.exchange==="NASDAQ"?"NASDAQ":"NYSE")+":"+row.ticker}
+                        : "https://kr.tradingview.com/chart/?symbol="+row.ticker}
                         target="_blank" rel="noreferrer"
                         style={{ fontSize:10, color:"#60a5fa", textDecoration:"none", background:"#1e3a5f", borderRadius:4, padding:"1px 5px" }}
                         onClick={e => e.stopPropagation()}>TV</a>
