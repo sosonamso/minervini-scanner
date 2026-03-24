@@ -256,15 +256,19 @@ function ScannerView({ data=[], market }) {
                     {row.handle_depth?(row.handle_depth+"%"+((row.handle_depth>=10)?" ⚠️":"")):"-"}
                   </td>
                   <td style={{ padding:"8px 12px", textAlign:"right", color:"#f1f5f9" }}>
-                    {isKR?(row.cur?Number(row.cur).toLocaleString():"-"):(row.cur?"$"+Number(row.cur).toFixed(2):"-")}
+                    {isKR
+                      ? (row.cur?Number(row.cur).toLocaleString():"-")
+                      : ((row.cur||row.entry)?"$"+Number(row.cur||row.entry).toFixed(2):"-")}
                   </td>
                   <td style={{ padding:"8px 10px", textAlign:"right" }}>
                     <div style={{ color:"#fb923c", fontWeight:700 }}>
                       {isKR?(row.pivot?Number(row.pivot).toLocaleString():"-"):(row.pivot?"$"+Number(row.pivot).toFixed(2):"-")}
                     </div>
-                    {isKR && row.cur && (
+                    {row.pivot && (
                       <div style={{ color:"#ef4444", fontSize:10, marginTop:2 }}>
-                        {"↓"+Math.round(row.cur*0.93).toLocaleString()}
+                        {isKR
+                          ? "↓"+Math.round(row.pivot*0.93).toLocaleString()
+                          : "↓$"+(row.pivot*0.93).toFixed(2)}
                       </div>
                     )}
                   </td>
