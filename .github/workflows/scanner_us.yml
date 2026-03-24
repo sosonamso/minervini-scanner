@@ -11,7 +11,7 @@ permissions:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 360
 
     steps:
       - uses: actions/checkout@v3
@@ -24,7 +24,6 @@ jobs:
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          MASSIVE_TOKEN:    ${{ secrets.MASSIVE_TOKEN }}
         run: python scanner_us.py
 
       - name: CSV 레포에 자동 커밋
@@ -35,3 +34,14 @@ jobs:
           git commit --allow-empty -m "scanner_us: $(date +'%Y-%m-%d') 스캔 결과"
           git pull --rebase origin main
           git push
+```
+
+---
+
+**3. scanner_us_small.yml 비활성화**
+
+GitHub에서 직접:
+```
+Actions 탭 → 미국 소형주 스캐너 데일리
+→ 오른쪽 상단 ⋯ 메뉴
+→ "Disable workflow" 클릭
