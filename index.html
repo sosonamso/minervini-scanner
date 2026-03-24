@@ -810,15 +810,26 @@ function App() {
             <div style={{ fontSize:10, color:"#475569", marginTop:2 }}>sosonamso/minervini-scanner · 자동 업데이트</div>
           </div>
           <div style={{ display:"flex", gap:8, flexWrap:"wrap", alignItems:"center" }}>
-            {TABS.filter(t => t.type !== "search").map(t => (
-              <div key={t.id} style={{ display:"flex", alignItems:"center", gap:4, fontSize:11 }}>
-                <span style={{ color:"#475569" }}>{t.id.split("_")[0].toUpperCase()}</span>
-                <span>{loadState[t.id]==="loading"?"⏳":loadState[t.id]==="done"?"✅":"❌"}</span>
-                {(datasets[t.id]||[]).length > 0 && (
-                  <span style={{ color:"#22c55e", fontSize:10 }}>{datasets[t.id].length}건</span>
-                )}
-              </div>
-            ))}
+            {TABS.filter(t => t.type !== "search").map(t => {
+              const cnt = t.id === "kr_scanner"
+                ? (datasets.kr_all||[]).filter(r => {
+                    const sig = r.signal===true||r.signal==="True"||r.signal==="true";
+                    if (!sig) return false;
+                    const p=Number(r.pivot||0), c=Number(r.cur||0);
+                    return p>0 && c>=p*0.90 && c<=p*1.05;
+                  }).length
+                : (datasets[t.id]||[]).length;
+              const st = t.id === "kr_scanner"
+                ? (loadState.kr_all||"idle")
+                : loadState[t.id];
+              return (
+                <div key={t.id} style={{ display:"flex", alignItems:"center", gap:4, fontSize:11 }}>
+                  <span style={{ color:"#475569" }}>{t.id.split("_")[0].toUpperCase()}</span>
+                  <span>{st==="loading"?"⏳":st==="done"?"✅":"❌"}</span>
+                  {cnt > 0 && <span style={{ color:"#22c55e", fontSize:10 }}>{cnt}건</span>}
+                </div>
+              );
+            })}
             <button onClick={() => { TABS.forEach(t => { if(t.type!=="search") fetchCSV(t.id); }); fetchCSV("kr_all"); }}
               style={{ padding:"6px 14px", borderRadius:8, border:"1px solid #334155", background:"#1e293b", color:"#94a3b8", cursor:"pointer", fontSize:12, fontFamily:"inherit", fontWeight:700 }}>
               새로고침
@@ -843,11 +854,21 @@ function App() {
             fontWeight:700, fontSize:13, fontFamily:"inherit",
             borderBottom:activeTab===t.id?"2px solid #fb923c":"2px solid transparent" }}>
             {t.label}
-            {t.type !== "search" && (datasets[t.id]||[]).length > 0 && (
-              <span style={{ marginLeft:5, background:"#1e293b", borderRadius:99, padding:"1px 5px", fontSize:10, color:"#22c55e" }}>
-                {datasets[t.id].length}
-              </span>
-            )}
+            {t.type !== "search" && (() => {
+              const cnt = t.id === "kr_scanner"
+                ? (datasets.kr_all||[]).filter(r => {
+                    const sig = r.signal===true||r.signal==="True"||r.signal==="true";
+                    if (!sig) return false;
+                    const p=Number(r.pivot||0), c=Number(r.cur||0);
+                    return p>0 && c>=p*0.90 && c<=p*1.05;
+                  }).length
+                : (datasets[t.id]||[]).length;
+              return cnt > 0 ? (
+                <span style={{ marginLeft:5, background:"#1e293b", borderRadius:99, padding:"1px 5px", fontSize:10, color:"#22c55e" }}>
+                  {cnt}
+                </span>
+              ) : null;
+            })()}
           </button>
         ))}
       </div>
