@@ -255,6 +255,29 @@ def detect(df):
                  "pivot":round(float(rh),0),"cur":round(float(cur),0),
                  "vr":round(vr,2),"vs":vr>=1.40}
 
+def check_trend_detail(df):
+    if len(df)<200:return False,{}
+    c=df["Close"]
+    m50=float(c.rolling(50).mean().iloc[-1])
+    m150=float(c.rolling(150).mean().iloc[-1])
+    m200=float(c.rolling(200).mean().iloc[-1])
+    cur=float(c.iloc[-1])
+    m200v=c.rolling(200).mean().dropna()
+    d1=float(m200v.iloc[-21]) if len(m200v)>=21 else m200
+    lk=c.iloc[-252:] if len(c)>=252 else c
+    low52=float(lk.min());high52=float(lk.max())
+    checks={
+        "현재가>150MA":(cur>m150,round(cur),round(m150)),
+        "현재가>200MA":(cur>m200,round(cur),round(m200)),
+        "150MA>200MA":(m150>m200,round(m150),round(m200)),
+        "200MA상승중":(m200>d1,round(m200),round(d1)),
+        "현재가>50MA":(cur>m50,round(cur),round(m50)),
+        "52주저점+25%":(cur>=low52*1.25,round(cur),round(low52*1.25)),
+        "52주고점-30%":(cur>=high52*0.70,round(cur),round(high52*0.70)),
+    }
+    ok=all(v[0] for v in checks.values())
+    return ok,checks
+
 def get_pattern_fail_reason(df):
     """패턴 미감지 이유 간단히 반환"""
     cl=df["Close"].values.astype(float)
