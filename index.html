@@ -32,6 +32,7 @@ const DATA_FILES = {
   us_scanner:  RAW + "/scanner_us_raw.csv",
   us_small:    RAW + "/scanner_us_small_raw.csv",
   us_backtest: RAW + "/backtest_us_raw.csv",
+  kr_all:      RAW + "/scanner_kr_all.csv",
 };
 
 function parseCSV(text) {
@@ -426,7 +427,7 @@ function BacktestView({ data=[], market }) {
     return (av>bv?1:-1)*sort.dir;
   }), [data, filter, sort]);
 
-    const winStats = DAYS.map(d => {
+  const winStats = DAYS.map(d => {
     const vals = filtered.map(r=>r["r"+d]).filter(v=>v!==null&&!isNaN(v));
     return { day:d, vals, win:vals.filter(v=>v>0).length, total:vals.length,
       rate: vals.length ? Math.round(vals.filter(v=>v>0).length/vals.length*100) : 0,
