@@ -255,6 +255,35 @@ def detect(df):
                  "pivot":round(float(rh),0),"cur":round(float(cur),0),
                  "vr":round(vr,2),"vs":vr>=1.40}
 
+def get_pattern_fail_reason(df):
+    """패턴 미감지 이유 간단히 반환"""
+    cl=df["Close"].values.astype(float)
+    n=len(cl)
+    if n<60:return "데이터 부족"
+    c=cl[-min(200,n):]
+    w=len(c)
+    li=int(np.argmax(c[:w//2]));lh=c[li];cup=c[li:]
+    if len(cup)<20:return "컵 구간 부족"
+    bi=li+int(np.argmin(cup));bot=c[bi];cd=(lh-bot)/lh;cup_days=bi-li
+    if cd<0.15:return f"컵 깊이 얕음({round(cd*100,1)}%)"
+    if cd>0.50:return f"컵 깊이 깊음({round(cd*100,1)}%)"
+    if cup_days<35:return f"컵 기간 짧음({cup_days}일)"
+    rc=c[bi:]
+    if len(rc)<10:return "오른쪽 컵 구간 부족"
+    ri=bi+int(np.argmax(rc));rh=c[ri]
+    if rh<lh*0.90:return f"고점 회복 부족({round(rh/lh*100,1)}%)"
+    hnd=c[ri:];hl=len(hnd)
+    if hl<5:return "핸들 기간 짧음"
+    if hl>20:return f"핸들 기간 김({hl}일)"
+    hlow=float(np.min(hnd));hd=(rh-hlow)/rh
+    if hd<0.05:return f"핸들 깊이 얕음({round(hd*100,1)}%)"
+    if hd>0.15:return f"핸들 깊이 깊음({round(hd*100,1)}%)"
+    if (hlow-bot)/(lh-bot)<0.60:return "핸들 위치 낮음"
+    cur=cl[-1]
+    if cur<rh*0.97:return f"현재가 피벗 미달({round((cur/rh-1)*100,1)}%)"
+    if cur>rh*1.05:return f"현재가 피벗 초과({round((cur/rh-1)*100,1)}%)"
+    return "기타"
+
 def calc_rs(df,mkt_df):
     def p(d,n):return float(d["Close"].iloc[-1]/d["Close"].iloc[-n]-1)if len(d)>=n else 0.0
     s=sum([0.4,0.2,0.2,0.2][i]*p(df,[63,126,189,252][i])for i in range(4))
@@ -412,7 +441,7 @@ if __name__=="__main__":
         send("⚠️ KOSPI 200MA 하방 — 시그널 신뢰도 낮음, 주의!")
 
     # 패턴 분석
-    res=[];trend_pass=0
+    res=[];trend_pass=0;all_scores=[]
     ticker_list=list(all_ohlcv.keys())
 
     for i,ticker in enumerate(ticker_list):
@@ -420,39 +449,81 @@ if __name__=="__main__":
         info=all_ohlcv[ticker]
         df=info["df"]
         mkt=info["market"]
+        name=info.get("name",ticker)
 
         for sig_str in sig_dates:
             sig_ts=pd.Timestamp(sig_str)
             if sig_ts not in df.index:continue
             pos=df.index.tolist().index(sig_ts)
             sl=df.iloc[:pos+1]
-            if not check_trend(sl):continue
-            trend_pass+=1
-            ok,pat=detect(sl)
-            if not ok:continue
-            if not pat["vs"]:continue
+            trend_ok=check_trend(sl)
+
+            # 전체 종목 점수 저장용
             idx_df=kospi_df if mkt=="KOSPI" else kosdaq_df
+            rs=0.0
             if idx_df is not None and len(idx_df)>10:
                 try:rs=calc_rs(sl,idx_df.loc[:sig_ts])
                 except:rs=0.0
-                if rs<=0:continue
-            else:rs=0.0
-            history=get_past_signals(df,sig_ts)
+            cur=float(sl["Close"].iloc[-1])
+            trdval_20=round(float(sl["TrdVal"].tail(20).mean())/1e8,1) if "TrdVal" in sl.columns else 0.0
+
+            if not trend_ok:
+                all_scores.append({
+                    "ticker":ticker,"name":name,"market":mkt,
+                    "cur":round(cur),"rs":rs,"trdval_20":trdval_20,
+                    "trend_ok":False,"pattern_ok":False,
+                    "signal":False,"score":0,"grade":"D",
+                    "pivot":0,"cup_depth":0,"handle_depth":0,
+                    "vol_ratio":0,"reason":"트렌드 미통과"
+                })
+                break
+
+            trend_pass+=1
+            ok,pat=detect(sl)
+
+            if not ok:
+                # 패턴 미감지 이유 파악
+                reason=get_pattern_fail_reason(sl)
+                score=calc_score(rs,1.0,0,0)
+                all_scores.append({
+                    "ticker":ticker,"name":name,"market":mkt,
+                    "cur":round(cur),"rs":rs,"trdval_20":trdval_20,
+                    "trend_ok":True,"pattern_ok":False,
+                    "signal":False,"score":score,"grade":score_grade(score),
+                    "pivot":0,"cup_depth":0,"handle_depth":0,
+                    "vol_ratio":0,"reason":reason
+                })
+                break
+
             score=calc_score(rs,pat["vr"],pat["cd"],pat["hd"])
             grade=score_grade(score)
+            signal=pat["vs"] and rs>0
+
+            all_scores.append({
+                "ticker":ticker,"name":name,"market":mkt,
+                "cur":pat["cur"],"rs":rs,"trdval_20":trdval_20,
+                "trend_ok":True,"pattern_ok":True,
+                "signal":signal,"score":score,"grade":grade,
+                "pivot":pat["pivot"],"cup_depth":pat["cd"],
+                "handle_depth":pat["hd"],"vol_ratio":pat["vr"],
+                "cup_days":pat["cdays"],"handle_days":pat["hdays"],
+                "reason":"시그널" if signal else ("거래량 미충족" if not pat["vs"] else "RS 미충족")
+            })
+
+            if not signal:break
+
+            history=get_past_signals(df,sig_ts)
             trdval_20=round(float(sl["TrdVal"].tail(20).mean())/1e8,1) if "TrdVal" in sl.columns else 0.0
             res.append({
                 "sig_date":sig_str,"ticker":ticker,
-                "name":info.get("name",ticker),
-                "sector":info.get("sector","기타"),
+                "name":name,"sector":info.get("sector","기타"),
                 "market":mkt,
                 "cur":pat["cur"],"pivot":pat["pivot"],
                 "cd":pat["cd"],"hd":pat["hd"],
                 "cdays":pat["cdays"],"hdays":pat["hdays"],
                 "vr":pat["vr"],"vs":pat["vs"],
                 "rs":rs,"score":score,"grade":grade,
-                "trdval_20":trdval_20,
-                "history":history,
+                "trdval_20":trdval_20,"history":history,
             })
             break
 
@@ -517,3 +588,9 @@ if __name__=="__main__":
         pd.DataFrame(rows).to_csv("scanner_kr_raw.csv",index=False,encoding="utf-8-sig")
         print(f"RAW 저장 완료: scanner_kr_raw.csv ({len(rows)}건)")
         send_file("scanner_kr_raw.csv", f"📊 국장 스캐너 RAW ({len(rows)}건) {datetime.today().strftime('%Y-%m-%d')}")
+
+    # 전체 종목 점수 저장 (종목 검색용)
+    if all_scores:
+        df_all=pd.DataFrame(all_scores)
+        df_all.to_csv("scanner_kr_all.csv",index=False,encoding="utf-8-sig")
+        print(f"전체 종목 점수 저장: scanner_kr_all.csv ({len(all_scores)}건)")
