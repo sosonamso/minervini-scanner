@@ -490,6 +490,10 @@ if __name__=="__main__":
             cur=float(sl["Close"].iloc[-1])
             trdval_20=round(float(sl["TrdVal"].tail(20).mean())/1e8,1) if "TrdVal" in sl.columns else 0.0
 
+            # 트렌드 세부조건 (all_scores용)
+            _,trend_detail=check_trend_detail(sl)
+            trend_detail_str="|".join(f"{k}:{1 if v[0] else 0}" for k,v in trend_detail.items()) if trend_detail else ""
+
             if not trend_ok:
                 all_scores.append({
                     "ticker":ticker,"name":name,"market":mkt,
@@ -497,7 +501,8 @@ if __name__=="__main__":
                     "trend_ok":False,"pattern_ok":False,
                     "signal":False,"score":0,"grade":"D",
                     "pivot":0,"cup_depth":0,"handle_depth":0,
-                    "vol_ratio":0,"reason":"트렌드 미통과"
+                    "vol_ratio":0,"reason":"트렌드 미통과",
+                    "trend_detail":trend_detail_str,"safety":"","pct_from_pivot":0
                 })
                 break
 
@@ -505,7 +510,6 @@ if __name__=="__main__":
             ok,pat=detect(sl)
 
             if not ok:
-                # 패턴 미감지 이유 파악
                 reason=get_pattern_fail_reason(sl)
                 score=calc_score(rs,1.0,0,0)
                 all_scores.append({
@@ -514,25 +518,36 @@ if __name__=="__main__":
                     "trend_ok":True,"pattern_ok":False,
                     "signal":False,"score":score,"grade":score_grade(score),
                     "pivot":0,"cup_depth":0,"handle_depth":0,
-                    "vol_ratio":0,"reason":reason
+                    "vol_ratio":0,"reason":reason,
+                    "trend_detail":trend_detail_str,"safety":"","pct_from_pivot":0
                 })
                 break
 
             score=calc_score(rs,pat["vr"],pat["cd"],pat["hd"])
             grade=score_grade(score)
-            # 완전 상승장: RS>0 필수 / 부분 상승장: RS 필터 완화
-            rs_ok = rs>0 if "완전" in market_str else rs>-20
+            rs_ok=rs>0 if "완전" in market_str else rs>-20
             signal=pat["vs"] and rs_ok
+
+            # 안전도 계산
+            pivot=pat["pivot"];cur_p=pat["cur"]
+            if pivot>0:
+                pct=round((cur_p-pivot)/pivot*100,1)
+                if cur_p>=pivot*0.93:safety="safe"
+                elif cur_p>=pivot*0.90:safety="caution"
+                else:safety="danger"
+            else:
+                pct=0;safety=""
 
             all_scores.append({
                 "ticker":ticker,"name":name,"market":mkt,
-                "cur":pat["cur"],"rs":rs,"trdval_20":trdval_20,
+                "cur":cur_p,"rs":rs,"trdval_20":trdval_20,
                 "trend_ok":True,"pattern_ok":True,
                 "signal":signal,"score":score,"grade":grade,
-                "pivot":pat["pivot"],"cup_depth":pat["cd"],
+                "pivot":pivot,"cup_depth":pat["cd"],
                 "handle_depth":pat["hd"],"vol_ratio":pat["vr"],
                 "cup_days":pat["cdays"],"handle_days":pat["hdays"],
-                "reason":"시그널" if signal else ("거래량 미충족" if not pat["vs"] else "RS 미충족")
+                "reason":"시그널" if signal else ("거래량 미충족" if not pat["vs"] else "RS 미충족"),
+                "trend_detail":trend_detail_str,"safety":safety,"pct_from_pivot":pct
             })
 
             if not signal:break
