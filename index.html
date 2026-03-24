@@ -606,53 +606,74 @@ const TABS = [
   { id:"ticker_search", label:"🔍 종목 검색",      market:"KR", type:"search"   },
 ];
 
+const DATA_FILES_MAP = {
+  kr_scanner:  "/scanner_kr_raw.csv",
+  kr_backtest: "/backtest_raw.csv",
+  us_scanner:  "/scanner_us_raw.csv",
+  us_small:    "/scanner_us_small_raw.csv",
+  us_backtest: "/backtest_us_raw.csv",
+  kr_all:      "/scanner_kr_all.csv",
+};
+
 function App() {
   const [activeTab, setActiveTab] = useState("kr_scanner");
-  const [datasets, setDatasets] = useState({ kr_scanner:[], kr_backtest:[], us_scanner:[], us_small:[], us_backtest:[], kr_all:[] });
-  const [loadState, setLoadState] = useState({ kr_scanner:"idle", kr_backtest:"idle", us_scanner:"idle", us_small:"idle", us_backtest:"idle", kr_all:"idle", ticker_search:"done" });
+  const [datasets, setDatasets] = useState({
+    kr_scanner:[], kr_backtest:[], us_scanner:[], us_small:[], us_backtest:[], kr_all:[]
+  });
+  const [loadState, setLoadState] = useState({
+    kr_scanner:"idle", kr_backtest:"idle", us_scanner:"idle",
+    us_small:"idle", us_backtest:"idle", kr_all:"idle"
+  });
   const [lastUpdated, setLastUpdated] = useState({});
   const [tickerInput, setTickerInput] = useState("");
   const [tickerResult, setTickerResult] = useState(null);
 
+  const fetchCSV = useCallback(async (tabId) => {
+    const path = DATA_FILES_MAP[tabId];
+    if (!path) return;
+    const url = RAW + path;
+    setLoadState(s => ({...s, [tabId]:"loading"}));
+    try {
+      const res = await fetch(url + "?t=" + Date.now());
+      if (!res.ok) throw new Error("not ok");
+      const text = await res.text();
+      const data = parseCSV(text);
+      setDatasets(d => ({...d, [tabId]:data}));
+      try {
+        const ghRes = await fetch("https://api.github.com/repos/" + GITHUB_USER + "/" + GITHUB_REPO + "/commits?path=" + path.slice(1) + "&per_page=1");
+        if (ghRes.ok) {
+          const ghData = await ghRes.json();
+          if (ghData[0]) {
+            const t = new Date(ghData[0].commit.committer.date);
+            t.setHours(t.getHours() + 9);
+            const formatted = (t.getMonth()+1) + "/" + t.getDate() + " " + String(t.getHours()).padStart(2,"0") + ":" + String(t.getMinutes()).padStart(2,"0") + " (KST)";
+            setLastUpdated(u => ({...u, [tabId]:formatted}));
+          }
+        }
+      } catch(e) {}
+      setLoadState(s => ({...s, [tabId]:"done"}));
+    } catch(e) {
+      setLoadState(s => ({...s, [tabId]:"error"}));
+    }
+  }, []);
+
   const searchTicker = useCallback((query) => {
-    if (!query) return;
+    if (!query || !query.trim()) return;
     const q = query.trim().toLowerCase();
-    const found = datasets.kr_all.find(r =>
+    const list = datasets.kr_all || [];
+    const found = list.find(r =>
       String(r.ticker||"").toLowerCase() === q ||
       String(r.name||"").toLowerCase().includes(q)
     );
     setTickerResult(found || { error: "종목을 찾을 수 없어요: " + query });
   }, [datasets.kr_all]);
 
-  const fetchCSV = useCallback(async (tabId) => {
-    setLoadState(s => ({...s, [tabId]:"loading"}));
-    try {
-      const res = await fetch(DATA_FILES[tabId] + "?t=" + Date.now());
-      if (!res.ok) throw new Error();
-      const text = await res.text();
-      const data = parseCSV(text);
-      setDatasets(d => ({...d, [tabId]:data}));
-      try {
-        const fileName = DATA_FILES[tabId].split("/").pop().split("?")[0];
-        const ghRes = await fetch("https://api.github.com/repos/" + GITHUB_USER + "/" + GITHUB_REPO + "/commits?path=" + fileName + "&per_page=1");
-        if (ghRes.ok) {
-          const ghData = await ghRes.json();
-          if (ghData[0]) {
-            const t = new Date(ghData[0].commit.committer.date);
-            const formatted = (t.getMonth()+1) + "/" + t.getDate() + " " + String(t.getHours()).padStart(2,"0") + ":" + String(t.getMinutes()).padStart(2,"0") + " (KST)";
-            setLastUpdated(u => ({...u, [tabId]:formatted}));
-          }
-        }
-      } catch(e) {
-        setLastUpdated(u => ({...u, [tabId]:new Date().toLocaleTimeString("ko-KR")}));
-      }
-      setLoadState(s => ({...s, [tabId]:"done"}));
-    } catch {
-      setLoadState(s => ({...s, [tabId]:"error"}));
-    }
+  useEffect(() => {
+    TABS.forEach(t => {
+      if (t.type !== "search") fetchCSV(t.id);
+    });
+    fetchCSV("kr_all");
   }, []);
-
-  useEffect(() => { TABS.forEach(t => { if(t.type!=="search") fetchCSV(t.id); }); if(DATA_FILES.kr_all) fetchCSV("kr_all"); }, []);
 
   const handleUpload = useCallback((tabId) => (e) => {
     const file = e.target.files[0];
@@ -668,8 +689,8 @@ function App() {
     reader.readAsText(file);
   }, []);
 
-  const active = datasets[activeTab];
   const activeInfo = TABS.find(t => t.id === activeTab);
+  const active = datasets[activeTab] || [];
 
   return (
     <div>
@@ -685,14 +706,16 @@ function App() {
             <div style={{ fontSize:10, color:"#475569", marginTop:2 }}>sosonamso/minervini-scanner · 자동 업데이트</div>
           </div>
           <div style={{ display:"flex", gap:8, flexWrap:"wrap", alignItems:"center" }}>
-            {TABS.filter(t=>t.type!=="search").map(t => (
+            {TABS.filter(t => t.type !== "search").map(t => (
               <div key={t.id} style={{ display:"flex", alignItems:"center", gap:4, fontSize:11 }}>
                 <span style={{ color:"#475569" }}>{t.id.split("_")[0].toUpperCase()}</span>
                 <span>{loadState[t.id]==="loading"?"⏳":loadState[t.id]==="done"?"✅":"❌"}</span>
-                {(datasets[t.id]||[]).length>0 && <span style={{ color:"#22c55e", fontSize:10 }}>{datasets[t.id].length}건</span>}
+                {(datasets[t.id]||[]).length > 0 && (
+                  <span style={{ color:"#22c55e", fontSize:10 }}>{datasets[t.id].length}건</span>
+                )}
               </div>
             ))}
-            <button onClick={() => TABS.forEach(t => { if(t.type!=="search") fetchCSV(t.id); }); fetchCSV("kr_all");}
+            <button onClick={() => { TABS.forEach(t => { if(t.type!=="search") fetchCSV(t.id); }); fetchCSV("kr_all"); }}
               style={{ padding:"6px 14px", borderRadius:8, border:"1px solid #334155", background:"#1e293b", color:"#94a3b8", cursor:"pointer", fontSize:12, fontFamily:"inherit", fontWeight:700 }}>
               새로고침
             </button>
@@ -700,7 +723,7 @@ function App() {
         </div>
         {Object.keys(lastUpdated).length > 0 && (
           <div style={{ marginTop:6, fontSize:10, color:"#334155" }}>
-            {TABS.filter(t=>lastUpdated[t.id]).map(t => (
+            {TABS.filter(t => lastUpdated[t.id]).map(t => (
               <span key={t.id} style={{ marginRight:12 }}>{t.label}: {lastUpdated[t.id]}</span>
             ))}
           </div>
@@ -716,7 +739,7 @@ function App() {
             fontWeight:700, fontSize:13, fontFamily:"inherit",
             borderBottom:activeTab===t.id?"2px solid #fb923c":"2px solid transparent" }}>
             {t.label}
-            {t.type!=="search" && (datasets[t.id]||[]).length > 0 && (
+            {t.type !== "search" && (datasets[t.id]||[]).length > 0 && (
               <span style={{ marginLeft:5, background:"#1e293b", borderRadius:99, padding:"1px 5px", fontSize:10, color:"#22c55e" }}>
                 {datasets[t.id].length}
               </span>
@@ -726,12 +749,20 @@ function App() {
       </div>
 
       <div style={{ padding:20 }}>
-        {loadState[activeTab]==="loading" ? (
+        {activeInfo && activeInfo.type === "search" ? (
+          <TickerSearchView
+            result={tickerResult}
+            input={tickerInput}
+            setInput={setTickerInput}
+            onSearch={searchTicker}
+            allData={datasets.kr_all||[]}
+          />
+        ) : loadState[activeTab] === "loading" ? (
           <div style={{ textAlign:"center", padding:"60px 20px", color:"#64748b" }}>⏳ 로딩 중...</div>
-        ) : loadState[activeTab]==="error" ? (
+        ) : loadState[activeTab] === "error" ? (
           <div style={{ textAlign:"center", padding:"60px 20px" }}>
             <div style={{ fontSize:52, marginBottom:16 }}>{activeTab.startsWith("kr")?"🇰🇷":"🇺🇸"}</div>
-            <div style={{ fontSize:15, fontWeight:700, color:"#94a3b8", marginBottom:16 }}>{activeInfo.label} 데이터 없음</div>
+            <div style={{ fontSize:15, fontWeight:700, color:"#94a3b8", marginBottom:16 }}>데이터 없음</div>
             <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
               <button onClick={() => fetchCSV(activeTab)}
                 style={{ padding:"10px 20px", borderRadius:10, border:"1px solid #334155", background:"#1e293b", color:"#94a3b8", cursor:"pointer", fontSize:13, fontFamily:"inherit", fontWeight:700 }}>
@@ -745,15 +776,7 @@ function App() {
               </label>
             </div>
           </div>
-        ) : activeInfo.type==="search" ? (
-          <TickerSearchView
-            result={tickerResult}
-            input={tickerInput}
-            setInput={setTickerInput}
-            onSearch={searchTicker}
-            allData={datasets.kr_all||[]}
-          />
-        ) : activeInfo.type==="scanner" ? (
+        ) : activeInfo && activeInfo.type === "scanner" ? (
           <ScannerView data={active} market={activeInfo.market} />
         ) : (
           <BacktestView data={active} market={activeInfo.market} />
