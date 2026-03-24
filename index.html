@@ -642,17 +642,18 @@ function BacktestView({ data, market }) {
 }
 
 const TABS = [
-  { id:"kr_scanner",  label:"KR 국장 스캐너",  market:"KR", type:"scanner"  },
-  { id:"kr_backtest", label:"KR 국장 백테스트", market:"KR", type:"backtest" },
-  { id:"us_scanner",  label:"US S&P1500",       market:"US", type:"scanner"  },
-  { id:"us_small",    label:"US 소형주",         market:"US", type:"scanner"  },
-  { id:"us_backtest", label:"US 백테스트",       market:"US", type:"backtest" },
+  { id:"kr_scanner",    label:"KR 국장 스캐너",  market:"KR", type:"scanner"  },
+  { id:"kr_backtest",   label:"KR 국장 백테스트", market:"KR", type:"backtest" },
+  { id:"us_scanner",    label:"US S&P1500",       market:"US", type:"scanner"  },
+  { id:"us_small",      label:"US 소형주",         market:"US", type:"scanner"  },
+  { id:"us_backtest",   label:"US 백테스트",       market:"US", type:"backtest" },
+  { id:"ticker_search", label:"🔍 종목 검색",      market:"KR", type:"search"   },
 ];
 
 function App() {
   const [activeTab, setActiveTab] = useState("kr_scanner");
-  const [datasets, setDatasets] = useState({ kr_scanner:[], kr_backtest:[], us_scanner:[], us_small:[], us_backtest:[] });
-  const [loadState, setLoadState] = useState({ kr_scanner:"idle", kr_backtest:"idle", us_scanner:"idle", us_small:"idle", us_backtest:"idle" });
+  const [datasets, setDatasets] = useState({ kr_scanner:[], kr_backtest:[], us_scanner:[], us_small:[], us_backtest:[], kr_all:[] });
+  const [loadState, setLoadState] = useState({ kr_scanner:"idle", kr_backtest:"idle", us_scanner:"idle", us_small:"idle", us_backtest:"idle", kr_all:"idle", ticker_search:"done" });
   const [lastUpdated, setLastUpdated] = useState({});
 
   const fetchCSV = useCallback(async (tabId) => {
@@ -683,7 +684,7 @@ function App() {
     }
   }, []);
 
-  useEffect(() => { TABS.forEach(t => fetchCSV(t.id)); }, []);
+  useEffect(() => { TABS.forEach(t => { if(t.type!=="search") fetchCSV(t.id); }); fetchCSV("kr_all"); }, []);
 
   const handleUpload = useCallback((tabId) => (e) => {
     const file = e.target.files[0];
@@ -776,6 +777,14 @@ function App() {
               </label>
             </div>
           </div>
+        ) : activeInfo.type==="search" ? (
+          <TickerSearchView
+            result={tickerResult}
+            input={tickerInput}
+            setInput={setTickerInput}
+            onSearch={searchTicker}
+            allData={datasets.kr_all||[]}
+          />
         ) : activeInfo.type==="search" ? (
           <TickerSearchView
             result={tickerResult}
