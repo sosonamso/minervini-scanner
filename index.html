@@ -273,6 +273,184 @@ function ScannerView({ data, market }) {
   );
 }
 
+function TickerSearchView({ result, input, setInput, onSearch, allData }) {
+  const gradeEmoji = {"S":"🏆","A":"🥇","B":"🥈","C":"🥉","D":"📊"};
+  const [suggestions, setSuggestions] = useState([]);
+
+  const handleInput = (val) => {
+    setInput(val);
+    if (val.length >= 1 && allData.length) {
+      const q = val.toLowerCase();
+      const found = allData.filter(r =>
+        String(r.name||"").toLowerCase().includes(q) ||
+        String(r.ticker||"").startsWith(q)
+      ).slice(0, 8);
+      setSuggestions(found);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const handleSelect = (row) => {
+    setInput(row.name);
+    setSuggestions([]);
+    onSearch(row.name);
+  };
+
+  return (
+    <div>
+      <div style={{ marginBottom:20, position:"relative" }}>
+        <div style={{ fontSize:12, color:"#64748b", marginBottom:8 }}>
+          {allData.length > 0 ? allData.length+"개 종목 로딩됨 · 종목명으로 검색" : "⏳ 데이터 로딩 중..."}
+        </div>
+        <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+          <div style={{ position:"relative" }}>
+            <input
+              placeholder="예: 삼성전자, 서진시스템"
+              value={input}
+              onChange={e => handleInput(e.target.value)}
+              onKeyDown={e => { if(e.key==="Enter"){ setSuggestions([]); onSearch(input); }}}
+              style={{ padding:"8px 14px", borderRadius:8, border:"1px solid #334155",
+                background:"#1e293b", color:"#f1f5f9", fontSize:13, outline:"none", width:220 }}
+            />
+            {suggestions.length > 0 && (
+              <div style={{ position:"absolute", top:"100%", left:0, width:260, background:"#1e293b",
+                border:"1px solid #334155", borderRadius:8, zIndex:100, marginTop:4 }}>
+                {suggestions.map((s,i) => (
+                  <div key={i} onClick={() => handleSelect(s)}
+                    style={{ padding:"8px 14px", cursor:"pointer", fontSize:12,
+                      borderBottom:"1px solid #0f172a", display:"flex", justifyContent:"space-between" }}>
+                    <span style={{ color:"#f1f5f9" }}>{s.name}</span>
+                    <span style={{ color:"#475569" }}>{s.ticker}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <button onClick={() => { setSuggestions([]); onSearch(input); }}
+            style={{ padding:"8px 18px", borderRadius:8, background:"linear-gradient(90deg,#fb923c,#f59e0b)",
+              color:"#000", fontWeight:800, fontSize:13, border:"none", cursor:"pointer", fontFamily:"inherit" }}>
+            검색
+          </button>
+        </div>
+      </div>
+
+      {result && (
+        <div style={{ background:"#0f172a", borderRadius:12, padding:20, border:"1px solid #1e293b" }}>
+          {/* 헤더 */}
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16, flexWrap:"wrap", gap:8 }}>
+            <div>
+              <div style={{ fontSize:18, fontWeight:900, color:"#f1f5f9" }}>
+                {result.name} <span style={{ color:"#64748b", fontSize:13 }}>({result.ticker})</span>
+              </div>
+              <div style={{ fontSize:11, color:"#475569", marginTop:2 }}>
+                {result.market} · 분석일: {result.analyzed_at}
+              </div>
+            </div>
+            {result.score > 0 && (
+              <div style={{ textAlign:"center", background:"#1e293b", borderRadius:10, padding:"8px 16px" }}>
+                <div style={{ fontSize:11, color:"#64748b" }}>미너비니 점수</div>
+                <div style={{ fontSize:28, fontWeight:900, color:"#fb923c" }}>
+                  {gradeEmoji[result.grade]||"📊"} {result.score}
+                </div>
+                <div style={{ fontSize:12, color:"#94a3b8" }}>{result.grade}등급</div>
+              </div>
+            )}
+          </div>
+
+          {/* 기본 정보 */}
+          <div style={{ display:"flex", gap:10, marginBottom:16, flexWrap:"wrap" }}>
+            {[
+              ["현재가", result.cur ? Number(result.cur).toLocaleString()+"원" : "-"],
+              ["RS", result.rs !== undefined ? (result.rs > 0 ? "+":"")+result.rs+"%" : "-"],
+              ["거래대금(20일평균)", result.trdval ? result.trdval+"억" : "-"],
+            ].map(([label,val]) => (
+              <div key={label} style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
+                <div style={{ fontSize:10, color:"#64748b" }}>{label}</div>
+                <div style={{ fontSize:14, fontWeight:700, color:"#f1f5f9" }}>{val}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* 트렌드 체크리스트 */}
+          <div style={{ marginBottom:16 }}>
+            <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>
+              📈 트렌드 템플릿 (7가지 조건)
+            </div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:4 }}>
+              {result.trend_checks && Object.entries(result.trend_checks).map(([label, {ok, val, threshold}]) => (
+                <div key={label} style={{ background:"#1e293b", borderRadius:6, padding:"6px 10px",
+                  borderLeft:"3px solid "+(ok?"#22c55e":"#ef4444") }}>
+                  <span style={{ fontSize:11 }}>{ok?"✅":"❌"} {label}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop:8, fontSize:12, fontWeight:700,
+              color:result.trend_ok?"#22c55e":"#ef4444" }}>
+              {result.trend_ok ? "✅ 트렌드 통과" : "❌ 트렌드 미통과"}
+            </div>
+          </div>
+
+          {/* 컵핸들 패턴 */}
+          <div style={{ marginBottom:16 }}>
+            <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>
+              🥤 컵&핸들 패턴
+            </div>
+            {result.pattern && (
+              <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:8 }}>
+                {result.pattern.cup_depth && <span style={{ background:"#1e293b", borderRadius:6, padding:"4px 10px", fontSize:11 }}>컵 {result.pattern.cup_depth}%</span>}
+                {result.pattern.cdays && <span style={{ background:"#1e293b", borderRadius:6, padding:"4px 10px", fontSize:11 }}>컵 {result.pattern.cdays}일</span>}
+                {result.pattern.handle_depth && <span style={{ background:"#1e293b", borderRadius:6, padding:"4px 10px", fontSize:11 }}>핸들 {result.pattern.handle_depth}%</span>}
+                {result.pattern.hdays && <span style={{ background:"#1e293b", borderRadius:6, padding:"4px 10px", fontSize:11 }}>핸들 {result.pattern.hdays}일</span>}
+                {result.pattern.vr && <span style={{ background:"#1e293b", borderRadius:6, padding:"4px 10px", fontSize:11 }}>거래량 {result.pattern.vr}x</span>}
+              </div>
+            )}
+            {result.pattern && result.pattern.pivot && (
+              <div style={{ display:"flex", gap:12 }}>
+                <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
+                  <div style={{ fontSize:10, color:"#64748b" }}>피벗가</div>
+                  <div style={{ fontSize:15, fontWeight:700, color:"#fb923c" }}>{Number(result.pattern.pivot).toLocaleString()}원</div>
+                </div>
+                <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
+                  <div style={{ fontSize:10, color:"#64748b" }}>손절가 (-7%)</div>
+                  <div style={{ fontSize:15, fontWeight:700, color:"#ef4444" }}>{Math.round(result.pattern.pivot*0.93).toLocaleString()}원</div>
+                </div>
+              </div>
+            )}
+            <div style={{ marginTop:8, fontSize:12,
+              color:result.pattern_ok?"#22c55e":"#ef4444" }}>
+              {result.pattern_reason}
+            </div>
+          </div>
+
+          {/* 최종 결론 */}
+          <div style={{ borderRadius:8, padding:"12px 16px",
+            background:result.signal?"#14532d":"#450a0a",
+            border:"1px solid "+(result.signal?"#22c55e":"#ef4444") }}>
+            <div style={{ fontSize:13, fontWeight:700,
+              color:result.signal?"#86efac":"#fca5a5" }}>
+              {result.signal ? "🚀 스캐너 조건 충족! 시그널 종목입니다" : "⛔ 스캐너 미검출"}
+            </div>
+            {!result.signal && (
+              <div style={{ fontSize:11, color:"#94a3b8", marginTop:4 }}>
+                미검출 이유: {result.pattern_reason}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {!result && !loading && (
+        <div style={{ textAlign:"center", padding:"40px 20px", color:"#475569" }}>
+          <div style={{ fontSize:40, marginBottom:12 }}>🔍</div>
+          <div style={{ fontSize:14 }}>종목코드를 입력하고 분석 요청해보세요</div>
+          <div style={{ fontSize:11, marginTop:8 }}>분석 후 "결과 새로고침"을 눌러주세요</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function BacktestView({ data, market }) {
   const [sort, setSort] = useState({ col:"r20", dir:-1 });
   const [filter, setFilter] = useState({ search:"", minScore:0, cap:"전체" });
@@ -598,6 +776,14 @@ function App() {
               </label>
             </div>
           </div>
+        ) : activeInfo.type==="search" ? (
+          <TickerSearchView
+            result={tickerResult}
+            input={tickerInput}
+            setInput={setTickerInput}
+            onSearch={searchTicker}
+            allData={datasets.kr_all||[]}
+          />
         ) : activeInfo.type==="scanner" ? (
           <ScannerView data={active} market={activeInfo.market} />
         ) : (
