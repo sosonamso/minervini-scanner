@@ -216,13 +216,13 @@ function ScannerView({ data=[], market }) {
                     <div style={{ display:"flex", gap:4, marginTop:3 }}>
                       <a href={isKR
                         ? "https://finance.naver.com/item/main.naver?code="+row.ticker
-                        : "https://finance.naver.com/world/sise/delayQuote.naver?symbol="+row.ticker}
+                        : "https://finance.yahoo.com/quote/"+row.ticker}
                         target="_blank" rel="noreferrer"
                         style={{ fontSize:10, color:"#22c55e", textDecoration:"none", background:"#14532d", borderRadius:4, padding:"1px 5px" }}
-                        onClick={e => e.stopPropagation()}>네이버</a>
+                        onClick={e => e.stopPropagation()}>{isKR?"네이버":"야후"}</a>
                       <a href={isKR
                         ? "https://kr.tradingview.com/chart/?symbol=KRX:"+row.ticker
-                        : "https://kr.tradingview.com/chart/?symbol=NASDAQ:"+row.ticker}
+                        : "https://kr.tradingview.com/chart/?symbol="+(row.exchange==="NASDAQ"?"NASDAQ":"NYSE")+":"+row.ticker}
                         target="_blank" rel="noreferrer"
                         style={{ fontSize:10, color:"#60a5fa", textDecoration:"none", background:"#1e3a5f", borderRadius:4, padding:"1px 5px" }}
                         onClick={e => e.stopPropagation()}>TV</a>
@@ -589,13 +589,13 @@ function BacktestView({ data=[], market }) {
                     <div style={{ display:"flex", gap:4, marginTop:3 }}>
                       <a href={isKR
                         ? "https://finance.naver.com/item/main.naver?code="+row.ticker
-                        : "https://finance.naver.com/world/sise/delayQuote.naver?symbol="+row.ticker}
+                        : "https://finance.yahoo.com/quote/"+row.ticker}
                         target="_blank" rel="noreferrer"
                         style={{ fontSize:10, color:"#22c55e", textDecoration:"none", background:"#14532d", borderRadius:4, padding:"1px 5px" }}
-                        onClick={e => e.stopPropagation()}>네이버</a>
+                        onClick={e => e.stopPropagation()}>{isKR?"네이버":"야후"}</a>
                       <a href={isKR
                         ? "https://kr.tradingview.com/chart/?symbol=KRX:"+row.ticker
-                        : "https://kr.tradingview.com/chart/?symbol=NASDAQ:"+row.ticker}
+                        : "https://kr.tradingview.com/chart/?symbol="+(row.exchange==="NASDAQ"?"NASDAQ":"NYSE")+":"+row.ticker}
                         target="_blank" rel="noreferrer"
                         style={{ fontSize:10, color:"#60a5fa", textDecoration:"none", background:"#1e3a5f", borderRadius:4, padding:"1px 5px" }}
                         onClick={e => e.stopPropagation()}>TV</a>
