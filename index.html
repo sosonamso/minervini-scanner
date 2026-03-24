@@ -294,6 +294,16 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
     }
   };
 
+  const parseTrendDetail = (str) => {
+    if (!str) return {};
+    const obj = {};
+    str.split("|").forEach(item => {
+      const [k,v] = item.split(":");
+      if (k) obj[k] = v === "1";
+    });
+    return obj;
+  };
+
   return (
     <div>
       <div style={{ marginBottom:20 }}>
@@ -331,12 +341,21 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
 
       {result && !result.error && (
         <div style={{ background:"#0f172a", borderRadius:12, padding:20, border:"1px solid #1e293b" }}>
+
+          {/* 헤더 */}
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16, flexWrap:"wrap", gap:8 }}>
             <div>
               <div style={{ fontSize:18, fontWeight:900, color:"#f1f5f9" }}>
                 {result.name} <span style={{ color:"#64748b", fontSize:13 }}>({result.ticker})</span>
               </div>
-              <div style={{ fontSize:11, color:"#475569", marginTop:2 }}>{result.market}</div>
+              <div style={{ fontSize:11, color:"#475569", marginTop:2 }}>
+                {result.market} ·&nbsp;
+                <a href={"https://finance.naver.com/item/main.naver?code="+result.ticker} target="_blank" rel="noreferrer"
+                  style={{ color:"#22c55e", textDecoration:"none" }}>네이버</a>
+                &nbsp;·&nbsp;
+                <a href={"https://kr.tradingview.com/chart/?symbol=KRX:"+result.ticker} target="_blank" rel="noreferrer"
+                  style={{ color:"#60a5fa", textDecoration:"none" }}>트레이딩뷰</a>
+              </div>
             </div>
             {result.score > 0 && (
               <div style={{ textAlign:"center", background:"#1e293b", borderRadius:10, padding:"8px 16px" }}>
@@ -349,44 +368,112 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
             )}
           </div>
 
-          <div style={{ display:"flex", gap:10, marginBottom:16, flexWrap:"wrap" }}>
-            {[["현재가", result.cur?Number(result.cur).toLocaleString()+"원":"-"],
-              ["RS", result.rs!==undefined?(result.rs>0?"+":"")+result.rs+"%":"-"],
-              ["거래대금", result.trdval_20?result.trdval_20+"억":"-"],
-            ].map(([label,val]) => (
+          {/* 기본 정보 */}
+          <div style={{ display:"flex", gap:8, marginBottom:16, flexWrap:"wrap" }}>
+            {[
+              ["현재가", result.cur?Number(result.cur).toLocaleString()+"원":"-","#f1f5f9"],
+              ["RS", result.rs!==undefined?(result.rs>0?"+":"")+result.rs+"%":"-", result.rs>0?"#22c55e":"#ef4444"],
+              ["거래대금(20일)", result.trdval_20?result.trdval_20+"억":"-","#f1f5f9"],
+            ].map(([label,val,color]) => (
               <div key={label} style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
                 <div style={{ fontSize:10, color:"#64748b" }}>{label}</div>
-                <div style={{ fontSize:14, fontWeight:700, color:"#f1f5f9" }}>{val}</div>
+                <div style={{ fontSize:14, fontWeight:700, color }}>{val}</div>
               </div>
             ))}
           </div>
 
-          <div style={{ marginBottom:12 }}>
-            <div style={{ fontSize:12, color:"#94a3b8", marginBottom:6 }}>트렌드</div>
-            <span style={{ fontSize:12, fontWeight:700, color:result.trend_ok?"#22c55e":"#ef4444" }}>
-              {result.trend_ok?"✅ 통과":"❌ 미통과"}
-            </span>
+          {/* 트렌드 7조건 */}
+          <div style={{ marginBottom:16 }}>
+            <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>
+              📈 트렌드 템플릿 (7가지 조건)
+              <span style={{ marginLeft:8, color:result.trend_ok?"#22c55e":"#ef4444" }}>
+                {result.trend_ok?"✅ 통과":"❌ 미통과"}
+              </span>
+            </div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:4 }}>
+              {Object.entries(parseTrendDetail(result.trend_detail)).map(([label, ok]) => (
+                <div key={label} style={{ background:"#1e293b", borderRadius:6, padding:"5px 10px",
+                  borderLeft:"3px solid "+(ok?"#22c55e":"#ef4444"), fontSize:11 }}>
+                  {ok?"✅":"❌"} {label}
+                </div>
+              ))}
+            </div>
           </div>
 
-          {result.pattern_ok && result.pivot > 0 && (
-            <div style={{ display:"flex", gap:12, marginBottom:12 }}>
-              <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
-                <div style={{ fontSize:10, color:"#64748b" }}>피벗가</div>
-                <div style={{ fontSize:15, fontWeight:700, color:"#fb923c" }}>{Number(result.pivot).toLocaleString()}원</div>
+          {/* 컵핸들 패턴 */}
+          <div style={{ marginBottom:16 }}>
+            <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>
+              🥤 컵&핸들 패턴
+              <span style={{ marginLeft:8, color:result.pattern_ok?"#22c55e":"#ef4444" }}>
+                {result.pattern_ok?"✅ 감지":"❌ 미감지"}
+              </span>
+            </div>
+            {!result.pattern_ok && result.reason && (
+              <div style={{ fontSize:11, color:"#64748b", marginBottom:8 }}>미감지 이유: {result.reason}</div>
+            )}
+            {result.pattern_ok && (
+              <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:10 }}>
+                {[
+                  ["컵 깊이", (result.cup_depth||0)+"%"],
+                  ["컵 기간", (result.cup_days||0)+"일"],
+                  ["핸들 깊이", (result.handle_depth||0)+"%"],
+                  ["핸들 기간", (result.handle_days||0)+"일"],
+                  ["거래량", (result.vol_ratio||0)+"x"],
+                ].map(([k,v]) => (
+                  <div key={k} style={{ background:"#1e293b", borderRadius:6, padding:"4px 10px", fontSize:11 }}>
+                    <span style={{ color:"#64748b" }}>{k} </span>
+                    <span style={{ color:"#f1f5f9", fontWeight:700 }}>{v}</span>
+                  </div>
+                ))}
               </div>
-              <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
-                <div style={{ fontSize:10, color:"#64748b" }}>손절가 (-7%)</div>
-                <div style={{ fontSize:15, fontWeight:700, color:"#ef4444" }}>{Math.round(result.pivot*0.93).toLocaleString()}원</div>
+            )}
+          </div>
+
+          {/* 피벗 + 손절 */}
+          {result.pattern_ok && result.pivot > 0 && (
+            <div style={{ marginBottom:16 }}>
+              <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>📍 가격 정보</div>
+              <div style={{ display:"flex", gap:8, flexWrap:"wrap", alignItems:"center" }}>
+                <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
+                  <div style={{ fontSize:10, color:"#64748b" }}>피벗가</div>
+                  <div style={{ fontSize:15, fontWeight:700, color:"#fb923c" }}>{Number(result.pivot).toLocaleString()}원</div>
+                </div>
+                <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
+                  <div style={{ fontSize:10, color:"#64748b" }}>손절가 (-7%)</div>
+                  <div style={{ fontSize:15, fontWeight:700, color:"#ef4444" }}>{Math.round(result.pivot*0.93).toLocaleString()}원</div>
+                </div>
+                <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
+                  <div style={{ fontSize:10, color:"#64748b" }}>피벗 대비</div>
+                  <div style={{ fontSize:15, fontWeight:700,
+                    color:(result.pct_from_pivot||0)>=0?"#22c55e":"#ef4444" }}>
+                    {result.pct_from_pivot!==undefined?((result.pct_from_pivot>=0?"+":"")+result.pct_from_pivot+"%"):"-"}
+                  </div>
+                </div>
+                {result.safety && (
+                  <div style={{ borderRadius:8, padding:"8px 14px",
+                    background:result.safety==="safe"?"#14532d":result.safety==="caution"?"#451a03":"#450a0a",
+                    border:"1px solid "+(result.safety==="safe"?"#22c55e":result.safety==="caution"?"#f59e0b":"#ef4444") }}>
+                    <div style={{ fontSize:12, fontWeight:700,
+                      color:result.safety==="safe"?"#86efac":result.safety==="caution"?"#fcd34d":"#fca5a5" }}>
+                      {result.safety==="safe"?"✅ 안전구간 (손절 7% 이내)":
+                       result.safety==="caution"?"⚠️ 주의구간 (7~10%)":"❌ 손절 위험 (10% 초과)"}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
 
+          {/* 최종 결론 */}
           <div style={{ borderRadius:8, padding:"12px 16px",
             background:result.signal?"#14532d":"#450a0a",
             border:"1px solid "+(result.signal?"#22c55e":"#ef4444") }}>
             <div style={{ fontSize:13, fontWeight:700, color:result.signal?"#86efac":"#fca5a5" }}>
-              {result.signal?"🚀 시그널 조건 충족!":"⛔ 미검출 - "+result.reason}
+              {result.signal?"🚀 시그널 조건 충족!":"⛔ 미검출"}
             </div>
+            {!result.signal && result.reason && (
+              <div style={{ fontSize:11, color:"#94a3b8", marginTop:4 }}>이유: {result.reason}</div>
+            )}
           </div>
         </div>
       )}
@@ -690,7 +777,21 @@ function App() {
   }, []);
 
   const activeInfo = TABS.find(t => t.id === activeTab);
-  const active = datasets[activeTab] || [];
+
+  // kr_scanner 탭은 kr_all에서 유효 시그널만 필터링
+  const getActiveData = () => {
+    if (activeTab === "kr_scanner") {
+      return (datasets.kr_all || []).filter(r => {
+        if (!r.signal) return false;
+        const pivot = Number(r.pivot || 0);
+        const cur = Number(r.cur || 0);
+        if (pivot <= 0) return false;
+        return cur >= pivot * 0.90 && cur <= pivot * 1.05;
+      });
+    }
+    return datasets[activeTab] || [];
+  };
+  const active = getActiveData();
 
   return (
     <div>
