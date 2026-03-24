@@ -1,0 +1,2839 @@
+﻿ticker,name,sector,cap,exchange
+BTU,피바디 에너지,에너지,SmallCap,NYSE
+TGI,Triumph Group Inc,산업,SmallCap,NYSE
+CNMD,CONMED Corp,헬스케어,SmallCap,NYSE
+BBUC,Brookfield Business,필수소비재,SmallCap,NYSE
+FL,풋락커,소비순환재,SmallCap,NYSE
+OFG,OFG Bancorp,금융,SmallCap,NYSE
+PBI,피트니 보우스,기술,SmallCap,NYSE
+CRI,Carter’s,소비순환재,SmallCap,NYSE
+WMK,Weis Markets,필수소비재,SmallCap,NYSE
+MNR,Mach Natural,에너지,SmallCap,NYSE
+DBRG,Digitalbridge Group,부동산,SmallCap,NYSE
+DFIN,Donnelley Financial Solutions,산업,SmallCap,NYSE
+STC,Stewart Info Services,금융,SmallCap,NYSE
+SEI,Solaris Oilfield,에너지,SmallCap,NYSE
+LZB,La-Z-Boy Inc,소비순환재,SmallCap,NYSE
+HG,Hamilton Insurance,금융,SmallCap,NYSE
+SAND,Sandstorm Gold Ltd N,소재,SmallCap,NYSE
+UTZ,Utz Brands,필수소비재,SmallCap,NYSE
+INSW,International Seaways,에너지,SmallCap,NYSE
+CVI,CVR Energy Inc,에너지,SmallCap,NYSE
+QBTS,D Wave Quantum,기술,SmallCap,NYSE
+GBX,Greenbrier Co,산업,SmallCap,NYSE
+MSDL,Morgan Stanley Direct Lending Fund,금융,SmallCap,NYSE
+NABL,NAble,기술,SmallCap,NYSE
+CTRI,Centuri Holdings,산업,SmallCap,NYSE
+DNOW,Now Inc,산업,SmallCap,NYSE
+NIC,Nicolet Bankshares,금융,SmallCap,NYSE
+PL,Planet Labs PBC,산업,SmallCap,NYSE
+FIHL,Fidelis Insurance Holdings,금융,SmallCap,NYSE
+DRH,DiamondRock,부동산,SmallCap,NYSE
+VSTS,Vestis,필수소비재,SmallCap,NYSE
+VYX,NCR Corp,기술,SmallCap,NYSE
+DHT,DHT Holdings Inc,에너지,SmallCap,NYSE
+CUBI,Customers Bancorp,금융,SmallCap,NYSE
+NTB,Bank of N.T. Butterfield Son,금융,SmallCap,NYSE
+PRG,PROG Holdings,필수소비재,SmallCap,NYSE
+OI,O-I Glass,소재,SmallCap,NYSE
+ARCO,Arcos Dorados Holdings Inc,소비순환재,SmallCap,NYSE
+LUCK,Lucky Strike Entertainment,소비순환재,SmallCap,NYSE
+REVG,Rev Group,산업,SmallCap,NYSE
+HE,Hawaiian Electric Industries Inc,유틸리티,SmallCap,NYSE
+DBD,Diebold Nixdorf,기술,SmallCap,NYSE
+PD,Pagerduty,기술,SmallCap,NYSE
+KMT,Kennametal,산업,SmallCap,NYSE
+SJW,SJW Corp,유틸리티,SmallCap,NYSE
+PRM,Perimeter Solutions,소재,SmallCap,NYSE
+SPHR,Sphere Entertainment,소비순환재,SmallCap,NYSE
+PHR,Phreesia,기술,SmallCap,NYSE
+KEN,Kenon Holdings,유틸리티,SmallCap,NYSE
+KLG,WK Kellogg,필수소비재,SmallCap,NYSE
+TALO,Talos Energy,에너지,SmallCap,NYSE
+HMN,H.M.E.C.,금융,SmallCap,NYSE
+FCF,First Commonwe.,금융,SmallCap,NYSE
+ROG,Rogers Corp,기술,SmallCap,NYSE
+NPWR,NET Power,유틸리티,SmallCap,NYSE
+THS,Treehouse Foods,필수소비재,SmallCap,NYSE
+CABO,Cable One Inc,기술,SmallCap,NYSE
+TNC,Tennant Co.,산업,SmallCap,NYSE
+NBHC,National Bank Holdings,금융,SmallCap,NYSE
+GNL,Global Net Lease,부동산,SmallCap,NYSE
+AG,First Majestic Silver,소재,SmallCap,NYSE
+NGVT,Ingevity,소재,SmallCap,NYSE
+NWN,NW Natural,유틸리티,SmallCap,NYSE
+DAC,다나오스,산업,SmallCap,NYSE
+VRE,Veris Residential,부동산,SmallCap,NYSE
+DESP,Despegar.com,소비순환재,SmallCap,NYSE
+ARIS,Aris Water Solutions,산업,SmallCap,NYSE
+LC,LendingClub,금융,SmallCap,NYSE
+KN,Knowles Cor,기술,SmallCap,NYSE
+ATEN,A10 Network,기술,SmallCap,NYSE
+CODI,Compass Diversified Holdings,금융,SmallCap,NYSE
+WKC,World Fuel Services,에너지,SmallCap,NYSE
+XPRO,Expro Holdings NV,에너지,SmallCap,NYSE
+RDW,Redwire,산업,SmallCap,NYSE
+GB,Global Blue Group Holding,산업,SmallCap,NYSE
+AMBP,Ardagh Metal Packaging,소재,SmallCap,NYSE
+WTTR,Select Energy Services,에너지,SmallCap,NYSE
+STEL,Stellar Bancorp,금융,SmallCap,NYSE
+LTC,LTC Properties,부동산,SmallCap,NYSE
+UTI,Universal Tech,아카데믹 및 교육 서비스,SmallCap,NYSE
+MMI,Marcus & Millichap,부동산,SmallCap,NYSE
+SHCO,Soho House,기술,SmallCap,NYSE
+AMC,AMC 엔터,소비순환재,SmallCap,NYSE
+ELME,Elme,부동산,SmallCap,NYSE
+LOB,Live Oak Bancshares Inc,금융,SmallCap,NYSE
+BHE,Benchmark Elect,기술,SmallCap,NYSE
+JBGS,JBG SMITH Properties,부동산,SmallCap,NYSE
+KOS,Kosmos Energy Ltd,에너지,SmallCap,NYSE
+LADR,Ladder Capital A,부동산,SmallCap,NYSE
+WWW,Wolverine W.W.,소비순환재,SmallCap,NYSE
+PEB,Pebblebr. Hotel,부동산,SmallCap,NYSE
+ARR,ARMOUR REIT,부동산,SmallCap,NYSE
+WS,Worthington Steel,소재,SmallCap,NYSE
+FDP,Fresh Del Monte,필수소비재,SmallCap,NYSE
+LNN,Lindsay Corp,산업,SmallCap,NYSE
+EPC,Edgewell Personal Care,필수소비재,SmallCap,NYSE
+ADNT,Adient,소비순환재,SmallCap,NYSE
+MLNK,Meridianlink,기술,SmallCap,NYSE
+EVEX,Eve Holding,산업,SmallCap,NYSE
+CDRE,Cadre Holdings,산업,SmallCap,NYSE
+ENFN,Enfusion,기술,SmallCap,NYSE
+UMH,UMH Properties,부동산,SmallCap,NYSE
+PX,P10 Inc,금융,SmallCap,NYSE
+EXOD,Exodus Movement,,SmallCap,NYSE
+AGL,애질론 헬스,헬스케어,SmallCap,NYSE
+LEG,레거트 앤 플래트,소비순환재,SmallCap,NYSE
+SILA,Sila Realty Trust,부동산,SmallCap,NYSE
+COUR,코세라,기술,SmallCap,NYSE
+SCS,스틸케이스,산업,SmallCap,NYSE
+TWO,Two Harbors,부동산,SmallCap,NYSE
+LPA,Two,부동산,SmallCap,NYSE
+BV,BrightView Holdings,산업,SmallCap,NYSE
+BLX,Foreign Trade Bank of Latin America,금융,SmallCap,NYSE
+TNK,Teekay Tankers,에너지,SmallCap,NYSE
+CTS,CTS Corp,기술,SmallCap,NYSE
+SCL,Stepan Comp,소재,SmallCap,NYSE
+FUBO,푸보TV,기술,SmallCap,NYSE
+WT,WisdomTree Inv,금융,SmallCap,NYSE
+CSTM,Constellium Nv,소재,SmallCap,NYSE
+HLIO,Helios Tech,산업,SmallCap,NYSE
+AIV,아파트먼트,부동산,SmallCap,NYSE
+BHLB,Berkshire B,금융,SmallCap,NYSE
+MODG,Callaway Golf,소비순환재,SmallCap,NYSE
+IHS,IHS Holding,기술,SmallCap,NYSE
+UVV,Universal Corp,필수소비재,SmallCap,NYSE
+BY,Byline Bancorp,금융,SmallCap,NYSE
+VRTS,Virtus Inv,금융,SmallCap,NYSE
+MSGE,Madison Square Garden Entertainment,소비순환재,SmallCap,NYSE
+USPH,US Phy. Therapy,헬스케어,SmallCap,NYSE
+RES,RPC Inc,에너지,SmallCap,NYSE
+KSS,Kohl’s Corp,소비순환재,SmallCap,NYSE
+ATUS,Altice USA,기술,SmallCap,NYSE
+ALEX,Alexander & Baldwin Inc,부동산,SmallCap,NYSE
+PRO,PROS Holdings,기술,SmallCap,NYSE
+CMRE,Costamare Inc,산업,SmallCap,NYSE
+DOLE,Dole,필수소비재,SmallCap,NYSE
+WGO,위네바고 인더스트리,소비순환재,SmallCap,NYSE
+AORT,Artivion,헬스케어,SmallCap,NYSE
+WEAV,Weave Communications,기술,SmallCap,NYSE
+SFL,SFLoration Ltd,에너지,SmallCap,NYSE
+GRDN,Guardian Pharmacy Services,필수소비재,SmallCap,NYSE
+HCI,HCI Group Inc,금융,SmallCap,NYSE
+KBDC,Kayne Anderson BDC,금융,SmallCap,NYSE
+DEA,Easterly Government Properties,부동산,SmallCap,NYSE
+VTLE,Vital Energy,에너지,SmallCap,NYSE
+TROX,Tronox,소재,SmallCap,NYSE
+TPC,Tutor Perini,산업,SmallCap,NYSE
+OBK,Origin Bancorp,금융,SmallCap,NYSE
+CNNE,Cannae,금융,SmallCap,NYSE
+HLX,Helix Nrg Sol.,에너지,SmallCap,NYSE
+BFS,Saul Centers,부동산,SmallCap,NYSE
+DAO,Youdao,기술,SmallCap,NYSE
+TPB,Turning Point Brands,필수소비재,SmallCap,NYSE
+IDT,IDT,기술,SmallCap,NYSE
+KW,Kennedy-Wilson,부동산,SmallCap,NYSE
+SAFE,Safehold,부동산,SmallCap,NYSE
+EIG,Employers Hldg,금융,SmallCap,NYSE
+PMT,PennyMac Mortg.,부동산,SmallCap,NYSE
+SDHC,Smith Douglas Homes,소비순환재,SmallCap,NYSE
+RCUS,Arcus Biosciences,헬스케어,SmallCap,NYSE
+EFC,Ellington Financial,부동산,SmallCap,NYSE
+FBMS,The First Bancshares,금융,SmallCap,NYSE
+PSFE,페이 세이프,기술,SmallCap,NYSE
+EVRI,Everi Holdings,소비순환재,SmallCap,NYSE
+INR,Infinity Natural Res,에너지,SmallCap,NYSE
+MD,Pediatrix Medical,헬스케어,SmallCap,NYSE
+OLO,Olo,기술,SmallCap,NYSE
+JBI,Janus International Group,소비순환재,SmallCap,NYSE
+VTEX,VTEX,기술,SmallCap,NYSE
+FOR,Forestar Group,산업,SmallCap,NYSE
+BCSF,Bain Capital Specialty Finance,금융,SmallCap,NYSE
+FVRR,Fiverr International,기술,SmallCap,NYSE
+DX,Dynex Capital,부동산,SmallCap,NYSE
+ARLO,Arlo Technologies,소비순환재,SmallCap,NYSE
+OXM,Oxford Ind.,소비순환재,SmallCap,NYSE
+EVH,Evolent Health Inc,헬스케어,SmallCap,NYSE
+MRC,MRC Global,산업,SmallCap,NYSE
+DK,Delek US Energy,에너지,SmallCap,NYSE
+INVX,Innovex International,에너지,SmallCap,NYSE
+NTST,넷스트레잇,부동산,SmallCap,NYSE
+CIM,Chimera Investment Corp,부동산,SmallCap,NYSE
+RC,Ready Capital,부동산,SmallCap,NYSE
+NVGS,Navigator Holdings,에너지,SmallCap,NYSE
+CARS,카스닷컴,기술,SmallCap,NYSE
+BFLY,Butterfly Network,헬스케어,SmallCap,NYSE
+FSLY,패스틀리,기술,SmallCap,NYSE
+CTOS,Custom Truck One Source,소비순환재,SmallCap,NYSE
+OPFI,OppFi,기술,SmallCap,NYSE
+NGVC,Natural Grocers Vitamin,소비순환재,SmallCap,NYSE
+PRSU,Pursuit Attractions Hospitality,소비순환재,SmallCap,NYSE
+PGRE,Paramount Group Inc,부동산,SmallCap,NYSE
+FNA,Paragon 28,헬스케어,SmallCap,NYSE
+FBRT,Franklin BSP Realty Trust,부동산,SmallCap,NYSE
+GETY,Getty Images Holdings,기술,SmallCap,NYSE
+MFA,MFA Financial Inc,부동산,SmallCap,NYSE
+NX,Quanex,소비순환재,SmallCap,NYSE
+PRLB,Proto Labs Inc,산업,SmallCap,NYSE
+BKD,Brookdale Senior Living,헬스케어,SmallCap,NYSE
+ALX,Alexanders Inc,부동산,SmallCap,NYSE
+KIND,Nextdoor Holdings,기술,SmallCap,NYSE
+KRO,Kronos Worldwide Inc,소재,SmallCap,NYSE
+BOW,Bowhead Specialty Holdings,금융,SmallCap,NYSE
+VTOL,Bristow Inc,산업,SmallCap,NYSE
+AMRC,아메리스코,에너지,SmallCap,NYSE
+SLQT,Selectquote,금융,SmallCap,NYSE
+TIXT,텔러스 인터내셔널,기술,SmallCap,NYSE
+CBL,CBL Associates Properties,부동산,SmallCap,NYSE
+NXRT,Nexpoint Residential Trust Inc,부동산,SmallCap,NYSE
+UP,Wheels Up Experience,산업,SmallCap,NYSE
+ACEL,Accel Entertainment,소비순환재,SmallCap,NYSE
+AMTB,Amerant Bancorp A,금융,SmallCap,NYSE
+THR,Thermon Group,산업,SmallCap,NYSE
+SSTK,Shutterstock,기술,SmallCap,NYSE
+GRC,Gorman-Rupp Co.,산업,SmallCap,NYSE
+AGRO,Adecoagro SA,필수소비재,SmallCap,NYSE
+PFLT,PennantPark Floating Rate Capital,금융,SmallCap,NYSE
+ML,MoneyLion,기술,SmallCap,NYSE
+GOOS,Canada Goose,소비순환재,SmallCap,NYSE
+BRDG,Bridge Investment Group Holdings,금융,SmallCap,NYSE
+LPG,Dorian LPG Ltd,에너지,SmallCap,NYSE
+RSKD,Riskified,기술,SmallCap,NYSE
+CINT,Ci T,기술,SmallCap,NYSE
+WOLF,Wolfspeed,기술,SmallCap,NYSE
+AHH,Armada Hflr Pr,부동산,SmallCap,NYSE
+BLND,Blend Labs,기술,SmallCap,NYSE
+NCDL,Nuveen Churchill Direct Lending,금융,SmallCap,NYSE
+AAMI,Acadian Asset Management,금융,SmallCap,NYSE
+ECVT,Ecovyst,소재,SmallCap,NYSE
+SBSI,Southside BShrs,금융,SmallCap,NYSE
+SBH,Sally Beauty Holdings Inc,소비순환재,SmallCap,NYSE
+MYTE,MYT 네덜란드 페어런트,기술,SmallCap,NYSE
+MTAL,MAC Copper,소재,SmallCap,NYSE
+FIGS,Figs,헬스케어,SmallCap,NYSE
+GIC,Global Industrial Co,산업,SmallCap,NYSE
+DCO,Ducommun Inc,산업,SmallCap,NYSE
+HY,Hyster-Yale Materials Handling,산업,SmallCap,NYSE
+UTL,UNITIL Corp,유틸리티,SmallCap,NYSE
+KFRC,Kforce,산업,SmallCap,NYSE
+PUMP,ProPetro,에너지,SmallCap,NYSE
+ETWO,E2open Parent Holdings,기술,SmallCap,NYSE
+AMN,AMN Healthcare,헬스케어,SmallCap,NYSE
+EEX,Emerald Expositions,산업,SmallCap,NYSE
+SMWB,시밀러웹,기술,SmallCap,NYSE
+PARR,Par Pacific Holdings,에너지,SmallCap,NYSE
+HUYA,HUYA,기술,SmallCap,NYSE
+FPH,Five Point,부동산,SmallCap,NYSE
+SKYH,Sky Harbour,산업,SmallCap,NYSE
+BXC,Bluelinx Hldg,소비순환재,SmallCap,NYSE
+YEXT,Yext,기술,SmallCap,NYSE
+MAX,Mediaalpha,기술,SmallCap,NYSE
+BDN,Brandywine Realty Trust,부동산,SmallCap,NYSE
+CLB,Core Laboratories NV,산업,SmallCap,NYSE
+DLX,Deluxe Corp,산업,SmallCap,NYSE
+XPOF,Xponential Fitness,소비순환재,SmallCap,NYSE
+OEC,Orion Engineered Carbons,소재,SmallCap,NYSE
+AC,Associated Capital Group Inc,금융,SmallCap,NYSE
+GRNT,Granite Ridge Resources,에너지,SmallCap,NYSE
+HOV,호브내니언 엔터프라이즈,소비순환재,SmallCap,NYSE
+SXC,SunCoke Energy,소재,SmallCap,NYSE
+GSL,Global Ship Lease Inc,산업,SmallCap,NYSE
+CPF,Central Pacific Financial,금융,SmallCap,NYSE
+MAGN,Magnera,소재,SmallCap,NYSE
+ASIX,AdvanSix,소재,SmallCap,NYSE
+VTS,Vitesse Energy,에너지,SmallCap,NYSE
+XIFR,XPLR Infra LP Unt,유틸리티,SmallCap,NYSE
+MSIF,MSC Income Fund Inc,,SmallCap,NYSE
+AMPS,Altus Power,유틸리티,SmallCap,NYSE
+DNA,Ginkgo Bioworks,헬스케어,SmallCap,NYSE
+GHLD,Guild,금융,SmallCap,NYSE
+KREF,KKR Real Estate,부동산,SmallCap,NYSE
+BRSP,Brightspire Capital,부동산,SmallCap,NYSE
+SITC,Site Centers,부동산,SmallCap,NYSE
+BZH,Beazer,소비순환재,SmallCap,NYSE
+NUVB,Nuvation Bio,헬스케어,SmallCap,NYSE
+REX,REX Corp,에너지,SmallCap,NYSE
+EQBK,Equity Bancshares Inc,금융,SmallCap,NYSE
+IE,Ivanhoe Electric,소재,SmallCap,NYSE
+ETD,Ethan Allen,소비순환재,SmallCap,NYSE
+ZIP,Ziprecruiter,산업,SmallCap,NYSE
+BH,Biglari,소비순환재,SmallCap,NYSE
+JELD,Jeld-Wen Holding,소비순환재,SmallCap,NYSE
+ORC,Orchid Island Capital,부동산,SmallCap,NYSE
+BALY,Bally's,소비순환재,SmallCap,NYSE
+PRA,ProAssurance Corp,금융,SmallCap,NYSE
+SENS,Senseonics Holdings Inc,헬스케어,SmallCap,NYSE
+NVRI,Enviri,산업,SmallCap,NYSE
+REPX,Riley Exploration Permian,에너지,SmallCap,NYSE
+MSC,Studio City,소비순환재,SmallCap,NYSE
+HIPO,Hippo,금융,SmallCap,NYSE
+MLR,Miller Ind.,소비순환재,SmallCap,NYSE
+AVNS,Avanos Medical,헬스케어,SmallCap,NYSE
+ASPN,아스펜 에어로젤,소재,SmallCap,NYSE
+NPK,National Presto,산업,SmallCap,NYSE
+TRTX,TPG RE Finance,부동산,SmallCap,NYSE
+RYI,Ryerson Holding,소재,SmallCap,NYSE
+MCB,Metropolitan Bank,금융,SmallCap,NYSE
+MCS,Marcus Corp,소비순환재,SmallCap,NYSE
+AACT,Ares Acquisition oration II,금융,SmallCap,NYSE
+GCI,가네트,소비순환재,SmallCap,NYSE
+CCO,Clear Channel,소비순환재,SmallCap,NYSE
+OPY,Oppenheimer,금융,SmallCap,NYSE
+YALA,얄라 그룹,기술,SmallCap,NYSE
+SMP,Standard Motor,소비순환재,SmallCap,NYSE
+CURV,Torrid Holdings,소비순환재,SmallCap,NYSE
+LAC,Lithium Americas,소재,SmallCap,NYSE
+MTUS,Metallus,소재,SmallCap,NYSE
+STRW,Strawberry Fields Reit,부동산,SmallCap,NYSE
+CION,Cion Investment,금융,SmallCap,NYSE
+MEG,몬트로스 인바이론멘탈,산업,SmallCap,NYSE
+GES,Guess,소비순환재,SmallCap,NYSE
+DDD,3D Systems Corp,기술,SmallCap,NYSE
+PACK,Ranpak Holdings,소재,SmallCap,NYSE
+HZO,MarineMax Inc,소비순환재,SmallCap,NYSE
+KODK,코닥,기술,SmallCap,NYSE
+CSV,캐리지 서비스,필수소비재,SmallCap,NYSE
+ODC,Oil-Dri Corp,필수소비재,SmallCap,NYSE
+GNK,Genco Shipping Trading,산업,SmallCap,NYSE
+TK,Teekay Corp,에너지,SmallCap,NYSE
+CTO,CTO Realty Growth,부동산,SmallCap,NYSE
+VEL,Velocity Fin,금융,SmallCap,NYSE
+NMCO,Nuveen Municipal,금융,SmallCap,NYSE
+KOP,Koppers Hldg,소재,SmallCap,NYSE
+IIIN,Insteel Industries,소비순환재,SmallCap,NYSE
+AXL,AAM,소비순환재,SmallCap,NYSE
+USNA,USANA Hlth Sci,필수소비재,SmallCap,NYSE
+SMBK,SmartFinancial Inc,금융,SmallCap,NYSE
+NPKI,NPK International,에너지,SmallCap,NYSE
+RGR,스텀루거,소비순환재,SmallCap,NYSE
+PLOW,Douglas Dynamic,산업,SmallCap,NYSE
+TTI,Tetra Tech,에너지,SmallCap,NYSE
+CAL,Caleres,소비순환재,SmallCap,NYSE
+FPI,Farmland Partners,부동산,SmallCap,NYSE
+UVE,U.I.H.,금융,SmallCap,NYSE
+OMI,오웬스 앤 마이너,헬스케어,SmallCap,NYSE
+LXU,Lsb Industries,소재,SmallCap,NYSE
+GMRE,Global Medical,부동산,SmallCap,NYSE
+FOA,Finance of America Companies,금융,SmallCap,NYSE
+HLF,허벌라이프,필수소비재,SmallCap,NYSE
+CHCT,Community Healthcare Trust Inc,부동산,SmallCap,NYSE
+TWI,Titan Intl,소비순환재,SmallCap,NYSE
+BRCC,BRC Inc.,필수소비재,SmallCap,NYSE
+VHI,Valhi Inc,소재,SmallCap,NYSE
+AMBC,Ambac,금융,SmallCap,NYSE
+NAT,Nord. Ame. Tank,에너지,SmallCap,NYSE
+DXYZ,Destiny Tech100,금융,SmallCap,NYSE
+LDI,론디포,금융,SmallCap,NYSE
+IVR,Invesco Mortgage,부동산,SmallCap,NYSE
+EBF,Ennis Inc,산업,SmallCap,NYSE
+WNC,Wabash National,산업,SmallCap,NYSE
+LVWR,LiveWire Group,소비순환재,SmallCap,NYSE
+EBS,Emergent Biosol,헬스케어,SmallCap,NYSE
+PSBD,Palmer Square Capital BDC,금융,SmallCap,NYSE
+BKSY,Blacksky Technology,기술,SmallCap,NYSE
+TEN,Tsakos Energy,에너지,SmallCap,NYSE
+GDOT,그린닷,금융,SmallCap,NYSE
+JMIA,Jumia Tech,기술,SmallCap,NYSE
+BBW,Build-A-Bear Workshop Inc,소비순환재,SmallCap,NYSE
+ACCO,Acco Brands,산업,SmallCap,NYSE
+NPB,Northpointe Bancshares,,SmallCap,NYSE
+GBLI,Global Indemnity,금융,SmallCap,NYSE
+AGS,PlayAGS,소비순환재,SmallCap,NYSE
+MATV,Mativ Holdings,소재,SmallCap,NYSE
+GNTY,Guaranty Bancshares,금융,SmallCap,NYSE
+FVR,FrontView REIT,부동산,SmallCap,NYSE
+RYAM,레이오니어,소재,SmallCap,NYSE
+CANG,Cango,기술,SmallCap,NYSE
+BOC,Boston Omaha,소비순환재,SmallCap,NYSE
+LZM,Lifezone Metals,소재,SmallCap,NYSE
+BGS,B&G Foods Hldg,필수소비재,SmallCap,NYSE
+NLOP,Net Lease Office Properties,부동산,SmallCap,NYSE
+PNNT,PennantPark Inv,금융,SmallCap,NYSE
+SNDA,Sonida Senior Living,헬스케어,SmallCap,NYSE
+GPRK,GeoPark Ltd,에너지,SmallCap,NYSE
+UIS,Unisys Corp,기술,SmallCap,NYSE
+CMP,Compass Minerals Intl Inc,소재,SmallCap,NYSE
+GCO,Genesco Inc,소비순환재,SmallCap,NYSE
+FC,Franklin Covey Co,아카데믹 및 교육 서비스,SmallCap,NYSE
+KULR,KULR Technology Group,산업,SmallCap,NYSE
+NBR,네이버스 인더스트리즈,에너지,SmallCap,NYSE
+GFR,Greenfire Resources,에너지,SmallCap,NYSE
+EGY,Vaalco Energy,에너지,SmallCap,NYSE
+SD,SandRidge Energy,에너지,SmallCap,NYSE
+MYE,Myers Ind.,소재,SmallCap,NYSE
+CYH,Community Health,헬스케어,SmallCap,NYSE
+AAM,AA Mission Acquisition,금융,SmallCap,NYSE
+EQV,EQV Ventures Acquisition,금융,SmallCap,NYSE
+MPLN,MultiPlan,산업,SmallCap,NYSE
+EVTL,Vertical Aerospace,산업,SmallCap,NYSE
+CYD,China Yuchai International Ltd,소비순환재,SmallCap,NYSE
+CLW,Clearwater Ppr,소재,SmallCap,NYSE
+EHAB,Enhabit,헬스케어,SmallCap,NYSE
+FFWM,First Foundation Inc,금융,SmallCap,NYSE
+CMTG,Claros Mortgage Trust,부동산,SmallCap,NYSE
+MOV,Movado Group,소비순환재,SmallCap,NYSE
+HOUS,Anywhere RE,부동산,SmallCap,NYSE
+TRC,Tejon Ranch Co,부동산,SmallCap,NYSE
+SPMC,Sound Point Meridian Capital,금융,SmallCap,NYSE
+BWMX,Betterware De Mexico,소비순환재,SmallCap,NYSE
+ASC,Ardmore Shpng,에너지,SmallCap,NYSE
+SCM,Stellus Capital Investment,금융,SmallCap,NYSE
+OOMA,Ooma Inc,기술,SmallCap,NYSE
+XPER,Xperi,기술,SmallCap,NYSE
+GHM,Graham Corp,산업,SmallCap,NYSE
+BYON,Beyond,기술,SmallCap,NYSE
+HPP,Hudson Pacific,부동산,SmallCap,NYSE
+TRAK,Repositrak,기술,SmallCap,NYSE
+GTN,Gray Television Inc,소비순환재,SmallCap,NYSE
+QUAD,Quad Graphics,산업,SmallCap,NYSE
+DIN,Dine Brands Global,소비순환재,SmallCap,NYSE
+RNGR,Ranger Energy Services,에너지,SmallCap,NYSE
+JILL,J.Jill,소비순환재,SmallCap,NYSE
+PKST,Peakstone Realty Trust,부동산,SmallCap,NYSE
+MLP,Maui Land & Pineapple Comp Inc,부동산,SmallCap,NYSE
+MTW,Manitowoc Co,산업,SmallCap,NYSE
+GNE,Genie Energy,유틸리티,SmallCap,NYSE
+SB,Safe Bulkers Inc,산업,SmallCap,NYSE
+HFRO,Highland Floating,금융,SmallCap,NYSE
+NUS,Nu Skin Enterprises Inc,필수소비재,SmallCap,NYSE
+AMPX,Amprius Tech,산업,SmallCap,NYSE
+PSTL,Postal Realty,부동산,SmallCap,NYSE
+MEI,Methode Electro,기술,SmallCap,NYSE
+HRTG,Heritage Insurance,금융,SmallCap,NYSE
+WOW,WideOpenWest,소비순환재,SmallCap,NYSE
+HYLN,Hyliion Holdings,산업,SmallCap,NYSE
+SES,SES AI,산업,SmallCap,NYSE
+MBI,MBIA Inc,금융,SmallCap,NYSE
+SAR,Saratoga Investment Corp,금융,SmallCap,NYSE
+RM,Regional Mgmt,금융,SmallCap,NYSE
+CHPT,ChargePoint Holdings,산업,SmallCap,NYSE
+TBN,Tamboran Resources,에너지,SmallCap,NYSE
+HVT,Haverty,소비순환재,SmallCap,NYSE
+VENU,Venu Holding,소비순환재,SmallCap,NYSE
+NL,NL Industries,산업,SmallCap,NYSE
+NRDY,Nerdy,기술,SmallCap,NYSE
+NREF,Nexpoint,부동산,SmallCap,NYSE
+BARK,BARK,소비순환재,SmallCap,NYSE
+NGS,Natural Gas Ser,에너지,SmallCap,NYSE
+CVEO,Civeo,부동산,SmallCap,NYSE
+OIS,Oil States International Inc,에너지,SmallCap,NYSE
+YSG,이셴,필수소비재,SmallCap,NYSE
+HLLY,Holley,소비순환재,SmallCap,NYSE
+BNED,Barnes & Noble Education Inc,소비순환재,SmallCap,NYSE
+MSB,Mesabi Trust,소재,SmallCap,NYSE
+VPG,V.P.G. Inc,산업,SmallCap,NYSE
+SEG,Seaport Entertainment,소비순환재,SmallCap,NYSE
+EB,Eventbrite A,기술,SmallCap,NYSE
+BRBS,Blue Ridge Bankshares,금융,SmallCap,NYSE
+FREY,FREYR Battery,산업,SmallCap,NYSE
+HYAC,Haymaker Acquisition 4,금융,SmallCap,NYSE
+MEC,Mayville Engineering,소비순환재,SmallCap,NYSE
+COOK,Traeger,소비순환재,SmallCap,NYSE
+RMAX,Re Max Holding,부동산,SmallCap,NYSE
+IPI,Intrepid Potash Inc,소재,SmallCap,NYSE
+LAW,CS Disco LLC,기술,SmallCap,NYSE
+TPVG,Triplepoint Venture,금융,SmallCap,NYSE
+MG,Mistras Group,에너지,SmallCap,NYSE
+MPX,Marine Products,소비순환재,SmallCap,NYSE
+ORN,Orion Group,산업,SmallCap,NYSE
+CBAN,Colony Bankcorp,금융,SmallCap,NYSE
+VFC,VF 코퍼레이션,소비순환재,MidCap,NYSE
+WMS,ADS,소비순환재,MidCap,NYSE
+BRBR,Bellring,필수소비재,MidCap,NYSE
+BG,번지,필수소비재,MidCap,NYSE
+CR,Crane,산업,MidCap,NYSE
+BWXT,BWX Tech,산업,MidCap,NYSE
+MUSA,Murphy USA Inc,에너지,MidCap,NYSE
+KD,Kyndryl Holdings,기술,MidCap,NYSE
+GLOB,Globant SA,기술,MidCap,NYSE
+WAL,W.A.L. Bcorp,금융,MidCap,NYSE
+SKX,Skechers USA,소비순환재,MidCap,NYSE
+WTRG,Essential Utilities,유틸리티,MidCap,NYSE
+KNTK,Kinetik Holdings,에너지,MidCap,NYSE
+ATR,AptarGroup Inc,소재,MidCap,NYSE
+G,Genpact Ltd,산업,MidCap,NYSE
+WCC,Wesco Intl,산업,MidCap,NYSE
+BLD,Topbuild Corp,산업,MidCap,NYSE
+ALB,알버말,소재,MidCap,NYSE
+AOS,A.O 스미스,산업,MidCap,NYSE
+CUBE,CubeSmart,부동산,MidCap,NYSE
+CRS,Carpenter Technology Corp,소재,MidCap,NYSE
+PRI,Primerica Inc,금융,MidCap,NYSE
+AA,알코아,소재,MidCap,NYSE
+RRC,레인지 리소시스,에너지,MidCap,NYSE
+ALK,알래스카 항공,산업,MidCap,NYSE
+MLI,Mueller Ind.,산업,MidCap,NYSE
+CFR,Cullen/Frost Bankers Inc,금융,MidCap,NYSE
+ORI,Old Republic International,금융,MidCap,NYSE
+RRX,Regal Beloit Corp,산업,MidCap,NYSE
+FRT,페더럴 리얼티 인베,부동산,MidCap,NYSE
+ALSN,Allison Transmission,산업,MidCap,NYSE
+PAAS,Pan American Silver NQ,소재,MidCap,NYSE
+SARO,StandardAero,산업,MidCap,NYSE
+CMA,코메리카,금융,MidCap,NYSE
+VNO,보나도,부동산,MidCap,NYSE
+KNX,Knight-Swift Trans,산업,MidCap,NYSE
+GNRC,Generac,산업,MidCap,NYSE
+OGE,OGE Energy,유틸리티,MidCap,NYSE
+ONTO,Onto Innovation,기술,MidCap,NYSE
+ATI,ATI Inc,산업,MidCap,NYSE
+U,유니티 소프트,기술,MidCap,NYSE
+X,US 스틸,소재,MidCap,NYSE
+GAP,갭,소비순환재,MidCap,NYSE
+FBIN,포춘 브랜즈 홈 & 시큐리티,소비순환재,MidCap,NYSE
+PLNT,Planet Fitness Inc,소비순환재,MidCap,NYSE
+WH,Wyndham Hotels,소비순환재,MidCap,NYSE
+BRX,Brixmor Property,부동산,MidCap,NYSE
+GKOS,Glaukos Corp,헬스케어,MidCap,NYSE
+MOS,모자이크,소재,MidCap,NYSE
+EXP,Eagle Materials,소재,MidCap,NYSE
+LW,램웨스턴,필수소비재,MidCap,NYSE
+IVZ,인베스코,금융,MidCap,NYSE
+CHE,Chemed Corp,헬스케어,MidCap,NYSE
+PATH,UiPath,기술,MidCap,NYSE
+DCI,Donaldson Comp Inc,산업,MidCap,NYSE
+FLS,플로우서브,산업,MidCap,NYSE
+INGR,Ingredion Inc,필수소비재,MidCap,NYSE
+NYT,New York Times,소비순환재,MidCap,NYSE
+BERY,Berry Global,소재,MidCap,NYSE
+IONQ,IONQ,기술,MidCap,NYSE
+AXTA,Axalta Coating Systems,소재,MidCap,NYSE
+TTC,Toro Co.,산업,MidCap,NYSE
+AM,Antero Midstream,에너지,MidCap,NYSE
+DLB,돌비 래보러터리,기술,MidCap,NYSE
+FN,Fabrinet,기술,MidCap,NYSE
+GPK,G.P.H.C.,소재,MidCap,NYSE
+S,SentinelOne,기술,MidCap,NYSE
+BIO,Bio-Rad Laboratories Inc,헬스케어,MidCap,NYSE
+BBWI,배스&바디웍스,소비순환재,MidCap,NYSE
+LPX,Louisiana-Pacific,소재,MidCap,NYSE
+OBDC,Owl Rock Capital,금융,MidCap,NYSE
+DDS,Dillards,소비순환재,MidCap,NYSE
+ESAB,ESAB Corp,산업,MidCap,NYSE
+PSN,Parsons,산업,MidCap,NYSE
+SNV,Synovus Financial,금융,MidCap,NYSE
+TFX,텔레플렉스,헬스케어,MidCap,NYSE
+CRL,Charles River Laboratories Intl,헬스케어,MidCap,NYSE
+MHK,모호크 인더스트리스,소비순환재,MidCap,NYSE
+ALV,오토리브,소비순환재,MidCap,NYSE
+ADC,Agree Realty,부동산,MidCap,NYSE
+CACI,CACI Intl,기술,MidCap,NYSE
+BXSL,Blackstone Secured Lending Fund,금융,MidCap,NYSE
+NNN,NNN REIT,부동산,MidCap,NYSE
+FR,First Ind Tr,부동산,MidCap,NYSE
+AXS,Axis Capital,금융,MidCap,NYSE
+AN,오토네이션,소비순환재,MidCap,NYSE
+BFAM,Bright Horizons,필수소비재,MidCap,NYSE
+FLR,플루오르,산업,MidCap,NYSE
+CE,셀라니즈,소재,MidCap,NYSE
+PB,Prosperity BShr,금융,MidCap,NYSE
+SSD,심슨 매뉴팩처링,소비순환재,MidCap,NYSE
+AGCO,Agco,산업,MidCap,NYSE
+PJT,PJT Partners Inc,금융,MidCap,NYSE
+LEVI,Levi Strauss A,소비순환재,MidCap,NYSE
+VOYA,Voya Financial Inc,금융,MidCap,NYSE
+TREX,Trex Co. Inc,소비순환재,MidCap,NYSE
+AZEK,Azek Company,소비순환재,MidCap,NYSE
+DINO,HF Sinclair,에너지,MidCap,NYSE
+MTDR,Matador Res Co,에너지,MidCap,NYSE
+WTS,Watts Water Tec,산업,MidCap,NYSE
+RH,RH,소비순환재,MidCap,NYSE
+JXN,Jackson Financial,금융,MidCap,NYSE
+AES,AES,유틸리티,MidCap,NYSE
+HRB,H&R 블록,필수소비재,MidCap,NYSE
+EAT,Brinker International Inc,소비순환재,MidCap,NYSE
+R,라이더 시스템,산업,MidCap,NYSE
+OSK,Oshkosh Corp,산업,MidCap,NYSE
+MNSO,미니소 그룹,소비순환재,MidCap,NYSE
+GTLS,Chart Ind.,산업,MidCap,NYSE
+JHG,재너스 헨더슨,금융,MidCap,NYSE
+BYD,보이드 게이밍,소비순환재,MidCap,NYSE
+UGI,UGI,유틸리티,MidCap,NYSE
+KBR,KBR Inc,기술,MidCap,NYSE
+SPXC,SPX Corp,산업,MidCap,NYSE
+RLI,RLI Corp,금융,MidCap,NYSE
+ADT,에이디티시큐리티,기술,MidCap,NYSE
+OMF,OneMain Holdings,금융,MidCap,NYSE
+CHH,Choice Hotels International Inc,소비순환재,MidCap,NYSE
+AWI,Armstrong World Industries Inc,소비순환재,MidCap,NYSE
+CWAN,Clearwater Analytics Holdings,기술,MidCap,NYSE
+LTH,Life Time Holdings,소비순환재,MidCap,NYSE
+STWD,Starwood Pro Tr,부동산,MidCap,NYSE
+LNC,링컨 내셔널,금융,MidCap,NYSE
+FSK,FS KKR Capital,금융,MidCap,NYSE
+TMHC,Taylor Morrison Home,소비순환재,MidCap,NYSE
+FCN,FTI Consulting,산업,MidCap,NYSE
+BWA,보그워너,소비순환재,MidCap,NYSE
+STAG,STAG Industrial,부동산,MidCap,NYSE
+FAF,First American Financial Corp,금융,MidCap,NYSE
+SITE,Siteone Landscape Supply,필수소비재,MidCap,NYSE
+NFG,National Fuel Gas Comp,유틸리티,MidCap,NYSE
+DAR,Darling Ingredients,필수소비재,MidCap,NYSE
+JBTM,JBTMarel,산업,MidCap,NYSE
+VMI,Valmont Industries Inc,산업,MidCap,NYSE
+OKLO,Oklo Inc,유틸리티,MidCap,NYSE
+BMI,Badger Meter,산업,MidCap,NYSE
+LOAR,Loar Holdings LLC,산업,MidCap,NYSE
+ESI,Element Solutions,소재,MidCap,NYSE
+CADE,Cadence Bancorp,금융,MidCap,NYSE
+HII,헌팅턴 잉걸스,산업,MidCap,NYSE
+POST,Post Holdings,필수소비재,MidCap,NYSE
+GPI,Group 1 Autom,소비순환재,MidCap,NYSE
+KEX,Kirby Corp,산업,MidCap,NYSE
+MSA,MSA Safety,산업,MidCap,NYSE
+W,Wayfair Inc,소비순환재,MidCap,NYSE
+MTN,Vail Resorts,소비순환재,MidCap,NYSE
+SKY,Champion Homes,소비순환재,MidCap,NYSE
+WEX,Wex,산업,MidCap,NYSE
+MTG,MGIC Investment,금융,MidCap,NYSE
+BILL,Bill Com,기술,MidCap,NYSE
+COLD,Americold Realty,부동산,MidCap,NYSE
+RHI,로버트 하프,산업,MidCap,NYSE
+ZWS,Zurn Water Solutions,소비순환재,MidCap,NYSE
+LRN,Stride,아카데믹 및 교육 서비스,MidCap,NYSE
+JOBY,Joby Aviation,산업,MidCap,NYSE
+INFA,Informatica,기술,MidCap,NYSE
+CMC,Commercial Metals Comp,소재,MidCap,NYSE
+HOMB,Home BancShares,금융,MidCap,NYSE
+ABG,Asbury Autom,소비순환재,MidCap,NYSE
+FG,F G Annuities Life,금융,MidCap,NYSE
+FSS,Federal Signal,산업,MidCap,NYSE
+NOV,Nov,에너지,MidCap,NYSE
+ESNT,Essent Group Ltd,금융,MidCap,NYSE
+HR,Healthcare Realty Trust,부동산,MidCap,NYSE
+SMR,Nuscale Power,유틸리티,MidCap,NYSE
+EPRT,Essential Properties,부동산,MidCap,NYSE
+GATX,GATX Corp,금융,MidCap,NYSE
+THG,Hanover Insurance Group Inc,금융,MidCap,NYSE
+IDA,IDACORP Inc,유틸리티,MidCap,NYSE
+VNT,Vontier,기술,MidCap,NYSE
+TKR,Timken Co,산업,MidCap,NYSE
+MC,Moelis & Co,금융,MidCap,NYSE
+MAIN,메인 스트리트,금융,MidCap,NYSE
+BE,Bloom Energy,산업,MidCap,NYSE
+USM,United States Cellular Corp,기술,MidCap,NYSE
+GTES,Gates Industrial Corp,산업,MidCap,NYSE
+BLCO,Bausch + Lomb,헬스케어,MidCap,NYSE
+KNF,Knife River,소재,MidCap,NYSE
+WHR,월풀,소비순환재,MidCap,NYSE
+SLGN,Silgan Holdings,소재,MidCap,NYSE
+HRI,Herc Holdings,산업,MidCap,NYSE
+ARW,Arrow Electronics,기술,MidCap,NYSE
+CLF,Cleveland-Cliffs,소재,MidCap,NYSE
+ANF,애버크롬비 & 피치,소비순환재,MidCap,NYSE
+GBCI,Glacier Bancorp,금융,MidCap,NYSE
+ZETA,Zeta Global Holdings,기술,MidCap,NYSE
+BROS,Dutch Bros,소비순환재,MidCap,NYSE
+ELAN,엘란코,헬스케어,MidCap,NYSE
+SWX,Southwest Gas Hold,유틸리티,MidCap,NYSE
+FNB,FNB Corp,금융,MidCap,NYSE
+INGM,Ingram Micro Holding,기술,MidCap,NYSE
+ALTM,Arcadium Lithium,소재,MidCap,NYSE
+THO,토르 인더스트리,소비순환재,MidCap,NYSE
+QTWO,Q2 Holdings,기술,MidCap,NYSE
+AL,Air Lease Corp,금융,MidCap,NYSE
+INSP,Inspire Medical Systems,헬스케어,MidCap,NYSE
+FLG,Flagstar Financial,금융,MidCap,NYSE
+CRK,캄스톡 리소시즈,에너지,MidCap,NYSE
+QXO,QXO Inc,기술,MidCap,NYSE
+MTH,Meritage Homes Corp,소비순환재,MidCap,NYSE
+STVN,Stevanato Group SpA,헬스케어,MidCap,NYSE
+ASAN,Asana,기술,MidCap,NYSE
+HXL,Hexcel Corp,산업,MidCap,NYSE
+MAC,메이서리치,부동산,MidCap,NYSE
+LEA,Lear,소비순환재,MidCap,NYSE
+ACHR,Archer Aviation,산업,MidCap,NYSE
+PFSI,PennyMac Financial,금융,MidCap,NYSE
+DY,Dycom Ind.,산업,MidCap,NYSE
+NEU,NewMarket Corp,소재,MidCap,NYSE
+CWEN,Clearway Energy C,유틸리티,MidCap,NYSE
+LB,LandBridge Co LLC,에너지,MidCap,NYSE
+MSGS,Madison Square Garden Sports,소비순환재,MidCap,NYSE
+BOX,Box Inc,기술,MidCap,NYSE
+VVV,Valvoline,필수소비재,MidCap,NYSE
+CUZ,Cousins Prop,부동산,MidCap,NYSE
+LAZ,Lazard Ltd,금융,MidCap,NYSE
+AMG,어필리에이트매니저스그룹,금융,MidCap,NYSE
+IBP,Installed Building,산업,MidCap,NYSE
+CTRE,Caretrust Inc,부동산,MidCap,NYSE
+SEE,실드 에어,소재,MidCap,NYSE
+WK,Workiva Inc,기술,MidCap,NYSE
+PIPR,Piper Sandler,금융,MidCap,NYSE
+SLG,SL 그린 리얼티,부동산,MidCap,NYSE
+ACA,Arcosa,산업,MidCap,NYSE
+COTY,코티,필수소비재,MidCap,NYSE
+VIST,Vista Oil Gas,에너지,MidCap,NYSE
+MOD,Modine Manu,소비순환재,MidCap,NYSE
+MATX,Matson,산업,MidCap,NYSE
+CIVI,Civitas Resources,에너지,MidCap,NYSE
+AROC,Archrock,에너지,MidCap,NYSE
+SFBS,ServisFirst Bancshares,금융,MidCap,NYSE
+AMTM,Amentum Holdings LLC,기술,MidCap,NYSE
+SNDR,Schneider National,산업,MidCap,NYSE
+NSA,National Storage Affiliates Trust,부동산,MidCap,NYSE
+WHD,Cactus,에너지,MidCap,NYSE
+RDN,Radian Group,금융,MidCap,NYSE
+ITGR,Integer Hld,헬스케어,MidCap,NYSE
+GXO,GXO Logistics,산업,MidCap,NYSE
+DNB,던 앤드 브래드스트리트 홀딩(D&B),산업,MidCap,NYSE
+CBT,Cabot Corp,소재,MidCap,NYSE
+SON,Sonoco Products Comp,소재,MidCap,NYSE
+KBH,Kb Home,소비순환재,MidCap,NYSE
+BCC,Boise Cascad Llc,소비순환재,MidCap,NYSE
+NE,Noble,에너지,MidCap,NYSE
+LUMN,루멘 테크놀로지스,기술,MidCap,NYSE
+BDC,Belden Inc,기술,MidCap,NYSE
+WTM,White Mountains Insurance,금융,MidCap,NYSE
+MGY,Magnolia Oil,에너지,MidCap,NYSE
+KTB,Kontoor Brands,소비순환재,MidCap,NYSE
+AGO,어슈어드,금융,MidCap,NYSE
+SHAK,Shake Shack Inc,소비순환재,MidCap,NYSE
+NJR,NewJersey Res,유틸리티,MidCap,NYSE
+FMC,FMC 코퍼레이션,소재,MidCap,NYSE
+KAI,Kadant Inc,산업,MidCap,NYSE
+ABCB,Ameris Bancorp,금융,MidCap,NYSE
+POR,Portland General,유틸리티,MidCap,NYSE
+MSM,MSC Industrial Direct Comp Inc,산업,MidCap,NYSE
+TXNM,TXNM Energy,유틸리티,MidCap,NYSE
+TDS,Telephone and Data Systems Inc,기술,MidCap,NYSE
+CNX,CNX Resources,에너지,MidCap,NYSE
+ST,Sensata Tech,기술,MidCap,NYSE
+CRC,California Resources,에너지,MidCap,NYSE
+SM,Sm Energy Co,에너지,MidCap,NYSE
+COMP,컴파스,기술,MidCap,NYSE
+AHR,American Healthcare REIT,부동산,MidCap,NYSE
+CBZ,CBIZ Inc,산업,MidCap,NYSE
+BC,Brunswick Corp,소비순환재,MidCap,NYSE
+PVH,PVH - 필립스 반 호이젠,소비순환재,MidCap,NYSE
+CEIX,Core Natural Resources,에너지,MidCap,NYSE
+KMPR,Kemper Corp,금융,MidCap,NYSE
+CNS,Cohen Steers,금융,MidCap,NYSE
+SR,Spire,유틸리티,MidCap,NYSE
+BKH,Black Hills,유틸리티,MidCap,NYSE
+PBH,Prestige Consumer Health,헬스케어,MidCap,NYSE
+HGV,Hilton Grand Vacations,소비순환재,MidCap,NYSE
+MWA,Mueller Water,산업,MidCap,NYSE
+GBTG,Global Business Travel,기술,MidCap,NYSE
+CNO,CNO Financial,금융,MidCap,NYSE
+BOOT,Boot Barn Holdings,소비순환재,MidCap,NYSE
+BHVN,바이오헤이븐,헬스케어,MidCap,NYSE
+M,메이시스,소비순환재,MidCap,NYSE
+SGHC,SGHC Limited,소비순환재,MidCap,NYSE
+KRC,Kilroy Realty,부동산,MidCap,NYSE
+GHC,Graham Holdings,아카데믹 및 교육 서비스,MidCap,NYSE
+ESE,ESCO Tech,산업,MidCap,NYSE
+MUR,머피 오일,에너지,MidCap,NYSE
+ELF,ELF Beauty,소비순환재,MidCap,NYSE
+KGS,Kodiak Gas Services,에너지,MidCap,NYSE
+DOCN,디지털오션,기술,MidCap,NYSE
+ASB,Associated Banc-Corp,금융,MidCap,NYSE
+NNI,Nelnet Inc,금융,MidCap,NYSE
+BCO,Brinks Comp,산업,MidCap,NYSE
+AI,C3.ai,기술,MidCap,NYSE
+GOLF,Acushnet Holdings,소비순환재,MidCap,NYSE
+NPO,Enpro Ind.,산업,MidCap,NYSE
+OGS,One Gas Inc,유틸리티,MidCap,NYSE
+SPR,Spirit Aerosystems Holdings Inc,산업,MidCap,NYSE
+CPA,Copa Holdings SA,산업,MidCap,NYSE
+JWN,노드스트롬,소비순환재,MidCap,NYSE
+BEPC,브룩필드,유틸리티,MidCap,NYSE
+AX,액소스 파이낸셜,금융,MidCap,NYSE
+UCB,Uni. Comm. Bank,금융,MidCap,NYSE
+UNF,Unifirst Corp,산업,MidCap,NYSE
+SKT,Tanger Inc,부동산,MidCap,NYSE
+PRIM,Primoris Ser,산업,MidCap,NYSE
+OGN,오가논 & Co,헬스케어,MidCap,NYSE
+AVNT,Avient Corp,소재,MidCap,NYSE
+ENS,Enersys,산업,MidCap,NYSE
+CNK,시네마크,소비순환재,MidCap,NYSE
+FLO,Flowers Foods,필수소비재,MidCap,NYSE
+PAY,Paymentus,기술,MidCap,NYSE
+MP,MP Materials,소재,MidCap,NYSE
+ATGE,Adtalem Education,아카데믹 및 교육 서비스,MidCap,NYSE
+TNL,Travel + Leisure Co,소비순환재,MidCap,NYSE
+TNET,Trinet Grou,산업,MidCap,NYSE
+MMS,Maximus Inc,산업,MidCap,NYSE
+CRGY,Crescent Energy,에너지,MidCap,NYSE
+RYN,Rayonier Inc,부동산,MidCap,NYSE
+ORA,Ormat Tech,유틸리티,MidCap,NYSE
+DV,더블베리파이,기술,MidCap,NYSE
+MRP,Millrose Properties,,MidCap,NYSE
+SMG,Scotts Miracle-Gro Comp,소재,MidCap,NYSE
+TTAM,Titan America,,MidCap,NYSE
+ALE,Allete Inc,유틸리티,MidCap,NYSE
+GVA,Granite Const,산업,MidCap,NYSE
+RSI,Rush Street Interactive,소비순환재,MidCap,NYSE
+HHH,Howard Hughes Holdings,부동산,MidCap,NYSE
+IFS,Intercorp Financial Services,금융,MidCap,NYSE
+NVST,Envista Holdings,헬스케어,MidCap,NYSE
+GEO,Geo Group Inc,부동산,MidCap,NYSE
+DXC,DXC 테크놀로지,기술,MidCap,NYSE
+GFF,Griffon Corp,소비순환재,MidCap,NYSE
+EPR,EPR Properties,부동산,MidCap,NYSE
+HTGC,Hercules Capital,금융,MidCap,NYSE
+ALIT,Alight,기술,MidCap,NYSE
+TGLS,Tecnoglass,소비순환재,MidCap,NYSE
+WU,웨스턴 유니온,산업,MidCap,NYSE
+BXMT,Capital Trust Inc,부동산,MidCap,NYSE
+IGT,IGT,소비순환재,MidCap,NYSE
+RXO,RXO Inc,산업,MidCap,NYSE
+BRC,Brady Corp,산업,MidCap,NYSE
+APAM,아티잔 Class A,금융,MidCap,NYSE
+NOG,Northern O&G,에너지,MidCap,NYSE
+CLVT,CLARIVATE,산업,MidCap,NYSE
+MIR,Mirion Technologies,산업,MidCap,NYSE
+KFY,Korn Ferry,산업,MidCap,NYSE
+DEI,Douglas Emmett,부동산,MidCap,NYSE
+TFPM,Triple Flag Precious Metals,소재,MidCap,NYSE
+HGTY,Hagerty,금융,MidCap,NYSE
+CBU,Comm. Bank Sys,금융,MidCap,NYSE
+MDU,Mdu Res Group Inc,유틸리티,MidCap,NYSE
+CXT,Crane NXT,산업,MidCap,NYSE
+TPH,TRI Pointe Homes,소비순환재,MidCap,NYSE
+HL,Hecla Mining,소재,MidCap,NYSE
+OSCR,오스카 헬스,금융,MidCap,NYSE
+BB,블랙베리,기술,MidCap,NYSE
+ATMU,Atmus Filtration Tech,소비순환재,MidCap,NYSE
+PRGO,페리고,헬스케어,MidCap,NYSE
+HASI,Hannon Armstrong Sustainable,부동산,MidCap,NYSE
+FUL,HB Fuller Comp,소재,MidCap,NYSE
+ASGN,ASGN,기술,MidCap,NYSE
+FBP,First Bancorp,금융,MidCap,NYSE
+ABM,ABM Industries,산업,MidCap,NYSE
+HOG,할리데이비슨,소비순환재,MidCap,NYSE
+GPOR,Gulfport Energy Operating,에너지,MidCap,NYSE
+NSP,Insperity Inc,산업,MidCap,NYSE
+MHO,M/I Homes Inc,소비순환재,MidCap,NYSE
+YETI,YETI,소비순환재,MidCap,NYSE
+GMS,GMS Inc,소비순환재,MidCap,NYSE
+GRND,Grindr,기술,MidCap,NYSE
+REZI,Resideo Tech,기술,MidCap,NYSE
+OLN,Olin Corp,소재,MidCap,NYSE
+OUT,Outfront Media,부동산,MidCap,NYSE
+HIW,Highwoods Properties,부동산,MidCap,NYSE
+VAL,Valaris,에너지,MidCap,NYSE
+SG,Sweetgreen,소비순환재,MidCap,NYSE
+SWI,SolarWinds Corp,기술,MidCap,NYSE
+TBBB,BBB Foods,필수소비재,MidCap,NYSE
+YOU,Clear Secure,기술,MidCap,NYSE
+CDP,COPT Defense Properties,부동산,MidCap,NYSE
+HAE,Haemonetics,헬스케어,MidCap,NYSE
+HAYW,헤이워드,산업,MidCap,NYSE
+GNW,젠워스,금융,MidCap,NYSE
+EE,Excelerate Energy,유틸리티,MidCap,NYSE
+RIG,트랜스오션,에너지,MidCap,NYSE
+WRBY,Warby Parker,헬스케어,MidCap,NYSE
+ASH,Ashland Global,소재,MidCap,NYSE
+BFH,Bread Financial Holdings,금융,MidCap,NYSE
+BKU,BankUnited Inc,금융,MidCap,NYSE
+CWK,Cushman & Wakefield,부동산,MidCap,NYSE
+MCY,Mercury General Corp,금융,MidCap,NYSE
+RNG,링센트럴,기술,MidCap,NYSE
+BNL,브로드스톤,부동산,MidCap,NYSE
+CAAP,Corporacion America Airports,산업,MidCap,NYSE
+VAC,Marriott Vac.,소비순환재,MidCap,NYSE
+TEX,Terex Corp,산업,MidCap,NYSE
+SXT,Sensient Tech,소재,MidCap,NYSE
+FHI,Federated Investors B,금융,MidCap,NYSE
+STR,Sitio Royalties,에너지,MidCap,NYSE
+MPW,Medical Prop Tr,부동산,MidCap,NYSE
+UA,언더아머 C,소비순환재,MidCap,NYSE
+UAA,언더아머 A,소비순환재,MidCap,NYSE
+HUN,Huntsman,소재,MidCap,NYSE
+TGNA,Tegna,소비순환재,MidCap,NYSE
+AZZ,AZZ Inc,소재,MidCap,NYSE
+SLVM,Sylvamo,소재,MidCap,NYSE
+WD,Walker & Dunlop,금융,MidCap,NYSE
+GEF,Greif Inc,소재,MidCap,NYSE
+AVA,Avista Corp,유틸리티,MidCap,NYSE
+BOH,Bank of Hawaii Corp,금융,MidCap,NYSE
+LBRT,Liberty Oilfield,에너지,MidCap,NYSE
+NOMD,Nomad Foods,필수소비재,MidCap,NYSE
+PRKS,United Parks Resorts,소비순환재,MidCap,NYSE
+CON,Concentra Holdings Parent,헬스케어,MidCap,NYSE
+ENVA,Enova International Inc,금융,MidCap,NYSE
+TDW,Tidewater Inc.,에너지,MidCap,NYSE
+AAP,어드밴스 오토파츠,소비순환재,MidCap,NYSE
+TRN,Trinity Industries,산업,MidCap,NYSE
+ABR,Arbor Realty Trust,부동산,MidCap,NYSE
+LCII,LCI Industries,소비순환재,MidCap,NYSE
+AWR,A.W.R.,유틸리티,MidCap,NYSE
+AUB,Atlantic Union,금융,MidCap,NYSE
+JOE,St Joe Comp,부동산,MidCap,NYSE
+CPK,Chesapeake,유틸리티,MidCap,NYSE
+FCPT,Four Corners Property Trust Inc,부동산,MidCap,NYSE
+AEO,American Eagle Outfitters,소비순환재,MidCap,NYSE
+UE,Urban Edge Properties,부동산,MidCap,NYSE
+SOC,Sable Offshore,에너지,MidCap,NYSE
+PBF,PBF Energy,에너지,MidCap,NYSE
+GRBK,Green Brick Partners Inc,소비순환재,MidCap,NYSE
+QS,퀀텀스케이프,소비순환재,MidCap,NYSE
+CWT,Cal Water Serv,유틸리티,MidCap,NYSE
+PK,Park Hotels & Resorts,부동산,MidCap,NYSE
+AESI,Atlas Energy Solutions,소재,MidCap,NYSE
+CPRI,카프리 홀딩스,소비순환재,MidCap,NYSE
+MANU,Manchester United Plc,소비순환재,MidCap,NYSE
+CALX,Calix Inc,기술,MidCap,NYSE
+HP,헬머리치 앤 페인,에너지,MidCap,NYSE
+CDE,Coeur Mining,소재,MidCap,NYSE
+SAM,Boston Beer,필수소비재,MidCap,NYSE
+PAR,PAR Technology Corp,기술,MidCap,NYSE
+BANC,First PacTrust,금융,MidCap,NYSE
+SEMR,에스이엠러시,기술,MidCap,NYSE
+CURB,Curbline Properties,부동산,MidCap,NYSE
+HCC,Warrior Met Coal,소재,MidCap,NYSE
+MAN,Manpower Inc,산업,MidCap,NYSE
+VSCO,Victoria's Secret Co,소비순환재,MidCap,NYSE
+OII,Oceaneering International,에너지,MidCap,NYSE
+LMND,레모네이드,금융,MidCap,NYSE
+MCW,Mister Car Wash,필수소비재,MidCap,NYSE
+AIN,Albany Intl,산업,MidCap,NYSE
+VSH,Vishay Intertechnology Inc,기술,MidCap,NYSE
+ATKR,Atkore Intl,산업,MidCap,NYSE
+PII,Polaris Industries,소비순환재,MidCap,NYSE
+SAH,Sonic Autom,소비순환재,MidCap,NYSE
+EPAC,Enerpac Tool Group,산업,MidCap,NYSE
+CC,Chemours Co,소재,MidCap,NYSE
+PAGS,PagSeguro Digital,산업,MidCap,NYSE
+ENOV,Enovis,헬스케어,MidCap,NYSE
+ESRT,Empire State Realty,부동산,MidCap,NYSE
+LU,Lufax,금융,MidCap,NYSE
+KWR,Quaker Chemical,소재,MidCap,NYSE
+TDOC,Teladoc Inc,헬스케어,MidCap,NYSE
+YELP,Yelp,기술,MidCap,NYSE
+HI,Hillenbrand Inc,산업,MidCap,NYSE
+ECG,Everus Construction,산업,MidCap,NYSE
+RNST,르네산트,금융,MidCap,NYSE
+PFS,Provident Fin,금융,MidCap,NYSE
+KLC,Kindercare Learning,필수소비재,MidCap,NYSE
+ZIM,짐 라인,산업,MidCap,NYSE
+FBK,FB Financial,금융,MidCap,NYSE
+SEM,Select Medical,헬스케어,MidCap,NYSE
+HNI,HON INDUSTRIES,산업,MidCap,NYSE
+FLOC,Flowco Holdings,,MidCap,NYSE
+DAN,Dana Holding,소비순환재,MidCap,NYSE
+TDC,테라데이타,기술,MidCap,NYSE
+SIG,시그넷 쥬얼러스,소비순환재,MidCap,NYSE
+IVT,Inventrust Properties,부동산,MidCap,NYSE
+CCS,Century Communities,소비순환재,MidCap,NYSE
+SPNT,Siriuspoint,금융,MidCap,NYSE
+AIR,AAR Corp,산업,MidCap,NYSE
+GENI,Genius Sports,기술,MidCap,NYSE
+CXM,Sprinklr,기술,MidCap,NYSE
+CWH,캠핑 월드 홀딩스,소비순환재,MidCap,NYSE
+MTX,Minerals Tech,소재,MidCap,NYSE
+BHC,Bausch Health,헬스케어,MidCap,NYSE
+BBAI,BigBearai Holdings,기술,MidCap,NYSE
+IBTA,Ibotta,기술,MidCap,NYSE
+SHO,Sunstone Hotel,부동산,MidCap,NYSE
+ZGN,Ermenegildo Zegna NV,소비순환재,MidCap,NYSE
+ENR,Energizer,산업,MidCap,NYSE
+SXI,Standex Intl,산업,MidCap,NYSE
+ALG,Alamo Group Inc,산업,MidCap,NYSE
+NATL,NCR Atleos,기술,MidCap,NYSE
+RAMP,Liveramp,기술,MidCap,NYSE
+KAR,Openlane,소비순환재,MidCap,NYSE
+RVLV,Revolve,소비순환재,MidCap,NYSE
+WOR,Worthington Ind,산업,MidCap,NYSE
+WLYB,John Wiley & Sons B,산업,MidCap,NYSE
+WLY,John Wiley & Sons,산업,MidCap,NYSE
+AMR,Alpha Metallurgical Resources,소재,MidCap,NYSE
+EVTC,Evertec Inc,산업,MidCap,NYSE
+BKE,The Buckle Inc,소비순환재,MidCap,NYSE
+TSLX,Sixth Street Specialty Lending,금융,MidCap,NYSE
+MBC,MasterBrand,소비순환재,MidCap,NYSE
+AGM,Farmer Mac,금융,MidCap,NYSE
+PHIN,Phinia,소비순환재,MidCap,NYSE
+ARDT,Ardent Health Partners LLC,헬스케어,MidCap,NYSE
+TR,투시롤,필수소비재,MidCap,NYSE
+DFH,드림 파인더스 홈즈,소비순환재,MidCap,NYSE
+HBI,헤인즈브랜즈,소비순환재,MidCap,NYSE
+PACS,PACS,헬스케어,MidCap,NYSE
+CXW,CoreCivic,산업,MidCap,NYSE
+IIPR,Innovative Industrial Properties,부동산,MidCap,NYSE
+STNG,Scorpio Tankers,에너지,MidCap,NYSE
+HTH,Hilltop Hldg,금융,MidCap,NYSE
+SPB,Spectrum Brands,소비순환재,MidCap,NYSE
+UNFI,Uni Ntrl Foods,필수소비재,MidCap,NYSE
+SDRL,Seadrill,에너지,MidCap,NYSE
+DAVA,Endava,기술,MidCap,NYSE
+AGX,아간,산업,MidCap,NYSE
+MTRN,Materion Corp,소재,MidCap,NYSE
+BKV,BKV,에너지,MidCap,NYSE
+DIS,월트 디즈니,소비순환재,LargeCap,NYSE
+T,AT&T,기술,LargeCap,NYSE
+VZ,버라이즌 커뮤니케이션,기술,LargeCap,NYSE
+CAT,캐터필러,산업,LargeCap,NYSE
+RY,RBC,금융,LargeCap,NYSE
+SHOP,쇼피파이,기술,LargeCap,NYSE
+SPGI,S&P Global,산업,LargeCap,NYSE
+UBER,우버 테크놀로지스,기술,LargeCap,NYSE
+RTX,Rtx Corp,산업,LargeCap,NYSE
+C,씨티그룹,금융,LargeCap,NYSE
+BSX,보스턴사이언티픽,헬스케어,LargeCap,NYSE
+PGR,프로그레시브,금융,LargeCap,NYSE
+BLK,블랙록,금융,LargeCap,NYSE
+UNP,유니온 퍼시픽,산업,LargeCap,NYSE
+DHR,다나허,헬스케어,LargeCap,NYSE
+SCHW,찰스 슈왑,금융,LargeCap,NYSE
+SYK,스트라이커,헬스케어,LargeCap,NYSE
+PFE,화이자,헬스케어,LargeCap,NYSE
+LOW,로우스,소비순환재,LargeCap,NYSE
+NEE,넥스테라,유틸리티,LargeCap,NYSE
+TJX,TJX 컴퍼니,소비순환재,LargeCap,NYSE
+BA,보잉,산업,LargeCap,NYSE
+ANET,아리스타 네트웍스,기술,LargeCap,NYSE
+FI,파이서브,산업,LargeCap,NYSE
+DE,디어,산업,LargeCap,NYSE
+SPOT,Spotify Tech,기술,LargeCap,NYSE
+KKR,KKR & Co,금융,LargeCap,NYSE
+COP,코노코필립스,에너지,LargeCap,NYSE
+ETN,이튼,산업,LargeCap,NYSE
+MDT,메드트로닉,헬스케어,LargeCap,NYSE
+PLD,프로로지스,부동산,LargeCap,NYSE
+MMC,마쉬 앤 맥레넌,금융,LargeCap,NYSE
+BMY,브리스톨 마이어스 스퀴브,헬스케어,LargeCap,NYSE
+NKE,나이키,소비순환재,LargeCap,NYSE
+CB,처브,금융,LargeCap,NYSE
+GEV,GE Vernova LLC,유틸리티,LargeCap,NYSE
+LMT,록히드 마틴,산업,LargeCap,NYSE
+UPS,유나이티드파슬서비스,산업,LargeCap,NYSE
+WELL,웰타워,부동산,LargeCap,NYSE
+ICE,ICE,금융,LargeCap,NYSE
+MCO,Moody’s,산업,LargeCap,NYSE
+ENB,엔브리지,에너지,LargeCap,NYSE
+SO,서던 컴퍼니,유틸리티,LargeCap,NYSE
+APO,Apollo Global Management A,금융,LargeCap,NYSE
+BN,Brookfield,금융,LargeCap,NYSE
+WM,웨이스트 매니지먼트,산업,LargeCap,NYSE
+MO,알트리아 그룹,필수소비재,LargeCap,NYSE
+ELV,Elevance Health,헬스케어,LargeCap,NYSE
+PH,파카 하니핀,산업,LargeCap,NYSE
+RACE,페라리NV,소비순환재,LargeCap,NYSE
+SHW,셔윈 윌리엄스,소재,LargeCap,NYSE
+AMT,아메리칸 타워,부동산,LargeCap,NYSE
+DUK,듀크 에너지,유틸리티,LargeCap,NYSE
+AON,에이온,금융,LargeCap,NYSE
+APH,암페놀,기술,LargeCap,NYSE
+CVS,CVS헬스,헬스케어,LargeCap,NYSE
+TT,트레인 테크놀로지,산업,LargeCap,NYSE
+CI,시그나,헬스케어,LargeCap,NYSE
+MMM,3M,필수소비재,LargeCap,NYSE
+AJG,아서 J 갤러거,금융,LargeCap,NYSE
+DELL,델,기술,LargeCap,NYSE
+HCA,HCA Holdings Inc,헬스케어,LargeCap,NYSE
+SCCO,서던 코퍼,소재,LargeCap,NYSE
+CMG,치폴레,소비순환재,LargeCap,NYSE
+COF,캐피탈 원,금융,LargeCap,NYSE
+PNC,PNC 파이낸셜,금융,LargeCap,NYSE
+ITW,일리노이 툴 웍스,필수소비재,LargeCap,NYSE
+ECL,에코랩,소재,LargeCap,NYSE
+USB,U.S 뱅코프,금융,LargeCap,NYSE
+MCK,맥케슨,헬스케어,LargeCap,NYSE
+TDG,트랜스다임 그룹,산업,LargeCap,NYSE
+MSI,모토롤라,기술,LargeCap,NYSE
+EOG,EOG 리소시스,에너지,LargeCap,NYSE
+CP,Canadian Pacific Kansas City,산업,LargeCap,NYSE
+RSG,리퍼블릭 서비스,산업,LargeCap,NYSE
+RCL,로얄 캐리비안,소비순환재,LargeCap,NYSE
+ZTS,조에티스,헬스케어,LargeCap,NYSE
+APD,Air Products,소재,LargeCap,NYSE
+CL,콜게이트-팜올리브,필수소비재,LargeCap,NYSE
+SPG,사이먼 프로퍼티,부동산,LargeCap,NYSE
+EMR,에머슨 일렉트릭,산업,LargeCap,NYSE
+WMB,윌리엄스 컴퍼니스,에너지,LargeCap,NYSE
+NU,Nu Holdings,금융,LargeCap,NYSE
+GD,제너럴 다이내믹스,산업,LargeCap,NYSE
+BDX,벡톤 디킨슨,헬스케어,LargeCap,NYSE
+FDX,페덱스,산업,LargeCap,NYSE
+HLT,힐튼 월드와이드,소비순환재,LargeCap,NYSE
+CNI,캐네디언 내셔널 레일웨이,산업,LargeCap,NYSE
+NOC,노스롭 그루먼,산업,LargeCap,NYSE
+BK,뱅크오브뉴욕 멜론,금융,LargeCap,NYSE
+SNOW,스노우플레이크,기술,LargeCap,NYSE
+TFC,트루이스트,금융,LargeCap,NYSE
+CVNA,카바나,소비순환재,LargeCap,NYSE
+JCI,존슨콘트롤즈,산업,LargeCap,NYSE
+NET,Cloudflare,기술,LargeCap,NYSE
+KMI,킨더 모건,에너지,LargeCap,NYSE
+TGT,타깃,소비순환재,LargeCap,NYSE
+SLB,슐럼버거,에너지,LargeCap,NYSE
+ARES,아레스 Class A,금융,LargeCap,NYSE
+AZO,오토존,소비순환재,LargeCap,NYSE
+NSC,노퍽 서던,산업,LargeCap,NYSE
+OKE,원오크,에너지,LargeCap,NYSE
+VST,Vistra Energy,유틸리티,LargeCap,NYSE
+AFL,아플락,금융,LargeCap,NYSE
+FCX,프리포트 맥모란,소재,LargeCap,NYSE
+CARR,캐리어,산업,LargeCap,NYSE
+DLR,디지털리얼,부동산,LargeCap,NYSE
+MET,메트라이프,금융,LargeCap,NYSE
+HWM,하우멧 에어로스페이스,산업,LargeCap,NYSE
+TRV,트래블러스,금융,LargeCap,NYSE
+SRE,셈프라 에너지,유틸리티,LargeCap,NYSE
+PSX,필립스 66,에너지,LargeCap,NYSE
+AMP,아메리프라이즈 파이낸셜,금융,LargeCap,NYSE
+NEM,뉴몬트 골드코프 코퍼레이션,소재,LargeCap,NYSE
+PSA,퍼블릭 스토리지,부동산,LargeCap,NYSE
+CMI,커민스,소비순환재,LargeCap,NYSE
+MFC,Manulife Financial,금융,LargeCap,NYSE
+GWW,WW 그레인저,산업,LargeCap,NYSE
+ALL,올스테이트,금융,LargeCap,NYSE
+MPC,마라톤 페트롤륨,에너지,LargeCap,NYSE
+DFS,디스커버 파이낸셜 서비스,금융,LargeCap,NYSE
+SU,Suncor Energy Inc.,에너지,LargeCap,NYSE
+WCN,Waste Connections Inc,산업,LargeCap,NYSE
+URI,유나이티드렌탈,산업,LargeCap,NYSE
+AEM,Agnico-Eagle Mines,소재,LargeCap,NYSE
+GM,제너럴 모터스,소비순환재,LargeCap,NYSE
+LNG,Cheniere Energy,에너지,LargeCap,NYSE
+O,리얼티인컴,부동산,LargeCap,NYSE
+XYZ,블록,산업,LargeCap,NYSE
+KR,크로거,필수소비재,LargeCap,NYSE
+COR,Cencora Inc,헬스케어,LargeCap,NYSE
+D,도미니언 에너지,유틸리티,LargeCap,NYSE
+AIG,AIG,금융,LargeCap,NYSE
+CPNG,쿠팡,소비순환재,LargeCap,NYSE
+TEL,TE 커넥티비티,기술,LargeCap,NYSE
+OXY,옥시덴탈,에너지,LargeCap,NYSE
+GLW,코닝,기술,LargeCap,NYSE
+EW,에드워즈라이프사이언시스,헬스케어,LargeCap,NYSE
+TRGP,Targa Resources,에너지,LargeCap,NYSE
+RBLX,로블록스,기술,LargeCap,NYSE
+MSCI,MSCI Inc,산업,LargeCap,NYSE
+KMB,킴벌리클라크,필수소비재,LargeCap,NYSE
+FICO,Fair Isaac Corp,기술,LargeCap,NYSE
+CTVA,코르테바,소재,LargeCap,NYSE
+VLO,발레로 에너지,에너지,LargeCap,NYSE
+CBRE,CBRE A,부동산,LargeCap,NYSE
+AME,아메텍,산업,LargeCap,NYSE
+HUBS,HubSpot Inc,기술,LargeCap,NYSE
+PWR,콴타 서비시즈,산업,LargeCap,NYSE
+KVUE,Kenvue,필수소비재,LargeCap,NYSE
+DAL,델타항공,산업,LargeCap,NYSE
+PEG,퍼블릭 서비스 엔터프라이즈,유틸리티,LargeCap,NYSE
+YUM,얌브랜드,소비순환재,LargeCap,NYSE
+DHI,DR호튼,소비순환재,LargeCap,NYSE
+VRT,Vertiv Holdings Co,산업,LargeCap,NYSE
+GRMN,가민,기술,LargeCap,NYSE
+IT,가트너,기술,LargeCap,NYSE
+PRU,프루덴셜,금융,LargeCap,NYSE
+VG,Venture Global,에너지,LargeCap,NYSE
+A,애질런트 테크놀로지스,헬스케어,LargeCap,NYSE
+OTIS,오티스 월드와이드,산업,LargeCap,NYSE
+CCI,크라운 캐슬,부동산,LargeCap,NYSE
+VEEV,Veeva Systems A,헬스케어,LargeCap,NYSE
+F,포드,소비순환재,LargeCap,NYSE
+LHX,L3해리스 테크놀로지스,산업,LargeCap,NYSE
+FIS,피델리티 내셔널 인포메이션 서비스(FIS),기술,LargeCap,NYSE
+OWL,Blue Owl Capital,금융,LargeCap,NYSE
+VMC,벌칸 머티리얼,소재,LargeCap,NYSE
+RDDT,Reddit,기술,LargeCap,NYSE
+LYV,Live Nation,소비순환재,LargeCap,NYSE
+DD,듀폰,소재,LargeCap,NYSE
+SYY,시스코,필수소비재,LargeCap,NYSE
+IR,잉가솔랜드,산업,LargeCap,NYSE
+RJF,레이먼드 제임스,금융,LargeCap,NYSE
+RMD,ResMed Inc,헬스케어,LargeCap,NYSE
+EXR,엑스트라 스페이스 스토리지,부동산,LargeCap,NYSE
+IQV,아이큐비아 홀딩스,헬스케어,LargeCap,NYSE
+PCG,PG E,유틸리티,LargeCap,NYSE
+ROK,로크웰 오토메이션,산업,LargeCap,NYSE
+IOT,Samsara,기술,LargeCap,NYSE
+MTB,M&T 뱅크,금융,LargeCap,NYSE
+ED,콘 에디슨,유틸리티,LargeCap,NYSE
+LEN,레나,소비순환재,LargeCap,NYSE
+WEC,WEC 에너지그룹,유틸리티,LargeCap,NYSE
+GIS,제너럴 밀스,필수소비재,LargeCap,NYSE
+NUE,뉴코,소재,LargeCap,NYSE
+MLM,마틴 마리에타,소재,LargeCap,NYSE
+HIG,하트포드,금융,LargeCap,NYSE
+WAB,웨스팅하우스 에어브레이크 테크놀로지,산업,LargeCap,NYSE
+VICI,VICI Properties,부동산,LargeCap,NYSE
+HSY,허쉬,필수소비재,LargeCap,NYSE
+EQT,EQT,에너지,LargeCap,NYSE
+KEYS,키사이트 테크놀로지,기술,LargeCap,NYSE
+BRO,Brown & Brown Inc,금융,LargeCap,NYSE
+HPQ,휴렛팩커드,기술,LargeCap,NYSE
+TPL,Texas Pacific,에너지,LargeCap,NYSE
+XYL,자일럼,산업,LargeCap,NYSE
+LVS,라스베가스 샌즈,소비순환재,LargeCap,NYSE
+AVB,아발론베이,부동산,LargeCap,NYSE
+GOLD,배릭 골드,소재,LargeCap,NYSE
+EFX,에퀴팩스,산업,LargeCap,NYSE
+CCL,카니발,소비순환재,LargeCap,NYSE
+HUM,휴매너,헬스케어,LargeCap,NYSE
+WPM,휘턴 프레셔스,소재,LargeCap,NYSE
+CAH,카디널 헬스,헬스케어,LargeCap,NYSE
+TKO,TKO Holdings,소비순환재,LargeCap,NYSE
+IP,인터내셔널 페이퍼,소재,LargeCap,NYSE
+STZ,컨스텔레이션 브랜드,필수소비재,LargeCap,NYSE
+VTR,벤타스,부동산,LargeCap,NYSE
+QSR,Restaurant Brands Int,소비순환재,LargeCap,NYSE
+STT,스테이트 스트리트,금융,LargeCap,NYSE
+HPE,휴렛팩커드 엔터프라이즈,기술,LargeCap,NYSE
+K,Kellanova,필수소비재,LargeCap,NYSE
+CNC,센텐,헬스케어,LargeCap,NYSE
+BR,브로드리지,산업,LargeCap,NYSE
+IRM,아이언마운틴,부동산,LargeCap,NYSE
+EQR,에쿼티 레지덴셜,부동산,LargeCap,NYSE
+DOV,도버,산업,LargeCap,NYSE
+FTV,포티브 코퍼레이션,산업,LargeCap,NYSE
+TYL,Tyler Tech,기술,LargeCap,NYSE
+PPG,PPG 인더스트리즈,소재,LargeCap,NYSE
+DOW,다우,소재,LargeCap,NYSE
+HEI,Heico Corp,산업,LargeCap,NYSE
+DTE,DTE 에너지,유틸리티,LargeCap,NYSE
+MTD,메틀러-토레도 인터내셔널,기술,LargeCap,NYSE
+AEE,애머렌,유틸리티,LargeCap,NYSE
+GDDY,Godaddy Inc,기술,LargeCap,NYSE
+WSM,윌리엄 소노마,소비순환재,LargeCap,NYSE
+PINS,핀터레스트,기술,LargeCap,NYSE
+CPAY,Corpay,산업,LargeCap,NYSE
+GPN,글로벌 페이먼트,산업,LargeCap,NYSE
+RKT,로켓 컴퍼니,기술,LargeCap,NYSE
+CHD,처치앤드와이트,필수소비재,LargeCap,NYSE
+SYF,싱크로니 파이낸셜,금융,LargeCap,NYSE
+NTR,뉴트리엔,소재,LargeCap,NYSE
+PPL,PPL 코퍼레이션,유틸리티,LargeCap,NYSE
+LYB,리온델바셀 인더스트리즈,소재,LargeCap,NYSE
+EL,에스티 로더,필수소비재,LargeCap,NYSE
+ROL,롤린스,산업,LargeCap,NYSE
+BEKE,Ke,부동산,LargeCap,NYSE
+AWK,아메리칸워터웍스,유틸리티,LargeCap,NYSE
+VLTO,Veralto,산업,LargeCap,NYSE
+MKL,Markel,금융,LargeCap,NYSE
+DECK,덱커 아웃도어,소비순환재,LargeCap,NYSE
+ATO,Atmos Energy Corp,유틸리티,LargeCap,NYSE
+FE,퍼스트에너지,유틸리티,LargeCap,NYSE
+TOST,Toast,기술,LargeCap,NYSE
+WRB,Wr Berkley Corp,금융,LargeCap,NYSE
+TDY,Teledyne Tech,기술,LargeCap,NYSE
+DVN,데본 에너지,에너지,LargeCap,NYSE
+HAL,할리버튼,에너지,LargeCap,NYSE
+ES,에버소스 에너지,유틸리티,LargeCap,NYSE
+DRI,다든 레스토랑,소비순환재,LargeCap,NYSE
+VIK,Viking Holdings,소비순환재,LargeCap,NYSE
+LII,Lennox International,산업,LargeCap,NYSE
+PSTG,Pure Storage Inc,기술,LargeCap,NYSE
+RF,리전스 파이낸셜,금융,LargeCap,NYSE
+ADM,ADM,필수소비재,LargeCap,NYSE
+NVR,NVR Inc,소비순환재,LargeCap,NYSE
+TECK,Teck Resources B,소재,LargeCap,NYSE
+WAT,워터스 코퍼레이션,헬스케어,LargeCap,NYSE
+IFF,IFF,필수소비재,LargeCap,NYSE
+NRG,NRG 에너지,유틸리티,LargeCap,NYSE
+CNP,센터포인트 에너지,유틸리티,LargeCap,NYSE
+PHM,펄티 그룹,소비순환재,LargeCap,NYSE
+STE,STERIS,헬스케어,LargeCap,NYSE
+TME,텐센트 뮤직 엔터테인먼트,기술,LargeCap,NYSE
+WY,웨이어하우저,부동산,LargeCap,NYSE
+CBOE,Cboe Global,금융,LargeCap,NYSE
+HUBB,Hubbell,산업,LargeCap,NYSE
+UI,Ubiquiti Ntwrk,기술,LargeCap,NYSE
+MKC,맥코믹,필수소비재,LargeCap,NYSE
+CMS,CMS,유틸리티,LargeCap,NYSE
+LH,Labcorp Holdings,헬스케어,LargeCap,NYSE
+CCJ,카메코,에너지,LargeCap,NYSE
+TSN,타이슨 푸드,필수소비재,LargeCap,NYSE
+CTRA,코테라 에너지,에너지,LargeCap,NYSE
+CFG,시티즌 금융 그룹,금융,LargeCap,NYSE
+ZBH,짐머 바이오메트,헬스케어,LargeCap,NYSE
+EME,EMCOR Group Inc,산업,LargeCap,NYSE
+KEY,키코프,금융,LargeCap,NYSE
+BBY,베스트바이,소비순환재,LargeCap,NYSE
+TRU,TransUnion,산업,LargeCap,NYSE
+DKS,Dick'S Sporting Goods Inc,소비순환재,LargeCap,NYSE
+EIX,에디슨 인터내셔널,유틸리티,LargeCap,NYSE
+INVH,Invitation Homes,부동산,LargeCap,NYSE
+ESS,에섹스 프로퍼티 트러스트,부동산,LargeCap,NYSE
+TWLO,트윌리오,기술,LargeCap,NYSE
+PKG,패키징,소재,LargeCap,NYSE
+DGX,퀘스트 다이아그노스틱스,헬스케어,LargeCap,NYSE
+NI,니소스,유틸리티,LargeCap,NYSE
+AER,AerCap Holdings NV,금융,LargeCap,NYSE
+JBL,재빌 서킷,기술,LargeCap,NYSE
+YUMC,Yum China Holdings,소비순환재,LargeCap,NYSE
+CRBG,Corebridge Financial,금융,LargeCap,NYSE
+SNAP,스냅,기술,LargeCap,NYSE
+DT,Dynatrace Inc,기술,LargeCap,NYSE
+GFL,Gfl Environmental,산업,LargeCap,NYSE
+CLX,클로락스,필수소비재,LargeCap,NYSE
+WSO,Watsco Inc,산업,LargeCap,NYSE
+TPR,태피스트리,소비순환재,LargeCap,NYSE
+RYAN,Ryan Specialty Group Holdings,금융,LargeCap,NYSE
+LUV,사우스웨스트 항공,산업,LargeCap,NYSE
+SNA,스냅온,산업,LargeCap,NYSE
+RBA,RB Global,산업,LargeCap,NYSE
+GWRE,Guidewire SWare,기술,LargeCap,NYSE
+BLDR,Builders FrstSo,소비순환재,LargeCap,NYSE
+L,로우스,금융,LargeCap,NYSE
+RL,랄프로렌 A,소비순환재,LargeCap,NYSE
+GPC,제뉴인 파츠,소비순환재,LargeCap,NYSE
+FDS,FactSet Research Systems Inc,산업,LargeCap,NYSE
+LDOS,Leidos,기술,LargeCap,NYSE
+EQH,Axa Equitable,금융,LargeCap,NYSE
+XPO,XPO,산업,LargeCap,NYSE
+AS,Amer Sports A,소비순환재,LargeCap,NYSE
+ONON,On Holding,소비순환재,LargeCap,NYSE
+MAS,마스코,소비순환재,LargeCap,NYSE
+EDR,엔데버 그룹,소비순환재,LargeCap,NYSE
+DPZ,도미노피자,소비순환재,LargeCap,NYSE
+ARE,알렉산드리아 리얼 에스테이트 에퀴티스,부동산,LargeCap,NYSE
+USFD,US Foods,필수소비재,LargeCap,NYSE
+SUI,Sun Communities,부동산,LargeCap,NYSE
+OMC,옴니콤,소비순환재,LargeCap,NYSE
+RS,Reliance Steel & Aluminum Co,소재,LargeCap,NYSE
+CNH,Cnh Industral Nv,산업,LargeCap,NYSE
+PNR,펜테어,산업,LargeCap,NYSE
+DG,달러 제너럴,소비순환재,LargeCap,NYSE
+CSL,Carlisle Companies Inc,소비순환재,LargeCap,NYSE
+EXPD,익스피다이터스,산업,LargeCap,NYSE
+RPM,Rpm Intl Inc,소재,LargeCap,NYSE
+FNF,피델리티 내셔널,금융,LargeCap,NYSE
+XPEV,샤오펑모터스,소비순환재,LargeCap,NYSE
+J,제이콥스 엔지니어링,산업,LargeCap,NYSE
+BAX,박스터 인터내셔널,헬스케어,LargeCap,NYSE
+UDR,UDR,부동산,LargeCap,NYSE
+HRL,호멜,필수소비재,LargeCap,NYSE
+WST,West,헬스케어,LargeCap,NYSE
+SN,Sharkninja,소비순환재,LargeCap,NYSE
+RCI,Rogers Communications,기술,LargeCap,NYSE
+CHWY,츄이,소비순환재,LargeCap,NYSE
+OC,Owens Corning,소비순환재,LargeCap,NYSE
+BURL,Burlington Stores,소비순환재,LargeCap,NYSE
+APTV,앱티브,소비순환재,LargeCap,NYSE
+MOH,Molina Hlthcre,헬스케어,LargeCap,NYSE
+EPAM,Epam Systems,기술,LargeCap,NYSE
+CAVA,CAVA Group,소비순환재,LargeCap,NYSE
+BAH,부즈 앨런 해밀턴,기술,LargeCap,NYSE
+BALL,볼 코퍼레이션,소재,LargeCap,NYSE
+KIM,Kimco Realty,부동산,LargeCap,NYSE
+WLK,Westlake Chemical,소재,LargeCap,NYSE
+IEX,IDEX,산업,LargeCap,NYSE
+BAP,Credicorp Ltd,금융,LargeCap,NYSE
+AMCR,암코,소재,LargeCap,NYSE
+JEF,제프리스 파이낸셜,금융,LargeCap,NYSE
+AVY,에이버리 데니슨,소재,LargeCap,NYSE
+GGG,Graco Inc,산업,LargeCap,NYSE
+DOCS,Doximity,기술,LargeCap,NYSE
+RBRK,Rubrik,기술,LargeCap,NYSE
+CF,CF 인더스트리,소재,LargeCap,NYSE
+EG,에버레스트 리 그룹,금융,LargeCap,NYSE
+TPX,Tempur Sealy International,소비순환재,LargeCap,NYSE
+BJ,BJs Wholesale Club,소비순환재,LargeCap,NYSE
+DOC,헬스피크 프로퍼티,부동산,LargeCap,NYSE
+FIX,Comfort Sys USA,산업,LargeCap,NYSE
+KGC,킨로스 골드,소재,LargeCap,NYSE
+H,Hyatt Hotels Corp,소비순환재,LargeCap,NYSE
+KMX,카맥스,소비순환재,LargeCap,NYSE
+RVTY,Revvity,헬스케어,LargeCap,NYSE
+PFGC,Performance Food Group Co,필수소비재,LargeCap,NYSE
+COHR,Coherent,기술,LargeCap,NYSE
+SWK,스탠리 블랙 앤 데커,산업,LargeCap,NYSE
+JLL,Jones Lang LaSalle Inc,부동산,LargeCap,NYSE
+ACM,AECOM Technology,산업,LargeCap,NYSE
+UNM,유넘,금융,LargeCap,NYSE
+HIMS,Hims Hers Health,헬스케어,LargeCap,NYSE
+TXT,텍스트론,산업,LargeCap,NYSE
+CNA,CNA Financial Corp,금융,LargeCap,NYSE
+UHAL,U-Haul Holding,산업,LargeCap,NYSE
+RGA,Reinsurance Group of America Inc,금융,LargeCap,NYSE
+ELS,Equity Lifestyle Properties Inc,부동산,LargeCap,NYSE
+PCOR,프로코어,기술,LargeCap,NYSE
+FTI,테크닙FMC,에너지,LargeCap,NYSE
+CPT,Camden Property Tr,부동산,LargeCap,NYSE
+WPC,WP 케어리,부동산,LargeCap,NYSE
+SOLV,Solventum,헬스케어,LargeCap,NYSE
+CIEN,Ciena Corp,기술,LargeCap,NYSE
+THC,테넷 헬스케어,헬스케어,LargeCap,NYSE
+KVYO,Klaviyo,기술,LargeCap,NYSE
+DVA,다비타,헬스케어,LargeCap,NYSE
+HLI,Houlihan Lokey Inc,금융,LargeCap,NYSE
+BXP,BXP Inc,부동산,LargeCap,NYSE
+AR,Antero Resources Corp,에너지,LargeCap,NYSE
+CLH,Clean Harbors Inc,산업,LargeCap,NYSE
+TOL,Toll Brothers,소비순환재,LargeCap,NYSE
+NLY,Annaly Capital Management Inc,부동산,LargeCap,NYSE
+TAP,몰슨 쿠어스 양조,필수소비재,LargeCap,NYSE
+SNX,TD Synnex,기술,LargeCap,NYSE
+AVTR,Avantor,헬스케어,LargeCap,NYSE
+CW,Curtiss-Wright,산업,LargeCap,NYSE
+JNPR,주니퍼 네트웍스,기술,LargeCap,NYSE
+ACI,Albertsons,필수소비재,LargeCap,NYSE
+CAG,콘아그라 브랜즈,필수소비재,LargeCap,NYSE
+GME,게임스탑,소비순환재,LargeCap,NYSE
+ITT,ITT Corp,산업,LargeCap,NYSE
+UHS,유니버셜 헬스 서비스,헬스케어,LargeCap,NYSE
+ALLY,Ally Financial Inc,금융,LargeCap,NYSE
+MGM,MGM 리조트 인터내셔널,소비순환재,LargeCap,NYSE
+ESTC,Elastic,기술,LargeCap,NYSE
+PAG,Penske Autom,소비순환재,LargeCap,NYSE
+EMN,이스트만케미컬,소재,LargeCap,NYSE
+ALLE,얼리전,기술,LargeCap,NYSE
+NCLH,노르웨이안 크루즈 홀딩스,소비순환재,LargeCap,NYSE
+FHN,First Horizon,금융,LargeCap,NYSE
+CPB,켐벨 수프,필수소비재,LargeCap,NYSE
+OVV,Ovintiv,에너지,LargeCap,NYSE
+GMED,Globus Medical,헬스케어,LargeCap,NYSE
+RBC,RBC Bearings,산업,LargeCap,NYSE
+PR,Permian Resources,에너지,LargeCap,NYSE
+RNR,Renaissancere,금융,LargeCap,NYSE
+ULS,UL Solutions,산업,LargeCap,NYSE
+PAYC,Paycom Soft,기술,LargeCap,NYSE
+SF,Stifel Fin.,금융,LargeCap,NYSE
+NVT,nVent Electric,산업,LargeCap,NYSE
+SCI,Service Corporation International,필수소비재,LargeCap,NYSE
+FOUR,Shift4 Payments Inc,산업,LargeCap,NYSE
+EVR,Evercore,금융,LargeCap,NYSE
+SJM,JM 스머커,필수소비재,LargeCap,NYSE
+CNM,Core Main,산업,LargeCap,NYSE
+BEN,프랭클린 리소시스,금융,LargeCap,NYSE
+MGA,마그나 인터내셔널,소비순환재,LargeCap,NYSE
+MTZ,MasTec Inc,산업,LargeCap,NYSE
+DAY,Dayforce,기술,LargeCap,NYSE
+OHI,오메가 헬스케어,부동산,LargeCap,NYSE
+FND,Floor & Decor,소비순환재,LargeCap,NYSE
+KNSL,Kinsale Capital,금융,LargeCap,NYSE
+AIZ,어슈어런트,금융,LargeCap,NYSE
+APG,Api Group Corp,산업,LargeCap,NYSE
+BIRK,Birkenstock Holding ltd,소비순환재,LargeCap,NYSE
+AFG,American Financial Group,금융,LargeCap,NYSE
+SSB,South State,금융,LargeCap,NYSE
+PEN,Penumbra Inc,헬스케어,LargeCap,NYSE
+CCK,Crown Hldgs,소재,LargeCap,NYSE
+GL,글로브 라이프,금융,LargeCap,NYSE
+UWMC,UWM Holdings,금융,LargeCap,NYSE
+AIT,어플라이드 인더스트,산업,LargeCap,NYSE
+EHC,Encompass Health,헬스케어,LargeCap,NYSE
+PNW,Pinnacle West,유틸리티,LargeCap,NYSE
+DTM,DT Midstream,에너지,LargeCap,NYSE
+WBS,Webster Fin.,금융,LargeCap,NYSE
+LAD,Lithia Motors,소비순환재,LargeCap,NYSE
+AYI,Acuity Brands,소비순환재,LargeCap,NYSE
+IPG,IPG,소비순환재,LargeCap,NYSE
+ARMK,Aramark Holdings,소비순환재,LargeCap,NYSE
+WMT,월마트,필수소비재,MegaCap,NYSE
+JPM,JP모건,금융,MegaCap,NYSE
+LLY,일라이릴리,헬스케어,MegaCap,NYSE
+V,비자(V),기술,MegaCap,NYSE
+MA,마스터카드,기술,MegaCap,NYSE
+ORCL,오라클,기술,MegaCap,NYSE
+UNH,유나이티드헬스그룹,헬스케어,MegaCap,NYSE
+XOM,엑슨모빌,에너지,MegaCap,NYSE
+HD,홈디포,소비순환재,MegaCap,NYSE
+PG,P&G,필수소비재,MegaCap,NYSE
+JNJ,존슨앤존슨,헬스케어,MegaCap,NYSE
+BAC,뱅크오브아메리카,금융,MegaCap,NYSE
+ABBV,애브비,헬스케어,MegaCap,NYSE
+CRM,세일즈포스,기술,MegaCap,NYSE
+KO,코카콜라,필수소비재,MegaCap,NYSE
+CVX,셰브론,에너지,MegaCap,NYSE
+WFC,웰스 파고,금융,MegaCap,NYSE
+ACN,액센츄어,기술,MegaCap,NYSE
+IBM,IBM,기술,MegaCap,NYSE
+PM,필립 모리스,필수소비재,MegaCap,NYSE
+ABT,애보트 래버러토리스,헬스케어,MegaCap,NYSE
+GE,GE Aerospace,산업,MegaCap,NYSE
+MS,모건 스탠리,금융,MegaCap,NYSE
+MCD,맥도날드,소비순환재,MegaCap,NYSE
+AXP,아메리칸 익스프레스,금융,MegaCap,NYSE
+MRK,머크앤드컴퍼니,헬스케어,MegaCap,NYSE
+TMO,써모 피셔 사이언티픽,헬스케어,MegaCap,NYSE
+NOW,서비스나우,기술,MegaCap,NYSE
+ULCC,프론티어 그룹,산업,SmallCap,NASDAQ
+TVTX,Travere Therapeutics,헬스케어,SmallCap,NASDAQ
+VSEC,VSE Corp,산업,SmallCap,NASDAQ
+RUN,선런,에너지,SmallCap,NASDAQ
+UFPT,UFP Tech,헬스케어,SmallCap,NASDAQ
+MBIN,Merchants Bancorp,금융,SmallCap,NASDAQ
+ACLS,Axcelis Tech,기술,SmallCap,NASDAQ
+EVCM,EverCommerce,기술,SmallCap,NASDAQ
+GTX,Garrett Motion,소비순환재,SmallCap,NASDAQ
+PAX,패트리아 인베스트먼트,금융,SmallCap,NASDAQ
+ROOT,Root,금융,SmallCap,NASDAQ
+CENX,Century Aluminum Co,소재,SmallCap,NASDAQ
+GDRX,Goodrx,기술,SmallCap,NASDAQ
+OPRA,Opera,기술,SmallCap,NASDAQ
+PSEC,Prospect Cptl,금융,SmallCap,NASDAQ
+TARS,Tarsus,헬스케어,SmallCap,NASDAQ
+CASH,Pathward Financial,금융,SmallCap,NASDAQ
+SEZL,Sezzle,산업,SmallCap,NASDAQ
+ASTH,Astrana Health,헬스케어,SmallCap,NASDAQ
+PGNY,Progyny,헬스케어,SmallCap,NASDAQ
+AGIO,Agios Pharm,헬스케어,SmallCap,NASDAQ
+SBLK,Star Bulk Carriers,산업,SmallCap,NASDAQ
+TRMD,Torm A,에너지,SmallCap,NASDAQ
+GDYN,Grid Dynamics,기술,SmallCap,NASDAQ
+BCRX,바이오크리스트,헬스케어,SmallCap,NASDAQ
+WULF,Terawulf,기술,SmallCap,NASDAQ
+PRDO,Perdoceo Education,아카데믹 및 교육 서비스,SmallCap,NASDAQ
+GOGL,Golden Ocean,산업,SmallCap,NASDAQ
+IART,Integra LifeSci,헬스케어,SmallCap,NASDAQ
+XMTR,Xometry,기술,SmallCap,NASDAQ
+NEO,NeoGenomics Inc,헬스케어,SmallCap,NASDAQ
+PLUS,ePlus Inc,기술,SmallCap,NASDAQ
+GRAL,Grail,헬스케어,SmallCap,NASDAQ
+SSRM,SSR Mining,소재,SmallCap,NASDAQ
+HPK,Highpeak Energy Acquisition,에너지,SmallCap,NASDAQ
+OMCL,옴니셀,헬스케어,SmallCap,NASDAQ
+OXLC,Oxford Lane,금융,SmallCap,NASDAQ
+OXLCP,Oxford Lane,금융,SmallCap,NASDAQ
+IRON,Disc Medicine,헬스케어,SmallCap,NASDAQ
+IDYA,Ideaya Biosciences,헬스케어,SmallCap,NASDAQ
+SDGR,슈뢰딩거,기술,SmallCap,NASDAQ
+MQ,Marqeta,기술,SmallCap,NASDAQ
+ROCK,Gibraltar Ind.,소비순환재,SmallCap,NASDAQ
+FBNC,First Bancorp NC,금융,SmallCap,NASDAQ
+SPT,스프라우트 소셜,기술,SmallCap,NASDAQ
+ARHS,Arhaus,소비순환재,SmallCap,NASDAQ
+CSGS,CSG Systems,기술,SmallCap,NASDAQ
+CHCO,City Holding,금융,SmallCap,NASDAQ
+PRAX,Praxis Precision,헬스케어,SmallCap,NASDAQ
+VERA,베라 테라,헬스케어,SmallCap,NASDAQ
+MCRI,Monarch Casino,소비순환재,SmallCap,NASDAQ
+NTCT,NetScout Sys,기술,SmallCap,NASDAQ
+STGW,Stagwell,소비순환재,SmallCap,NASDAQ
+CNXN,PC Connection,기술,SmallCap,NASDAQ
+LKFN,Lakeland Fin.,금융,SmallCap,NASDAQ
+IAS,Integral Ad Science Holding LLC,소비순환재,SmallCap,NASDAQ
+TFIN,Triumph Bancorp,금융,SmallCap,NASDAQ
+IOVA,Iovance Biotherapeutics,헬스케어,SmallCap,NASDAQ
+TWFG,TWFG,금융,SmallCap,NASDAQ
+DVAX,Dynavax Tech,헬스케어,SmallCap,NASDAQ
+UPBD,Upbound,소비순환재,SmallCap,NASDAQ
+EXPI,eXp World,부동산,SmallCap,NASDAQ
+MTTR,Matterport,기술,SmallCap,NASDAQ
+CLBK,Columbia Financial,금융,SmallCap,NASDAQ
+NWBI,Northwest Bshre,금융,SmallCap,NASDAQ
+UCTT,UltraClean Hldg,기술,SmallCap,NASDAQ
+TIGR,Up Fintech,금융,SmallCap,NASDAQ
+NN,Nextnav Acquisition,기술,SmallCap,NASDAQ
+PCT,Purecycle Technologies Holdings,산업,SmallCap,NASDAQ
+WVE,Wave Life Sciences Ltd,헬스케어,SmallCap,NASDAQ
+SRCE,1st Source Corp,금융,SmallCap,NASDAQ
+EH,Ehang,산업,SmallCap,NASDAQ
+PINC,Premier Inc,헬스케어,SmallCap,NASDAQ
+PLYA,Playa Hotels & Resorts,소비순환재,SmallCap,NASDAQ
+GO,Grocery Outlet,필수소비재,SmallCap,NASDAQ
+DXPE,DXP Enterprises,산업,SmallCap,NASDAQ
+VRNT,Verint Systems,기술,SmallCap,NASDAQ
+PZZA,파파존스 인터내셔널,소비순환재,SmallCap,NASDAQ
+AFYA,Afya,아카데믹 및 교육 서비스,SmallCap,NASDAQ
+PLUG,플러그파워,에너지,SmallCap,NASDAQ
+SONO,Sonos,기술,SmallCap,NASDAQ
+LZ,LegalZoom.com,기술,SmallCap,NASDAQ
+INFN,인피네라,기술,SmallCap,NASDAQ
+INOD,Innodata Isogen,기술,SmallCap,NASDAQ
+GERN,Geron Corp,헬스케어,SmallCap,NASDAQ
+MLKN,MillerKnoll,산업,SmallCap,NASDAQ
+AAPG,Ascentage Pharma,,SmallCap,NASDAQ
+AMPL,Amplitude,기술,SmallCap,NASDAQ
+STBA,S&T Bancorp,금융,SmallCap,NASDAQ
+SASR,Sandy Spring,금융,SmallCap,NASDAQ
+ATEC,알파텍,헬스케어,SmallCap,NASDAQ
+VITL,바이탈 팜스,필수소비재,SmallCap,NASDAQ
+TXG,10X 제노믹스,헬스케어,SmallCap,NASDAQ
+CLDX,Celldex Therapeutics,헬스케어,SmallCap,NASDAQ
+CMPO,CompoSecure,산업,SmallCap,NASDAQ
+ARQT,Arcutis,헬스케어,SmallCap,NASDAQ
+DAVE,Dave Inc,기술,SmallCap,NASDAQ
+ACMR,ACM 리서치,기술,SmallCap,NASDAQ
+AMPH,Amphastar P,헬스케어,SmallCap,NASDAQ
+MNKD,맨카인드,헬스케어,SmallCap,NASDAQ
+TCBK,TriCo,금융,SmallCap,NASDAQ
+ALGT,Allegiant Trvl,산업,SmallCap,NASDAQ
+KARO,카루,기술,SmallCap,NASDAQ
+ETNB,89bio,헬스케어,SmallCap,NASDAQ
+SPNS,Sapiens,기술,SmallCap,NASDAQ
+UDMY,Udemy,기술,SmallCap,NASDAQ
+VBTX,Veritex Holdings Inc,금융,SmallCap,NASDAQ
+ADEA,Adeia,기술,SmallCap,NASDAQ
+ATSG,Air Transport Service,산업,SmallCap,NASDAQ
+DSP,바이안트 테크놀로지,기술,SmallCap,NASDAQ
+DNUT,Krispy Kreme,소비순환재,SmallCap,NASDAQ
+LILA,Liberty Latin America,기술,SmallCap,NASDAQ
+LILAK,Liberty Latin America C,기술,SmallCap,NASDAQ
+KNSA,Kiniksa Pharma,헬스케어,SmallCap,NASDAQ
+DSGR,Distribution Solutions,산업,SmallCap,NASDAQ
+NAVI,Navient,금융,SmallCap,NASDAQ
+TASK,Taskus,산업,SmallCap,NASDAQ
+DYN,다인 테라,헬스케어,SmallCap,NASDAQ
+CLMT,Calumet Specialty,에너지,SmallCap,NASDAQ
+UNIT,Uniti Group,부동산,SmallCap,NASDAQ
+PLAB,Photronics,기술,SmallCap,NASDAQ
+VECO,Veeco Instr,기술,SmallCap,NASDAQ
+BUSE,First Busey,금융,SmallCap,NASDAQ
+ARDX,Ardelyx Inc,헬스케어,SmallCap,NASDAQ
+ANDE,The Andersons,필수소비재,SmallCap,NASDAQ
+LQDA,Liquidia Technologies,헬스케어,SmallCap,NASDAQ
+DCOM,Dime Community,금융,SmallCap,NASDAQ
+WBTN,Webtoon Entertainment,기술,SmallCap,NASDAQ
+SABR,Sabre Corpo,기술,SmallCap,NASDAQ
+MXL,MaxLinear Inc,기술,SmallCap,NASDAQ
+HOPE,Hope Bancorp,금융,SmallCap,NASDAQ
+MFIC,MidCap Financial Investment,금융,SmallCap,NASDAQ
+SYRE,Spyre Therapeutics,헬스케어,SmallCap,NASDAQ
+TILE,Interface,소비순환재,SmallCap,NASDAQ
+CETY,Clean Energy Tech,유틸리티,SmallCap,NASDAQ
+CMPR,Cimpress NV,산업,SmallCap,NASDAQ
+FTRE,Fortrea Holdings,헬스케어,SmallCap,NASDAQ
+CCB,Coastal Financial,금융,SmallCap,NASDAQ
+TBLA,Taboola,기술,SmallCap,NASDAQ
+NRIX,누릭스 테라퓨틱스,헬스케어,SmallCap,NASDAQ
+CRAI,CRA Intl,산업,SmallCap,NASDAQ
+MYGN,Myriad Genetics,헬스케어,SmallCap,NASDAQ
+WINA,Winmark Corp,소비순환재,SmallCap,NASDAQ
+WABC,Westamerica BC,금융,SmallCap,NASDAQ
+VIR,비르 바이오테크,헬스케어,SmallCap,NASDAQ
+KRNT,Kornit Digital Ltd,산업,SmallCap,NASDAQ
+INMD,InMode,헬스케어,SmallCap,NASDAQ
+NVAX,노바백스,헬스케어,SmallCap,NASDAQ
+BMBL,범블,기술,SmallCap,NASDAQ
+QCRH,QCR Holdings,금융,SmallCap,NASDAQ
+CDNA,Caredx Inc,헬스케어,SmallCap,NASDAQ
+CRSR,커세어 게이밍,기술,SmallCap,NASDAQ
+GIII,G-III Apparel,소비순환재,SmallCap,NASDAQ
+RBCAA,Republic BCorp,금융,SmallCap,NASDAQ
+VRDN,Viridian Therapeutics,헬스케어,SmallCap,NASDAQ
+OCSL,Oaktree Specialty Lending,금융,SmallCap,NASDAQ
+WLFC,Willis Lease,산업,SmallCap,NASDAQ
+HELE,Helen of Troy Ltd,소비순환재,SmallCap,NASDAQ
+BLFS,바이오라이프 솔루션즈,헬스케어,SmallCap,NASDAQ
+PLSE,펄스 바이오,헬스케어,SmallCap,NASDAQ
+NMFC,New Mountain,금융,SmallCap,NASDAQ
+QNST,QuinStreet,기술,SmallCap,NASDAQ
+AAOI,Applied Opt,기술,SmallCap,NASDAQ
+CRCT,크리컷,기술,SmallCap,NASDAQ
+DGII,Digi International,기술,SmallCap,NASDAQ
+SNDX,Syndax Pharmaceuticals,헬스케어,SmallCap,NASDAQ
+ACDC,Profrac Holding,에너지,SmallCap,NASDAQ
+ARVN,Arvinas,헬스케어,SmallCap,NASDAQ
+IMKTA,Ingles Markets,필수소비재,SmallCap,NASDAQ
+MRTN,Marten Transp,산업,SmallCap,NASDAQ
+FWRG,First Watch Restaurant,소비순환재,SmallCap,NASDAQ
+HTZ,Hertz Global Holdings,산업,SmallCap,NASDAQ
+DAWN,Day One Biopharmaceuticals,헬스케어,SmallCap,NASDAQ
+ADPT,Adaptive Biotechnologies,헬스케어,SmallCap,NASDAQ
+MDXG,MiMedx,헬스케어,SmallCap,NASDAQ
+AMSC,American Sup.,산업,SmallCap,NASDAQ
+GABC,German American,금융,SmallCap,NASDAQ
+RXST,Rxsight,헬스케어,SmallCap,NASDAQ
+NNE,Nano Nuclear Energy,유틸리티,SmallCap,NASDAQ
+IGIC,International General Insurance,금융,SmallCap,NASDAQ
+PFBC,Preferred Bank,금융,SmallCap,NASDAQ
+CSWC,Cptl Southwest,금융,SmallCap,NASDAQ
+FSUN,Firstsun Capital Bancorp,금융,SmallCap,NASDAQ
+ECPG,Encore Cptl Gr,금융,SmallCap,NASDAQ
+HLIT,Harmonic Inc,기술,SmallCap,NASDAQ
+VSAT,ViaSat,기술,SmallCap,NASDAQ
+AMWD,Amer. Woodmark,소비순환재,SmallCap,NASDAQ
+BLBD,Blue Bird,산업,SmallCap,NASDAQ
+PCRX,Pacira Pharma,헬스케어,SmallCap,NASDAQ
+SPRY,ARS Pharmaceuticals,헬스케어,SmallCap,NASDAQ
+FLNC,Fluence Energy,산업,SmallCap,NASDAQ
+AHCO,Adapthealth,헬스케어,SmallCap,NASDAQ
+SAFT,Safety Insu,금융,SmallCap,NASDAQ
+ANIP,ANI Pharma,헬스케어,SmallCap,NASDAQ
+PENG,Penguin Solutions,기술,SmallCap,NASDAQ
+XPEL,Xpel,소비순환재,SmallCap,NASDAQ
+XNCR,Xencor Inc,헬스케어,SmallCap,NASDAQ
+PEBO,Peoples Bancorp,금융,SmallCap,NASDAQ
+NVEE,NV5 Global,산업,SmallCap,NASDAQ
+OCUL,Ocular Therapeutix Inc,헬스케어,SmallCap,NASDAQ
+TTGT,TechTarget,기술,SmallCap,NASDAQ
+LQDT,Liquidity Ser,기술,SmallCap,NASDAQ
+INVA,Innoviva,헬스케어,SmallCap,NASDAQ
+AMAL,Amalgamated Bank,금융,SmallCap,NASDAQ
+PGY,Pagaya,기술,SmallCap,NASDAQ
+KALU,Kaiser Aluminum,소재,SmallCap,NASDAQ
+AUPH,Aurinia Pharma,헬스케어,SmallCap,NASDAQ
+PTLO,Portillo's,소비순환재,SmallCap,NASDAQ
+VMEO,Vimeo,기술,SmallCap,NASDAQ
+OPEN,Opendoor Tech,부동산,SmallCap,NASDAQ
+THRM,Gentherm Inc,소비순환재,SmallCap,NASDAQ
+OPK,Opko Health,헬스케어,SmallCap,NASDAQ
+COMM,Commscope Hlding,기술,SmallCap,NASDAQ
+RDFN,Redfin,부동산,SmallCap,NASDAQ
+GOGO,Gogo Inc,기술,SmallCap,NASDAQ
+RCKT,Rocket Pharma,헬스케어,SmallCap,NASDAQ
+BBSI,Barrett Busi,산업,SmallCap,NASDAQ
+APOG,Apogee Enterp,소비순환재,SmallCap,NASDAQ
+REPL,레플리뮨,헬스케어,SmallCap,NASDAQ
+NTLA,Intellia Therapeutics Inc,헬스케어,SmallCap,NASDAQ
+BRKL,Brookline BCorp,금융,SmallCap,NASDAQ
+TSAT,Telesat,기술,SmallCap,NASDAQ
+FOXF,Fox Factory,소비순환재,SmallCap,NASDAQ
+HROW,Harrow Health,헬스케어,SmallCap,NASDAQ
+EOSE,Eos Energy Enterprises,산업,SmallCap,NASDAQ
+ICHR,Ichor Holdings,기술,SmallCap,NASDAQ
+OCFC,OceanFirst Fin.,금융,SmallCap,NASDAQ
+AIOT,I.D. Systems,기술,SmallCap,NASDAQ
+MRVI,마라바이 라이프,헬스케어,SmallCap,NASDAQ
+ELVN,Enliven Therapeutics,헬스케어,SmallCap,NASDAQ
+PFC,Premier Financial,금융,SmallCap,NASDAQ
+CBRL,Cracker Barrel,소비순환재,SmallCap,NASDAQ
+PAHC,Phibro,헬스케어,SmallCap,NASDAQ
+REAX,Real Brokerage,부동산,SmallCap,NASDAQ
+QUBT,Quantum,기술,SmallCap,NASDAQ
+LMB,Limbach Holdings,산업,SmallCap,NASDAQ
+GYRE,Gyre Therapeutics,헬스케어,SmallCap,NASDAQ
+CNOB,ConnectOne Bancorp Inc,금융,SmallCap,NASDAQ
+BELFA,Bel Fuse Inc,기술,SmallCap,NASDAQ
+ZYME,Zymeworks,헬스케어,SmallCap,NASDAQ
+ARRY,어레이 테크,에너지,SmallCap,NASDAQ
+HSTM,HealthStream,기술,SmallCap,NASDAQ
+BELFB,Bel Fuse (B),기술,SmallCap,NASDAQ
+NRDS,Nerdwallet,금융,SmallCap,NASDAQ
+AOSL,Alpha & Omega Semiconductor,기술,SmallCap,NASDAQ
+BFC,Bank First National,금융,SmallCap,NASDAQ
+DGNX,Diginex,,SmallCap,NASDAQ
+RDWR,Radware,기술,SmallCap,NASDAQ
+ESTA,Establishment Labs,헬스케어,SmallCap,NASDAQ
+CTBI,Community Tr,금융,SmallCap,NASDAQ
+SBGI,Sinclair Broad,소비순환재,SmallCap,NASDAQ
+XRX,제록스,기술,SmallCap,NASDAQ
+BGM,BGM,헬스케어,SmallCap,NASDAQ
+COHU,코후,기술,SmallCap,NASDAQ
+EYE,National Vision,소비순환재,SmallCap,NASDAQ
+TRS,TriMas Corp,소재,SmallCap,NASDAQ
+BASE,Couchbase,기술,SmallCap,NASDAQ
+ABCL,앱셀레라바이오로직스,헬스케어,SmallCap,NASDAQ
+IIIV,i3 Verticals,기술,SmallCap,NASDAQ
+SLRC,SLR Investment,금융,SmallCap,NASDAQ
+BHRB,Burke Herbert Bank Trust,금융,SmallCap,NASDAQ
+COLL,Collegium Pharmaceutical,헬스케어,SmallCap,NASDAQ
+OLPX,Olaplex Holdings,필수소비재,SmallCap,NASDAQ
+SEDG,솔라엣지,에너지,SmallCap,NASDAQ
+AMSF,AMERISAFE,금융,SmallCap,NASDAQ
+BLMN,Bloomin' Brands Inc,소비순환재,SmallCap,NASDAQ
+PHVS,Pharvaris NV,헬스케어,SmallCap,NASDAQ
+PLAY,Dave & Buster's Entertainment,소비순환재,SmallCap,NASDAQ
+GDEN,Golden Entertainment,소비순환재,SmallCap,NASDAQ
+BBNX,Beta Bionics,,SmallCap,NASDAQ
+KRUS,Kura Sushi,소비순환재,SmallCap,NASDAQ
+NSSC,NAPCO Security Te,기술,SmallCap,NASDAQ
+TRIN,Trinity Capital,금융,SmallCap,NASDAQ
+EOLS,Evolus,헬스케어,SmallCap,NASDAQ
+PRAA,PRA Group Inc,금융,SmallCap,NASDAQ
+AEVA,Aeva Technologies,기술,SmallCap,NASDAQ
+FMBH,First Mid Illinois Bancshares,금융,SmallCap,NASDAQ
+ADTN,ADTRAN Inc,기술,SmallCap,NASDAQ
+EVGO,Evgo,유틸리티,SmallCap,NASDAQ
+HSII,Heidri.&Strug.,산업,SmallCap,NASDAQ
+FBYD,Falcon’s Beyond Global,소비순환재,SmallCap,NASDAQ
+SNCY,선컨트리항공,산업,SmallCap,NASDAQ
+ANGI,ANGI Homeservices,기술,SmallCap,NASDAQ
+UVSP,Univest Corp,금융,SmallCap,NASDAQ
+TH,Target Hospitality,소비순환재,SmallCap,NASDAQ
+OCS,Oculis Holding,헬스케어,SmallCap,NASDAQ
+SEAT,Vivid Seats,기술,SmallCap,NASDAQ
+UXIN,Uxin,소비순환재,SmallCap,NASDAQ
+NESR,National Energy Services,에너지,SmallCap,NASDAQ
+MSEX,Middlesex Water,유틸리티,SmallCap,NASDAQ
+CGBD,Carlyle Secured Lending,금융,SmallCap,NASDAQ
+RBBN,Ribbon Com,기술,SmallCap,NASDAQ
+AVBP,Arrivent Biopharma,헬스케어,SmallCap,NASDAQ
+HTLD,Heartland Exp.,산업,SmallCap,NASDAQ
+ARKO,Arko,에너지,SmallCap,NASDAQ
+PDFS,PDF Solutions,기술,SmallCap,NASDAQ
+PNTG,Pennant Group,헬스케어,SmallCap,NASDAQ
+PSIX,Power Solutions,소비순환재,SmallCap,NASDAQ
+AVAH,애비애나 헬스케어 홀딩스,헬스케어,SmallCap,NASDAQ
+GHRS,GH Research,헬스케어,SmallCap,NASDAQ
+COGT,Cogent Biosciences,헬스케어,SmallCap,NASDAQ
+FWRD,Forward Air,산업,SmallCap,NASDAQ
+ERII,Energy Recovery,산업,SmallCap,NASDAQ
+ATLC,Atlanticus Holdings Corp,금융,SmallCap,NASDAQ
+HCKT,Hackett Group,산업,SmallCap,NASDAQ
+PRTH,Priority Tech,기술,SmallCap,NASDAQ
+SCSC,ScanSource,기술,SmallCap,NASDAQ
+REAL,TheRealReal,소비순환재,SmallCap,NASDAQ
+NBN,Northeast Bancorp,금융,SmallCap,NASDAQ
+TLRY,Tilray,헬스케어,SmallCap,NASDAQ
+ADV,Advantage Solutions,소비순환재,SmallCap,NASDAQ
+EMBC,Embecta,헬스케어,SmallCap,NASDAQ
+THRY,Thryv Holdings Inc,소비순환재,SmallCap,NASDAQ
+DH,Definitive Healthcare,기술,SmallCap,NASDAQ
+SSYS,Stratasys Ltd,기술,SmallCap,NASDAQ
+AVO,Mission Produce,필수소비재,SmallCap,NASDAQ
+SION,Sionna Therapeutics,,SmallCap,NASDAQ
+IMNM,이뮤놈,헬스케어,SmallCap,NASDAQ
+CECO,CECO Envir,산업,SmallCap,NASDAQ
+OSBC,Old Second Bancorp,금융,SmallCap,NASDAQ
+JBSS,John B Sanfilip,필수소비재,SmallCap,NASDAQ
+GCT,GigaCloud Technology,기술,SmallCap,NASDAQ
+ASTL,Algoma Steel,소재,SmallCap,NASDAQ
+HFWA,Heritage Fin.,금융,SmallCap,NASDAQ
+NBBK,NB Bancorp,금융,SmallCap,NASDAQ
+NTGR,NETGEAR,기술,SmallCap,NASDAQ
+WRLD,World Accept,금융,SmallCap,NASDAQ
+CEVA,CEVA,기술,SmallCap,NASDAQ
+CVAC,큐어백,헬스케어,SmallCap,NASDAQ
+WOOF,Petco Health and Wellness,소비순환재,SmallCap,NASDAQ
+BFST,Business First,금융,SmallCap,NASDAQ
+TCPC,BlackRock TCP,금융,SmallCap,NASDAQ
+CFB,CrossFirst Bankshares,금융,SmallCap,NASDAQ
+CFFN,캐피톨 페더럴,금융,SmallCap,NASDAQ
+ULH,Universal Logistics,산업,SmallCap,NASDAQ
+MCBS,MetroCity,금융,SmallCap,NASDAQ
+AXGN,Axogen Inc,헬스케어,SmallCap,NASDAQ
+BJRI,BJs Restaurants,소비순환재,SmallCap,NASDAQ
+HBT,Hbt Fin,금융,SmallCap,NASDAQ
+MATW,Matthews Intern,필수소비재,SmallCap,NASDAQ
+HCSG,Healthcare Ser,산업,SmallCap,NASDAQ
+FUFU,BitFuFu,기술,SmallCap,NASDAQ
+FDUS,Fidus Investment Corp,금융,SmallCap,NASDAQ
+MLAB,Mesa Lab,헬스케어,SmallCap,NASDAQ
+TRNS,Transcat,기술,SmallCap,NASDAQ
+MBWM,Mercantile Bank,금융,SmallCap,NASDAQ
+INDI,indie Semiconductor,기술,SmallCap,NASDAQ
+CTLP,Cantaloupe,기술,SmallCap,NASDAQ
+EGBN,Eagle Bancorp,금융,SmallCap,NASDAQ
+ATEX,Anterix,기술,SmallCap,NASDAQ
+EZPW,EZCORP,금융,SmallCap,NASDAQ
+CBLL,CeriBell,헬스케어,SmallCap,NASDAQ
+SWIM,라탐,소비순환재,SmallCap,NASDAQ
+OSPN,Onespan,기술,SmallCap,NASDAQ
+EVER,EverQuote A,기술,SmallCap,NASDAQ
+GSM,Ferroglobe,소재,SmallCap,NASDAQ
+CSTL,Castle Biosciences,헬스케어,SmallCap,NASDAQ
+PRTA,Prothena Corp,헬스케어,SmallCap,NASDAQ
+FCBC,First Community,금융,SmallCap,NASDAQ
+QURE,Uniqure NV,헬스케어,SmallCap,NASDAQ
+ADSE,Ads Tec Energy,산업,SmallCap,NASDAQ
+DAKT,Daktronics,기술,SmallCap,NASDAQ
+STAA,STAAR Surgical,헬스케어,SmallCap,NASDAQ
+CRON,Cronos,헬스케어,SmallCap,NASDAQ
+ASTE,Astec Ind.,산업,SmallCap,NASDAQ
+CAC,Camden National,금융,SmallCap,NASDAQ
+HBNC,Horizon Bancorp,금융,SmallCap,NASDAQ
+DMRC,디지마크,기술,SmallCap,NASDAQ
+PUBM,퍼브매틱,기술,SmallCap,NASDAQ
+MBUU,말리부 보트,소비순환재,SmallCap,NASDAQ
+CGNT,Cognyte Software,기술,SmallCap,NASDAQ
+BYRN,Byrna Technologies,산업,SmallCap,NASDAQ
+FIP,FTAI Infra LLC,산업,SmallCap,NASDAQ
+ECX,Ecarx Holdings,기술,SmallCap,NASDAQ
+GLDD,Great Lakes,산업,SmallCap,NASDAQ
+CCAP,Crescent Capital BDC,금융,SmallCap,NASDAQ
+JACK,Jack In The Box,소비순환재,SmallCap,NASDAQ
+IMOS,ChipMOS Tech,기술,SmallCap,NASDAQ
+FNKO,Funko,소비순환재,SmallCap,NASDAQ
+IBCP,Independent Bank Corp,금융,SmallCap,NASDAQ
+BCAX,Bicara Therapeutics,헬스케어,SmallCap,NASDAQ
+SLP,Simulations Plus,헬스케어,SmallCap,NASDAQ
+TIPT,Tiptree,금융,SmallCap,NASDAQ
+HAFC,HAFC,금융,SmallCap,NASDAQ
+MGPI,MGP Ingredients,필수소비재,SmallCap,NASDAQ
+VERV,Verve Therapeutics,헬스케어,SmallCap,NASDAQ
+CAPR,Capricor Therapeutics,헬스케어,SmallCap,NASDAQ
+MNMD,Mind Medicine,헬스케어,SmallCap,NASDAQ
+DNTH,Dianthus Therapeutics,헬스케어,SmallCap,NASDAQ
+AVXL,Anavex Life Sciences,헬스케어,SmallCap,NASDAQ
+ABL,Abacus Life,금융,SmallCap,NASDAQ
+LIND,Lindblad Expeditions,소비순환재,SmallCap,NASDAQ
+RCAT,Red Cat Holdings,산업,SmallCap,NASDAQ
+GOOD,Gladstone Comm,부동산,SmallCap,NASDAQ
+OFIX,Orthofix,헬스케어,SmallCap,NASDAQ
+CVLG,Covenant Transpor,산업,SmallCap,NASDAQ
+ITRN,Ituran,기술,SmallCap,NASDAQ
+SANA,사나 바이오테크놀로지,헬스케어,SmallCap,NASDAQ
+CSIQ,케네디언솔라,에너지,SmallCap,NASDAQ
+VINP,빈시 파트너스 인베스트먼트,금융,SmallCap,NASDAQ
+GSBC,Great Southern,금융,SmallCap,NASDAQ
+IRMD,Iradimed Co,헬스케어,SmallCap,NASDAQ
+CLNE,클린 에너지,에너지,SmallCap,NASDAQ
+TYRA,Tyra Biosciences,헬스케어,SmallCap,NASDAQ
+LENZ,LENZ Therapeutics,헬스케어,SmallCap,NASDAQ
+RPAY,Repay Holdings,산업,SmallCap,NASDAQ
+RZLV,Rezolve AI,기술,SmallCap,NASDAQ
+PLPC,PLPC,산업,SmallCap,NASDAQ
+TALK,Talkspace,헬스케어,SmallCap,NASDAQ
+SIBN,Si-Bone,헬스케어,SmallCap,NASDAQ
+SFIX,스티치픽스,기술,SmallCap,NASDAQ
+SPTN,SpartanNash Co,필수소비재,SmallCap,NASDAQ
+LPRO,Open Lending,산업,SmallCap,NASDAQ
+BVS,Bioventus,헬스케어,SmallCap,NASDAQ
+CNDT,Conduent,기술,SmallCap,NASDAQ
+SMBC,Southern Missouri,금융,SmallCap,NASDAQ
+CTKB,Cytek Biosciences,헬스케어,SmallCap,NASDAQ
+MVST,Microvast Holdings,산업,SmallCap,NASDAQ
+UFCS,United Fire,금융,SmallCap,NASDAQ
+LEGH,Legacy Housing,소비순환재,SmallCap,NASDAQ
+NCMI,NCM Inc,소비순환재,SmallCap,NASDAQ
+RLAY,릴레이 테라퓨틱스,헬스케어,SmallCap,NASDAQ
+ABSI,Absci,헬스케어,SmallCap,NASDAQ
+SCVL,Shoe Carnival,소비순환재,SmallCap,NASDAQ
+MOFG,MidWestOne,금융,SmallCap,NASDAQ
+FSBC,파이브 스타 뱅코프,금융,SmallCap,NASDAQ
+ANNA,AleAnna,에너지,SmallCap,NASDAQ
+SHLS,쇼알스 테크놀로지 그룹,산업,SmallCap,NASDAQ
+ESQ,Esquire Financial,금융,SmallCap,NASDAQ
+RXT,랙스페이스,기술,SmallCap,NASDAQ
+HTBK,H.C.C.,금융,SmallCap,NASDAQ
+GLAD,Gladstone Cptl,금융,SmallCap,NASDAQ
+ORRF,Orrstown Financial,금융,SmallCap,NASDAQ
+ATRO,Astronics Corp,산업,SmallCap,NASDAQ
+DHC,Diversified Healthcare,부동산,SmallCap,NASDAQ
+APPS,Digital Turbine,기술,SmallCap,NASDAQ
+SHEN,Shenandoah Tel,기술,SmallCap,NASDAQ
+HTBI,HomeTrust Bancshares Inc,금융,SmallCap,NASDAQ
+ANAB,AnaptysBio,헬스케어,SmallCap,NASDAQ
+KRT,카랫 패키징,소재,SmallCap,NASDAQ
+KURA,Kura Oncology Inc,헬스케어,SmallCap,NASDAQ
+TMC,TMC the metals company,소재,SmallCap,NASDAQ
+CRMD,CorMedix Inc,헬스케어,SmallCap,NASDAQ
+TRST,TrustCo Bank,금융,SmallCap,NASDAQ
+AMRK,아마크 프레시,소재,SmallCap,NASDAQ
+MNTK,몬타우크 리뉴어블스,유틸리티,SmallCap,NASDAQ
+EVLV,Evolv Technologies Holdings,기술,SmallCap,NASDAQ
+WASH,Washington Tr,금융,SmallCap,NASDAQ
+HNST,어니스트,소비순환재,SmallCap,NASDAQ
+TMCI,트리스 메디컬 컨셉트,헬스케어,SmallCap,NASDAQ
+TREE,Lendingtree,금융,SmallCap,NASDAQ
+CCBG,Cptl City Bank,금융,SmallCap,NASDAQ
+ABUS,Arbutus Biopharma,헬스케어,SmallCap,NASDAQ
+THFF,First Financial,금융,SmallCap,NASDAQ
+SERV,Serve Robotics,산업,SmallCap,NASDAQ
+ODP,ODP,소비순환재,SmallCap,NASDAQ
+CASS,Cass Info,산업,SmallCap,NASDAQ
+PGC,Peapack-Gladst.,금융,SmallCap,NASDAQ
+IMTX,Immatics NV,헬스케어,SmallCap,NASDAQ
+WEST,Westrock Coffee,필수소비재,SmallCap,NASDAQ
+HIFS,Hingham Instit,금융,SmallCap,NASDAQ
+LYTS,LSI Industries,소비순환재,SmallCap,NASDAQ
+DJCO,Daily Journal Corp,기술,SmallCap,NASDAQ
+KIDS,Orthopediatrics,헬스케어,SmallCap,NASDAQ
+CCRN,Cross Country,산업,SmallCap,NASDAQ
+ACIC,American Coastal Insurance,금융,SmallCap,NASDAQ
+RDVT,Red Violet,기술,SmallCap,NASDAQ
+FLX,BingEx,산업,SmallCap,NASDAQ
+FRPH,Frp Holdings Ord,부동산,SmallCap,NASDAQ
+CRNC,Cerence,기술,SmallCap,NASDAQ
+MNRO,Monro Muffler,소비순환재,SmallCap,NASDAQ
+SCHL,Scholastic Corp,소비순환재,SmallCap,NASDAQ
+SVRA,사바라,헬스케어,SmallCap,NASDAQ
+ORIC,Oric Pharma,헬스케어,SmallCap,NASDAQ
+GAMB,Gambling.com Group,소비순환재,SmallCap,NASDAQ
+CMCO,Columbus McKin.,산업,SmallCap,NASDAQ
+SPFI,South Plains Financial,금융,SmallCap,NASDAQ
+RAPP,Rapport Therapeutics,헬스케어,SmallCap,NASDAQ
+FISI,F.F.I.,금융,SmallCap,NASDAQ
+CLMB,Climb Global Solutions,기술,SmallCap,NASDAQ
+FLWS,1800FLOWERS.COM,소비순환재,SmallCap,NASDAQ
+RMR,RMR Group Inc,부동산,SmallCap,NASDAQ
+SEPN,Septerna,헬스케어,SmallCap,NASDAQ
+PGEN,Precigen,헬스케어,SmallCap,NASDAQ
+IMXI,International Money Express,산업,SmallCap,NASDAQ
+MPB,Mid Penn Bancorp,금융,SmallCap,NASDAQ
+LVRO,Lavoro,소재,SmallCap,NASDAQ
+CAN,Canaan,기술,SmallCap,NASDAQ
+STOK,Stoke Therapeutics,헬스케어,SmallCap,NASDAQ
+ACCD,애콜레이드,헬스케어,SmallCap,NASDAQ
+DCGO,DocGo,헬스케어,SmallCap,NASDAQ
+NVTS,Navitas Semiconductor,기술,SmallCap,NASDAQ
+NYMT,NY Mortgage,부동산,SmallCap,NASDAQ
+SENEA,Seneca Foods,필수소비재,SmallCap,NASDAQ
+SENEB,Seneca Foods Corp (B),필수소비재,SmallCap,NASDAQ
+CCSI,Consensus Cloud Solutions,기술,SmallCap,NASDAQ
+CGEM,쿨리난 온콜로지,헬스케어,SmallCap,NASDAQ
+LINC,Lincoln Edu,아카데믹 및 교육 서비스,SmallCap,NASDAQ
+API,아고라,기술,SmallCap,NASDAQ
+INV,Innventure,금융,SmallCap,NASDAQ
+SHBI,Shore Bancshares,금융,SmallCap,NASDAQ
+VREX,Varex Imaging,헬스케어,SmallCap,NASDAQ
+BIGC,빅커머스,기술,SmallCap,NASDAQ
+PACB,Pacific Biosci,헬스케어,SmallCap,NASDAQ
+CCNE,CNB Financial,금융,SmallCap,NASDAQ
+AUTL,Autolus Therapeutics,헬스케어,SmallCap,NASDAQ
+ALRS,Alerus Fin,금융,SmallCap,NASDAQ
+FMNB,Farmers Ntnl,금융,SmallCap,NASDAQ
+FARO,FARO Tech,기술,SmallCap,NASDAQ
+OPAL,Opal Fuels,에너지,SmallCap,NASDAQ
+XERS,Xeris Pharmaceuticals,헬스케어,SmallCap,NASDAQ
+OMER,Omeros Corp,헬스케어,SmallCap,NASDAQ
+EBTC,Enterprise Bcor,금융,SmallCap,NASDAQ
+CBNK,Capital Bancorp,금융,SmallCap,NASDAQ
+BCAL,Bank Southern California,금융,SmallCap,NASDAQ
+MAZE,Maze Therapeutics,,SmallCap,NASDAQ
+LAB,Standard Biotools,헬스케어,SmallCap,NASDAQ
+TECX,Tectonic Therapeutic,헬스케어,SmallCap,NASDAQ
+RSVR,Reservoir Media,소비순환재,SmallCap,NASDAQ
+PFIS,Peoples Fin,금융,SmallCap,NASDAQ
+TCBX,Third Coast Bancshares,금융,SmallCap,NASDAQ
+MGTX,MeiraGTx,헬스케어,SmallCap,NASDAQ
+METC,Ramaco Resources,소재,SmallCap,NASDAQ
+METCB,Ramaco Resources,소재,SmallCap,NASDAQ
+NWPX,Northwest Pipe,소재,SmallCap,NASDAQ
+DCTH,Delcath Systems,헬스케어,SmallCap,NASDAQ
+FLGT,Fulgent Genetics,헬스케어,SmallCap,NASDAQ
+BAND,Bandwidth,기술,SmallCap,NASDAQ
+GAIN,Gladstone Inv,금융,SmallCap,NASDAQ
+MLYS,Mineralys Therapeutics,헬스케어,SmallCap,NASDAQ
+GRPN,Groupon Inc,소비순환재,SmallCap,NASDAQ
+DGICA,Donegal Group,금융,SmallCap,NASDAQ
+DGICB,Donegal Group (B),금융,SmallCap,NASDAQ
+NFBK,Northfield Bancorp,금융,SmallCap,NASDAQ
+RNAC,Cartesian Therapeutics,헬스케어,SmallCap,NASDAQ
+CLPT,Clearpoint Neuro,헬스케어,SmallCap,NASDAQ
+FFIC,Flushing Fin.,금융,SmallCap,NASDAQ
+ZJK,Zjk Industrial,산업,SmallCap,NASDAQ
+DDI,Doubledown,소비순환재,SmallCap,NASDAQ
+HUMA,Humacyte,헬스케어,SmallCap,NASDAQ
+TWNP,Twin Hospitality,소비순환재,SmallCap,NASDAQ
+HONE,HarborOne Banc,금융,SmallCap,NASDAQ
+VLGEA,Village SprMrkt,필수소비재,SmallCap,NASDAQ
+KELYB,Kelly Services (B),산업,SmallCap,NASDAQ
+KELYA,Kelly Services,산업,SmallCap,NASDAQ
+SDA,SunCar Tech,필수소비재,SmallCap,NASDAQ
+SNDL,SNDL Inc,헬스케어,SmallCap,NASDAQ
+SBC,SBC Medical Holdings,산업,SmallCap,NASDAQ
+OUST,Ouster,기술,SmallCap,NASDAQ
+ARCT,Arcturus Therapeutics Holdings Inc,헬스케어,SmallCap,NASDAQ
+DADA,다다 넥서스,기술,SmallCap,NASDAQ
+SRDX,SurModics,헬스케어,SmallCap,NASDAQ
+PRCH,Porch Group,기술,SmallCap,NASDAQ
+ALTI,Alti Global,금융,SmallCap,NASDAQ
+WLDN,Willdan Group,산업,SmallCap,NASDAQ
+UNTY,Unity Bancorp,금융,SmallCap,NASDAQ
+LASR,nLIGHT,기술,SmallCap,NASDAQ
+KALV,Kalvista Pharma,헬스케어,SmallCap,NASDAQ
+CELC,Celcuity,헬스케어,SmallCap,NASDAQ
+SKYT,Skywater Technology,기술,SmallCap,NASDAQ
+TRDA,Entrada Therapeutics,헬스케어,SmallCap,NASDAQ
+LGTY,Logility Supply Chain Solutions,기술,SmallCap,NASDAQ
+SOHU,Sohu.Com,기술,SmallCap,NASDAQ
+SWBI,Smith & Wesson,산업,SmallCap,NASDAQ
+TBPH,Theravance Biopharma,헬스케어,SmallCap,NASDAQ
+YORW,The York Water,유틸리티,SmallCap,NASDAQ
+GLRE,Greenlight Capital Re,금융,SmallCap,NASDAQ
+PROK,ProKidney,헬스케어,SmallCap,NASDAQ
+ORGO,Organogenesis,헬스케어,SmallCap,NASDAQ
+CMPX,"Compass Therapeutics,",헬스케어,SmallCap,NASDAQ
+HNRG,Hallador Energy,에너지,SmallCap,NASDAQ
+AKBA,Akebia Ther,헬스케어,SmallCap,NASDAQ
+NRIM,Northrim BCorp,금융,SmallCap,NASDAQ
+RICK,RCI Hospitality,소비순환재,SmallCap,NASDAQ
+OABI,OmniAb,헬스케어,SmallCap,NASDAQ
+BTBT,Bit Digital,기술,SmallCap,NASDAQ
+CLFD,Clearfield,기술,SmallCap,NASDAQ
+SMLR,Semler Scientifc,헬스케어,SmallCap,NASDAQ
+INNV,이노베이지 홀딩,헬스케어,SmallCap,NASDAQ
+ZSPC,"""zSpace""",기술,SmallCap,NASDAQ
+EYPT,Eyepoint Pharma,헬스케어,SmallCap,NASDAQ
+ANSC,Agriculture Natural Solutions,금융,SmallCap,NASDAQ
+URGN,UroGen Pharma,헬스케어,SmallCap,NASDAQ
+ALT,알티뮨,헬스케어,SmallCap,NASDAQ
+MITK,Mitek Systems,기술,SmallCap,NASDAQ
+AROW,Arrow Financial,금융,SmallCap,NASDAQ
+CDXC,Chromadex Corp,헬스케어,SmallCap,NASDAQ
+KRNY,Kearny Financial,금융,SmallCap,NASDAQ
+ALNT,Allient,산업,SmallCap,NASDAQ
+AIRJ,AirJoule Tech,산업,SmallCap,NASDAQ
+ERAS,Erasca,헬스케어,SmallCap,NASDAQ
+TKNO,Alpha Teknova,헬스케어,SmallCap,NASDAQ
+SAGE,SAGE Therapeutics,헬스케어,SmallCap,NASDAQ
+BLDP,Ballard,에너지,SmallCap,NASDAQ
+GOCO,고헬스,금융,SmallCap,NASDAQ
+SIGA,SIGA Tech,헬스케어,SmallCap,NASDAQ
+FBIZ,First Business,금융,SmallCap,NASDAQ
+ATGL,Alpha Technology,기술,SmallCap,NASDAQ
+MERC,Mercer Int,소재,SmallCap,NASDAQ
+SVC,Service Properties,부동산,SmallCap,NASDAQ
+SATL,Satellogic V,소재,SmallCap,NASDAQ
+CVGW,Calavo Growers,필수소비재,SmallCap,NASDAQ
+GPRE,Green Plains,에너지,SmallCap,NASDAQ
+ZVRA,Zevra Therapeutics,헬스케어,SmallCap,NASDAQ
+BSRR,Sierra Bancorp,금융,SmallCap,NASDAQ
+ITIC,Investors Title,금융,SmallCap,NASDAQ
+CWCO,Consolid. Water,유틸리티,SmallCap,NASDAQ
+RWAY,Runway Growth Finance,금융,SmallCap,NASDAQ
+ALLO,Allogene Therapeutics,헬스케어,SmallCap,NASDAQ
+ETON,Eton Pharmaceuticals,헬스케어,SmallCap,NASDAQ
+ACTG,Acacia Research,산업,SmallCap,NASDAQ
+SHYF,Shyft Group Inc,소비순환재,SmallCap,NASDAQ
+DOGZ,Dogness A,소비순환재,SmallCap,NASDAQ
+MTRX,Matrix Service,산업,SmallCap,NASDAQ
+KE,Kimball Electronics,기술,SmallCap,NASDAQ
+EWCZ,European Wax Center,필수소비재,SmallCap,NASDAQ
+ANGO,AngioDynamics,헬스케어,SmallCap,NASDAQ
+KROS,Keros,헬스케어,SmallCap,NASDAQ
+NETD,Nabors Energy Transition,금융,SmallCap,NASDAQ
+LMNR,Limoneira Co,필수소비재,SmallCap,NASDAQ
+GLUE,Monte Rosa Therapeutics,헬스케어,SmallCap,NASDAQ
+TCMD,Tactile Systems,헬스케어,SmallCap,NASDAQ
+MSBI,Midland States Banc,금융,SmallCap,NASDAQ
+CARE,Carter Bank,금융,SmallCap,NASDAQ
+CRMT,America CarMart,소비순환재,SmallCap,NASDAQ
+TITN,Titan Machinery,산업,SmallCap,NASDAQ
+SNBR,슬립 넘버,소비순환재,SmallCap,NASDAQ
+EGHT,8x8 Inc,기술,SmallCap,NASDAQ
+BWB,Bridgewater Bancshares,금융,SmallCap,NASDAQ
+NRC,National Research,산업,SmallCap,NASDAQ
+UPB,Upstream Bio,헬스케어,SmallCap,NASDAQ
+BSVN,Bank7,금융,SmallCap,NASDAQ
+NATH,Nathans Famous,소비순환재,SmallCap,NASDAQ
+TBRG,Trubridge,헬스케어,SmallCap,NASDAQ
+DHIL,Diamond Hill,금융,SmallCap,NASDAQ
+GEVO,제보,에너지,SmallCap,NASDAQ
+HBCP,Home Bancorp,금융,SmallCap,NASDAQ
+BMRC,Bank of Marin,금융,SmallCap,NASDAQ
+ATXS,Astria Therapeutics,헬스케어,SmallCap,NASDAQ
+AURA,Aura Biosciences,헬스케어,SmallCap,NASDAQ
+PHAT,Phathom Pharma,헬스케어,SmallCap,NASDAQ
+CMRX,Chimerix,헬스케어,SmallCap,NASDAQ
+BWMN,보우만 컨설팅,산업,SmallCap,NASDAQ
+ZEUS,Olympic Steel,소재,SmallCap,NASDAQ
+NNOX,나녹스,헬스케어,SmallCap,NASDAQ
+HRZN,Horizon Tech,금융,SmallCap,NASDAQ
+AIP,Arteris,기술,SmallCap,NASDAQ
+PSNL,Personalis,헬스케어,SmallCap,NASDAQ
+ORKA,Oruka Therapeutics,헬스케어,SmallCap,NASDAQ
+KLTR,칼투라,기술,SmallCap,NASDAQ
+GMGI,Golden Matrix,기술,SmallCap,NASDAQ
+APEI,A.P.E.I.,아카데믹 및 교육 서비스,SmallCap,NASDAQ
+AMCX,AMC Networks A,소비순환재,SmallCap,NASDAQ
+CDZI,Cadiz,유틸리티,SmallCap,NASDAQ
+RRBI,Red River Bancshares,금융,SmallCap,NASDAQ
+ALDX,Aldeyra The,헬스케어,SmallCap,NASDAQ
+ATAI,ATAI Life Sciences BV,헬스케어,SmallCap,NASDAQ
+CCIX,Churchill Capital,금융,SmallCap,NASDAQ
+CADL,Candel Therapeutics,헬스케어,SmallCap,NASDAQ
+OFLX,Omega Flex,산업,SmallCap,NASDAQ
+CVRX,CVRx,헬스케어,SmallCap,NASDAQ
+JYD,Jayud Global Logistics,산업,SmallCap,NASDAQ
+FRBA,First Bank,금융,SmallCap,NASDAQ
+RIGL,Rigel Pharma,헬스케어,SmallCap,NASDAQ
+LSAK,Lesaka Tech,산업,SmallCap,NASDAQ
+BBCP,Concrete Pumping A,산업,SmallCap,NASDAQ
+TBCH,Turtle Beach,기술,SmallCap,NASDAQ
+ASPI,ASP Isotopes,헬스케어,SmallCap,NASDAQ
+WALD,Waldencast Acquisition,소비순환재,SmallCap,NASDAQ
+CDRO,Codere Online US,소비순환재,SmallCap,NASDAQ
+JAKK,JAKKS Pacific,소비순환재,SmallCap,NASDAQ
+WTBA,West BanCorp,금융,SmallCap,NASDAQ
+AHG,Akso Health DRC,기술,SmallCap,NASDAQ
+USCB,US Century Bank,금융,SmallCap,NASDAQ
+PBPB,Potbelly Co,소비순환재,SmallCap,NASDAQ
+LOCO,El Pollo Loco Holdings Inc,소비순환재,SmallCap,NASDAQ
+GPAT,GP Act III Acquisition,금융,SmallCap,NASDAQ
+OLMA,올레마,헬스케어,SmallCap,NASDAQ
+LE,Lands' End,소비순환재,SmallCap,NASDAQ
+NPCE,뉴로페이스,헬스케어,SmallCap,NASDAQ
+BLZE,Backblaze,기술,SmallCap,NASDAQ
+ESPR,Esperion,헬스케어,SmallCap,NASDAQ
+ALF,Centurion Acquisition,금융,SmallCap,NASDAQ
+HAIN,Hain Celestial,필수소비재,SmallCap,NASDAQ
+MBAV,M3 Brigade Acquisition V,금융,SmallCap,NASDAQ
+TRVI,트레비 테라퓨틱스,헬스케어,SmallCap,NASDAQ
+ASLE,AerSale,산업,SmallCap,NASDAQ
+LOVE,Lovesac,소비순환재,SmallCap,NASDAQ
+ZIMV,ZimVie,헬스케어,SmallCap,NASDAQ
+PRME,Prime Medicine,헬스케어,SmallCap,NASDAQ
+RGNX,Regenxbio Inc,헬스케어,SmallCap,NASDAQ
+CWBC,Community West Bancshares,금융,SmallCap,NASDAQ
+CCIR,Cohen Circle Acquisition I,금융,SmallCap,NASDAQ
+IBEX,IBEX,기술,SmallCap,NASDAQ
+NVEC,NVE Corp,기술,SmallCap,NASDAQ
+NUTX,Nutex Health,헬스케어,SmallCap,NASDAQ
+RDUS,Radius Recycling,소재,SmallCap,NASDAQ
+FMAO,Farmers & Merchants Bancorp,금융,SmallCap,NASDAQ
+ACNB,ACNB Corp,금융,SmallCap,NASDAQ
+TRML,Tourmaline Bio,헬스케어,SmallCap,NASDAQ
+QSI,QuantumSi,헬스케어,SmallCap,NASDAQ
+DOMO,Domo,기술,SmallCap,NASDAQ
+LAES,Sealsq,기술,SmallCap,NASDAQ
+CDXS,Codexis,헬스케어,SmallCap,NASDAQ
+MBX,MBX Biosciences,헬스케어,SmallCap,NASDAQ
+TERN,턴스 파마슈티컬스,헬스케어,SmallCap,NASDAQ
+CERS,Cerus Corp,헬스케어,SmallCap,NASDAQ
+WEYS,Weyco Group,소비순환재,SmallCap,NASDAQ
+SPOK,Spok Holdings,기술,SmallCap,NASDAQ
+EXFY,Expensify,기술,SmallCap,NASDAQ
+FHTX,Foghorn,헬스케어,SmallCap,NASDAQ
+TTSH,Tile Shop Holdings,소비순환재,SmallCap,NASDAQ
+PKOH,Park Ohio Holdings,산업,SmallCap,NASDAQ
+NEWT,Newtek Business S,금융,SmallCap,NASDAQ
+CRML,Critical Metals Corp,소재,SmallCap,NASDAQ
+PANL,Pangaea Logistic,산업,SmallCap,NASDAQ
+GIG,GigCapital7,금융,SmallCap,NASDAQ
+BRY,Berry Petroleum,에너지,SmallCap,NASDAQ
+OB,Outbrain,기술,SmallCap,NASDAQ
+TSHA,Taysha Gene,헬스케어,SmallCap,NASDAQ
+AIRS,Airsculpt Technologies,헬스케어,SmallCap,NASDAQ
+PNRG,PrimeEnergy Corp,에너지,SmallCap,NASDAQ
+LWAY,Lifeway Foods,필수소비재,SmallCap,NASDAQ
+CYRX,Cryoport Inc,산업,SmallCap,NASDAQ
+CIVB,Civista Bancshares,금융,SmallCap,NASDAQ
+LFMD,LifeMD,헬스케어,SmallCap,NASDAQ
+CZNC,Citiz. &North.,금융,SmallCap,NASDAQ
+EHTH,eHealth,금융,SmallCap,NASDAQ
+HCAT,Health Catalyst,기술,SmallCap,NASDAQ
+ANNX,아넥손,헬스케어,SmallCap,NASDAQ
+PMTS,CPI Card,금융,SmallCap,NASDAQ
+VALU,Value Line,산업,SmallCap,NASDAQ
+HIT,Health In Tech,,SmallCap,NASDAQ
+IHRT,iHeartMedia A,소비순환재,SmallCap,NASDAQ
+VUZI,Vuzix Corp Cmn Stk,기술,SmallCap,NASDAQ
+SSBK,Southern States Bancshares,금융,SmallCap,NASDAQ
+MCFT,Mastercraft Boat,소비순환재,SmallCap,NASDAQ
+VACH,Voyager Acquisition,금융,SmallCap,NASDAQ
+ARTNA,Artesian Res,유틸리티,SmallCap,NASDAQ
+AEHR,Aehr Test Systems,기술,SmallCap,NASDAQ
+XOMA,XOMA,헬스케어,SmallCap,NASDAQ
+RR,Richtech Robotics,기술,SmallCap,NASDAQ
+REFI,Chicago Atlantic Real Estate Finance,부동산,SmallCap,NASDAQ
+BEAG,Bold Eagle Acquisition,,SmallCap,NASDAQ
+CRVS,Corvus Pharmaceuticals,헬스케어,SmallCap,NASDAQ
+RBB,RBB Bancorp,금융,SmallCap,NASDAQ
+CMPS,Compass Pathways,헬스케어,SmallCap,NASDAQ
+BIOX,Bioceres Crop,소재,SmallCap,NASDAQ
+CUB,Lionheart Holdings,금융,SmallCap,NASDAQ
+ONEW,Onewater Marine,소비순환재,SmallCap,NASDAQ
+ASUR,Asure Software Inc,기술,SmallCap,NASDAQ
+RMNI,Rimini Street,기술,SmallCap,NASDAQ
+QTRX,Quanterix,헬스케어,SmallCap,NASDAQ
+SIMA,SIM Acquisition I,금융,SmallCap,NASDAQ
+BCML,BayCom,금융,SmallCap,NASDAQ
+JOUT,Johnson Outdrs,소비순환재,SmallCap,NASDAQ
+CZFS,Citizens Financial Services,금융,SmallCap,NASDAQ
+LSEA,Landsea Homes,부동산,SmallCap,NASDAQ
+FLIC,First of Long Island,금융,SmallCap,NASDAQ
+PAMT,P.A.M. Transportation,산업,SmallCap,NASDAQ
+IRWD,Ironwood Pharma,헬스케어,SmallCap,NASDAQ
+SNFCA,Security National,금융,SmallCap,NASDAQ
+SMTI,Sanara Medtech,헬스케어,SmallCap,NASDAQ
+VMD,Viemed Healthcare,헬스케어,SmallCap,NASDAQ
+DRDB,Roman DBDR Acquisition II,,SmallCap,NASDAQ
+OBT,Orange County Bancorp,금융,SmallCap,NASDAQ
+PDLB,Ponce Financial,금융,SmallCap,NASDAQ
+AQST,Aquestive Therapeutics,헬스케어,SmallCap,NASDAQ
+TDUP,스레드업,기술,SmallCap,NASDAQ
+ZUMZ,Zumiez Inc,소비순환재,SmallCap,NASDAQ
+FSBW,FS Bancorp Inc,금융,SmallCap,NASDAQ
+ENGN,enGene Holdings,헬스케어,SmallCap,NASDAQ
+NODK,NI Holdings,금융,SmallCap,NASDAQ
+LCID,루시드,소비순환재,MidCap,NASDAQ
+DOX,Amdocs,기술,MidCap,NASDAQ
+MRNO,Murano Global Investments Plc,부동산,MidCap,NASDAQ
+EXEL,Exelixis,헬스케어,MidCap,NASDAQ
+HQY,Healthequity Inc,기술,MidCap,NASDAQ
+MASI,Masimo Corp,헬스케어,MidCap,NASDAQ
+RGLD,Royal Gold Inc,소재,MidCap,NASDAQ
+FRHC,Freedom,금융,MidCap,NASDAQ
+HSIC,헨리 샤인,헬스케어,MidCap,NASDAQ
+ALTR,알테어,기술,MidCap,NASDAQ
+WYNN,윈 리조트,소비순환재,MidCap,NASDAQ
+AGNC,AGNC 인베스트먼트,부동산,MidCap,NASDAQ
+ASTS,Ast Spacemobile,기술,MidCap,NASDAQ
+AAON,AAON,산업,MidCap,NASDAQ
+PNFP,Pinnacle Fin.,금융,MidCap,NASDAQ
+SIRI,시리우스 XM,소비순환재,MidCap,NASDAQ
+MTSI,MACOM Tech,기술,MidCap,NASDAQ
+BILI,빌리빌리,기술,MidCap,NASDAQ
+EXAS,이그젝트 사이,헬스케어,MidCap,NASDAQ
+MIDD,Middleby Corp,산업,MidCap,NASDAQ
+TTAN,ServiceTitan,기술,MidCap,NASDAQ
+CHDN,Churchill Downs,소비순환재,MidCap,NASDAQ
+FYBR,Frontier Communications Parent,기술,MidCap,NASDAQ
+WING,Wingstop Inc,소비순환재,MidCap,NASDAQ
+LSCC,래티스 세미컨덕터,기술,MidCap,NASDAQ
+VFS,VinFast,소비순환재,MidCap,NASDAQ
+CBSH,Commerce Bancshar,금융,MidCap,NASDAQ
+HLNE,Hamilton Lane,금융,MidCap,NASDAQ
+MTCH,매치 그룹,기술,MidCap,NASDAQ
+WTFC,Wintrust Fin.,금융,MidCap,NASDAQ
+APA,아파치,에너지,MidCap,NASDAQ
+HAS,해즈브로,소비순환재,MidCap,NASDAQ
+ENPH,인페이즈 에너지,에너지,MidCap,NASDAQ
+CZR,시저스 엔터,소비순환재,MidCap,NASDAQ
+WBA,월그린 부츠 얼라이언스,필수소비재,MidCap,NASDAQ
+SATS,EchoStar Corp,기술,MidCap,NASDAQ
+SFD,Smithfield Foods,필수소비재,MidCap,NASDAQ
+LNW,Light Wonder,소비순환재,MidCap,NASDAQ
+ZION,자이언스 뱅코프,금융,MidCap,NASDAQ
+RGEN,Repligen Corp,헬스케어,MidCap,NASDAQ
+TTEK,Tetra Tech,산업,MidCap,NASDAQ
+EXLS,ExlService Hldg,산업,MidCap,NASDAQ
+UMBF,UMB Financial,금융,MidCap,NASDAQ
+CVLT,Commvault System,기술,MidCap,NASDAQ
+JAZZ,Jazz Pharma,헬스케어,MidCap,NASDAQ
+PARA,파라마운트 글로벌 B,소비순환재,MidCap,NASDAQ
+PARAA,Paramount Global A,소비순환재,MidCap,NASDAQ
+FSV,FirstService,부동산,MidCap,NASDAQ
+XP,Xp,금융,MidCap,NASDAQ
+APPF,Appfolio Inc,기술,MidCap,NASDAQ
+WAY,Waystar Holding,기술,MidCap,NASDAQ
+UPST,업스타트 홀딩스,금융,MidCap,NASDAQ
+DRS,Leonardo DRS,산업,MidCap,NASDAQ
+CORT,Corcept Therap,헬스케어,MidCap,NASDAQ
+ONB,Old National,금융,MidCap,NASDAQ
+BRKR,Bruker,헬스케어,MidCap,NASDAQ
+ROIV,Roivant Sciences,헬스케어,MidCap,NASDAQ
+RVMD,Revolution Med,헬스케어,MidCap,NASDAQ
+STEP,스텝스톤,금융,MidCap,NASDAQ
+HALO,Halozyme Therap,헬스케어,MidCap,NASDAQ
+MAT,마텔,소비순환재,MidCap,NASDAQ
+MDGL,Madrigal Pharma,헬스케어,MidCap,NASDAQ
+BECN,Beacon Roofing,소비순환재,MidCap,NASDAQ
+BPOP,Popular Inc,금융,MidCap,NASDAQ
+MKTX,마켓액세스홀딩스,금융,MidCap,NASDAQ
+ENSG,Ensign Group,헬스케어,MidCap,NASDAQ
+PEGA,Pegasystems Inc,기술,MidCap,NASDAQ
+VERX,버텍스,기술,MidCap,NASDAQ
+QRVO,코르보,기술,MidCap,NASDAQ
+BOKF,BOK Financial Corp,금융,MidCap,NASDAQ
+UFPI,Ufp Industries,소재,MidCap,NASDAQ
+CWST,Casella Waste,산업,MidCap,NASDAQ
+CCCS,CCC Intelligent Solutions Holdings,기술,MidCap,NASDAQ
+HCP,Hashicorp,기술,MidCap,NASDAQ
+WSC,WillScot A,산업,MidCap,NASDAQ
+MKSI,MKS Instruments,산업,MidCap,NASDAQ
+NXT,Nextracker,에너지,MidCap,NASDAQ
+QFIN,Qifu Tech DRC,금융,MidCap,NASDAQ
+COOP,Mr. Cooper,금융,MidCap,NASDAQ
+CHRD,Chord Energy,에너지,MidCap,NASDAQ
+OLED,Univ. Display,기술,MidCap,NASDAQ
+RMBS,Rambus Inc,기술,MidCap,NASDAQ
+DJT,Trump Media & Technology Group,기술,MidCap,NASDAQ
+LEGN,Legend Bio,헬스케어,MidCap,NASDAQ
+OLLI,올리즈 바겐 아울렛,소비순환재,MidCap,NASDAQ
+SRAD,Sportradar,기술,MidCap,NASDAQ
+SLM,SLM - 셀리 메이,금융,MidCap,NASDAQ
+BBIO,BridgeBio Pharma,헬스케어,MidCap,NASDAQ
+ETSY,엣시,소비순환재,MidCap,NASDAQ
+AXSM,Axsome Therapeutics Inc,헬스케어,MidCap,NASDAQ
+MMSI,Merit Medical,헬스케어,MidCap,NASDAQ
+FRPT,프레시펫,필수소비재,MidCap,NASDAQ
+CACC,Credit Accept,금융,MidCap,NASDAQ
+LFUS,Littelfuse,기술,MidCap,NASDAQ
+CROX,Crocs,소비순환재,MidCap,NASDAQ
+OS,OneStream,기술,MidCap,NASDAQ
+CRVL,CorVel Corp,헬스케어,MidCap,NASDAQ
+BPMC,Blueprint Medicines Corp,헬스케어,MidCap,NASDAQ
+GH,Guardant Health,헬스케어,MidCap,NASDAQ
+OZK,Bank Ozk,금융,MidCap,NASDAQ
+ALKS,Alkermes Plc,헬스케어,MidCap,NASDAQ
+CRUS,Cirrus Logic,기술,MidCap,NASDAQ
+PONY,Pony Ai,기술,MidCap,NASDAQ
+INTA,Intapp,기술,MidCap,NASDAQ
+COLB,Columbia Bank,금융,MidCap,NASDAQ
+MARA,마라톤 디지털,기술,MidCap,NASDAQ
+LSTR,Landstar System,산업,MidCap,NASDAQ
+VIRT,Virtu Financial Inc,금융,MidCap,NASDAQ
+CGNX,Cognex Corp,산업,MidCap,NASDAQ
+CHX,ChampionX Corp,에너지,MidCap,NASDAQ
+LYFT,LYFT,기술,MidCap,NASDAQ
+VLY,Valley National,금융,MidCap,NASDAQ
+GNTX,Gentex Corp,소비순환재,MidCap,NASDAQ
+LNTH,Lantheus Holdings Inc,헬스케어,MidCap,NASDAQ
+RRR,Red Rock Resorts,소비순환재,MidCap,NASDAQ
+SPSC,SPS Commerce,기술,MidCap,NASDAQ
+AMKR,Amkor Tech,기술,MidCap,NASDAQ
+NUVL,Nuvalent,헬스케어,MidCap,NASDAQ
+ACIW,ACI Worldwide,기술,MidCap,NASDAQ
+IDCC,InterDigital,기술,MidCap,NASDAQ
+CYTK,Cytokinetics Inc,헬스케어,MidCap,NASDAQ
+RELY,Remitly Global,산업,MidCap,NASDAQ
+LITE,Lumentum Holdings Inc,기술,MidCap,NASDAQ
+BCPC,Balchem Corp,소재,MidCap,NASDAQ
+OPCH,Option Care Health,헬스케어,MidCap,NASDAQ
+CSWI,CSW Industrials Inc,산업,MidCap,NASDAQ
+FFIN,First Fin Bshar,금융,MidCap,NASDAQ
+LOPE,Grand Canyon,아카데믹 및 교육 서비스,MidCap,NASDAQ
+QLYS,Qualys Inc,기술,MidCap,NASDAQ
+NSIT,Insight Enterp,기술,MidCap,NASDAQ
+FCFS,FirstCash,금융,MidCap,NASDAQ
+CELH,Celsius,필수소비재,MidCap,NASDAQ
+LANC,Lancaster Col.,필수소비재,MidCap,NASDAQ
+URBN,어반 아웃피터스,소비순환재,MidCap,NASDAQ
+HWC,Hancock Whitney,금융,MidCap,NASDAQ
+ACT,이넥트,금융,MidCap,NASDAQ
+FRSH,Freshworks,기술,MidCap,NASDAQ
+WFRD,Weatherford Intl,에너지,MidCap,NASDAQ
+NOVT,Novanta,기술,MidCap,NASDAQ
+UBSI,United BShares,금융,MidCap,NASDAQ
+PECO,Phillips Edison Co,부동산,MidCap,NASDAQ
+REYN,Reynolds,필수소비재,MidCap,NASDAQ
+SIGI,Selective Insu,금융,MidCap,NASDAQ
+VRNS,Varonis Systems,기술,MidCap,NASDAQ
+SAIC,Science Applications,기술,MidCap,NASDAQ
+PAGP,Plains GP Holdings,에너지,MidCap,NASDAQ
+IONS,Ionis Pharma,헬스케어,MidCap,NASDAQ
+FIVE,Five Below Inc,소비순환재,MidCap,NASDAQ
+SANM,Sanmina Corp,기술,MidCap,NASDAQ
+SLAB,Silicon Laborator,기술,MidCap,NASDAQ
+ESGR,Enstar Group,금융,MidCap,NASDAQ
+COLM,Columbia Sports,소비순환재,MidCap,NASDAQ
+KC,Kingsoft Cloud,기술,MidCap,NASDAQ
+NXST,Nexstar,소비순환재,MidCap,NASDAQ
+ALGM,Allegro,기술,MidCap,NASDAQ
+RUSHB,Rush Enterprises,소비순환재,MidCap,NASDAQ
+RUSHA,Rush A,소비순환재,MidCap,NASDAQ
+NARI,Inari Med,헬스케어,MidCap,NASDAQ
+AEIS,Advanced Energy,산업,MidCap,NASDAQ
+TENB,Tenable,기술,MidCap,NASDAQ
+CALM,Cal-Maine Foods,필수소비재,MidCap,NASDAQ
+EEFT,Euronet,산업,MidCap,NASDAQ
+FELE,Franklin Elect,산업,MidCap,NASDAQ
+TIGO,Millicom,기술,MidCap,NASDAQ
+IESC,IES Holdings,산업,MidCap,NASDAQ
+RDNT,RadNet,헬스케어,MidCap,NASDAQ
+BGC,Bgc Group,금융,MidCap,NASDAQ
+FTDR,Frontdoor,필수소비재,MidCap,NASDAQ
+EXPO,Exponent,산업,MidCap,NASDAQ
+CLBT,Cellebrite,기술,MidCap,NASDAQ
+SKYW,SkyWest,산업,MidCap,NASDAQ
+FROG,제이프로그,기술,MidCap,NASDAQ
+AVT,Avnet Inc,기술,MidCap,NASDAQ
+TGTX,TG,헬스케어,MidCap,NASDAQ
+KRYS,Krystal Biotech,헬스케어,MidCap,NASDAQ
+AVAV,에어로 바이론먼트,산업,MidCap,NASDAQ
+VCTR,Victory Capital,금융,MidCap,NASDAQ
+ITRI,Itron Inc,기술,MidCap,NASDAQ
+ROAD,Construction Partners,산업,MidCap,NASDAQ
+VRRM,Verra Mobility,산업,MidCap,NASDAQ
+CVCO,Cavco Ind.,소비순환재,MidCap,NASDAQ
+BRZE,Braze,기술,MidCap,NASDAQ
+SWTX,SpringWorks,헬스케어,MidCap,NASDAQ
+GSHD,Goosehead Insurance,금융,MidCap,NASDAQ
+CRSP,크리스퍼 테라퓨틱스,헬스케어,MidCap,NASDAQ
+GLNG,골라LNG,에너지,MidCap,NASDAQ
+IPAR,Inter Parfums,필수소비재,MidCap,NASDAQ
+GBDC,Golub Cptl BDC,금융,MidCap,NASDAQ
+SITM,Sitime Corp,기술,MidCap,NASDAQ
+RXRX,리커젼 파마,헬스케어,MidCap,NASDAQ
+CARG,CarGurus,기술,MidCap,NASDAQ
+KTOS,Kratos Defense,산업,MidCap,NASDAQ
+RIOT,Riot Platforms,기술,MidCap,NASDAQ
+STRL,Sterling,산업,MidCap,NASDAQ
+IAC,IAC Interactivecorp,기술,MidCap,NASDAQ
+SOUN,SoundHound AI,기술,MidCap,NASDAQ
+LBTYK,리버티 글로벌 C,기술,MidCap,NASDAQ
+IBOC,Intl Ban,금융,MidCap,NASDAQ
+PYCR,Paycor HCM,기술,MidCap,NASDAQ
+PTCT,PTC Therapeutics,헬스케어,MidCap,NASDAQ
+LBTYB,Liberty Global B,기술,MidCap,NASDAQ
+BANF,BancFirst Corp,금융,MidCap,NASDAQ
+NCNO,엔시노,기술,MidCap,NASDAQ
+BLKB,Blackbaud,기술,MidCap,NASDAQ
+LBTYA,리버티 글로벌,기술,MidCap,NASDAQ
+ICUI,ICU Medical,헬스케어,MidCap,NASDAQ
+ALVO,Alvotech,헬스케어,MidCap,NASDAQ
+RARE,울트라제닉스 파마슈티컬,헬스케어,MidCap,NASDAQ
+SBRA,Sabra,부동산,MidCap,NASDAQ
+CCOI,Cogent Comm,기술,MidCap,NASDAQ
+DORM,Dorman Products,소비순환재,MidCap,NASDAQ
+RNA,어비디티 바이오사이언스,헬스케어,MidCap,NASDAQ
+AKRO,Akero Therapeutics,헬스케어,MidCap,NASDAQ
+BTSG,Brightspring Health Services,헬스케어,MidCap,NASDAQ
+DLO,Dlocal,산업,MidCap,NASDAQ
+SHC,소테라헬스,헬스케어,MidCap,NASDAQ
+ACHC,Acadia Hlthcre,헬스케어,MidCap,NASDAQ
+SMPL,Simply Good Foods,필수소비재,MidCap,NASDAQ
+PTON,펠로톤,소비순환재,MidCap,NASDAQ
+TFSL,TFS Financial Corp,금융,MidCap,NASDAQ
+PAYO,Payoneer Global Inc,산업,MidCap,NASDAQ
+ADMA,ADMA Biologics Inc,헬스케어,MidCap,NASDAQ
+SNEX,INTL FCStone,금융,MidCap,NASDAQ
+PLXS,Plexus Corp,기술,MidCap,NASDAQ
+EBC,Eastern Bankshares,금융,MidCap,NASDAQ
+FULT,Fulton Financial,금융,MidCap,NASDAQ
+TCBI,Texas Capital,금융,MidCap,NASDAQ
+ASO,아카데미 스포츠,소비순환재,MidCap,NASDAQ
+FIZZ,내셔널 베버리지,필수소비재,MidCap,NASDAQ
+RUM,Rumble,기술,MidCap,NASDAQ
+PRCT,Procept Biorobotics,헬스케어,MidCap,NASDAQ
+AVPT,Avepoint,기술,MidCap,NASDAQ
+BHF,Brighthouse Financial,금융,MidCap,NASDAQ
+XRAY,덴츠플라이,헬스케어,MidCap,NASDAQ
+ACVA,Acv 옥션,기술,MidCap,NASDAQ
+NMRK,Newmark Group,부동산,MidCap,NASDAQ
+OSIS,OSI Systems,기술,MidCap,NASDAQ
+ACLX,Arcellx,헬스케어,MidCap,NASDAQ
+ZI,ZoomInfo,기술,MidCap,NASDAQ
+IRTC,iRhythm Tech,헬스케어,MidCap,NASDAQ
+CORZ,Core Scientific,기술,MidCap,NASDAQ
+RYTM,Rhythm Pharma,헬스케어,MidCap,NASDAQ
+SRRK,Scholar Rock,헬스케어,MidCap,NASDAQ
+PCH,PotlatchDeltic,부동산,MidCap,NASDAQ
+IMVT,Immunovant,헬스케어,MidCap,NASDAQ
+PTEN,패터슨-UTI,에너지,MidCap,NASDAQ
+FA,First Advantage,산업,MidCap,NASDAQ
+IRDM,이리디움 커뮤,기술,MidCap,NASDAQ
+FHB,First Hawaiian,금융,MidCap,NASDAQ
+FIBK,First Interst.,금융,MidCap,NASDAQ
+APLS,아펠리스,헬스케어,MidCap,NASDAQ
+PENN,펜 엔터테인먼트,소비순환재,MidCap,NASDAQ
+VKTX,Viking Therapeutics Inc,헬스케어,MidCap,NASDAQ
+POWI,Power Integrat,기술,MidCap,NASDAQ
+PLMR,Palomar,금융,MidCap,NASDAQ
+ACAD,ACADIA Pharmaceuticals,헬스케어,MidCap,NASDAQ
+RGTI,Rigetti Computing,기술,MidCap,NASDAQ
+ALKT,알카미 테크,기술,MidCap,NASDAQ
+CATY,Cathay General,금융,MidCap,NASDAQ
+WSFS,WSFS Financial,금융,MidCap,NASDAQ
+SGRY,Surgery Partners Inc,헬스케어,MidCap,NASDAQ
+NFE,New Fortress Energy,유틸리티,MidCap,NASDAQ
+CRNX,Crinetics Pharma,헬스케어,MidCap,NASDAQ
+AMBA,Ambarella Inc,기술,MidCap,NASDAQ
+MGEE,MGE Energy Inc,유틸리티,MidCap,NASDAQ
+SMTC,Semtech Corp,기술,MidCap,NASDAQ
+OTTR,Otter Tail Corp,유틸리티,MidCap,NASDAQ
+PATK,Patrick Ind.,소비순환재,MidCap,NASDAQ
+HEES,H&E Equipment,산업,MidCap,NASDAQ
+BL,블랙라인,기술,MidCap,NASDAQ
+PTVE,팩티브,소재,MidCap,NASDAQ
+VCYT,Veracyte Inc,헬스케어,MidCap,NASDAQ
+NWE,NorthWestern,유틸리티,MidCap,NASDAQ
+CAR,Avis,산업,MidCap,NASDAQ
+BTDR,Bitdeer Tech,기술,MidCap,NASDAQ
+MTSR,Metsera,,MidCap,NASDAQ
+DOOO,BRP Inc,소비순환재,MidCap,NASDAQ
+WDFC,WD-40 Company,필수소비재,MidCap,NASDAQ
+ALRM,Alarm.com Holdings,기술,MidCap,NASDAQ
+CNXC,Concentrix,산업,MidCap,NASDAQ
+DNLI,Denali Therapeutics,헬스케어,MidCap,NASDAQ
+LFST,Lifestance Health Group,헬스케어,MidCap,NASDAQ
+AMED,아메디시스,헬스케어,MidCap,NASDAQ
+PRVA,프리비아 헬스,헬스케어,MidCap,NASDAQ
+LAUR,Laureate Education,아카데믹 및 교육 서비스,MidCap,NASDAQ
+FIVN,Five9,기술,MidCap,NASDAQ
+XENE,Xenon Pharmaceuticals,헬스케어,MidCap,NASDAQ
+USLM,United States,소재,MidCap,NASDAQ
+LUNR,Intuitive Machines,산업,MidCap,NASDAQ
+MGRC,M.G.R.C.,산업,MidCap,NASDAQ
+PI,Impinj,기술,MidCap,NASDAQ
+CLSK,CleanSpark,기술,MidCap,NASDAQ
+NWL,뉴웰브랜즈,소비순환재,MidCap,NASDAQ
+FORM,FormFactor,기술,MidCap,NASDAQ
+FOLD,아미쿠스 테라,헬스케어,MidCap,NASDAQ
+WEN,The Wendys Co,소비순환재,MidCap,NASDAQ
+INDB,Indepen. Bank,금융,MidCap,NASDAQ
+STNE,StoneCo,기술,MidCap,NASDAQ
+TBBK,The Bancorp,금융,MidCap,NASDAQ
+SHOO,Steven Madden,소비순환재,MidCap,NASDAQ
+GSAT,Globalstar Inc,기술,MidCap,NASDAQ
+IREN,IREN Ltd,기술,MidCap,NASDAQ
+TWST,Twist Bioscience,헬스케어,MidCap,NASDAQ
+CVBF,CVB Financial,금융,MidCap,NASDAQ
+SFNC,Simmons First Nat,금융,MidCap,NASDAQ
+SYNA,Synapticsorp,기술,MidCap,NASDAQ
+VCEL,Vericel Corp Ord,헬스케어,MidCap,NASDAQ
+MGNI,매그나이트,소비순환재,MidCap,NASDAQ
+NMIH,NMI Holdings,금융,MidCap,NASDAQ
+CPRX,Catalyst Pharmaceuticals,헬스케어,MidCap,NASDAQ
+PLTK,플레이티카 홀딩스,기술,MidCap,NASDAQ
+MRUS,Merus,헬스케어,MidCap,NASDAQ
+PDCO,패터슨 덴탈,헬스케어,MidCap,NASDAQ
+TOWN,Towne Bank,금융,MidCap,NASDAQ
+GT,Goodyear Tire & Rubber Co,소비순환재,MidCap,NASDAQ
+QDEL,Quidel Corp,헬스케어,MidCap,NASDAQ
+PSMT,PriceSmart,소비순환재,MidCap,NASDAQ
+CAKE,Cheesecake Fac.,소비순환재,MidCap,NASDAQ
+MLTX,MoonLake Immunotherapeutics,헬스케어,MidCap,NASDAQ
+IOSP,Innospec Inc,소재,MidCap,NASDAQ
+TTMI,TTM Tech,기술,MidCap,NASDAQ
+IPGP,IPG 포토닉스,기술,MidCap,NASDAQ
+VIAV,Viavi Solutions,기술,MidCap,NASDAQ
+FFBC,First Fin Bcorp,금융,MidCap,NASDAQ
+DRVN,드리븐 브랜즈 홀딩스,필수소비재,MidCap,NASDAQ
+MRCY,Mercury Systems,산업,MidCap,NASDAQ
+IBRX,Immunitybio Inc,헬스케어,MidCap,NASDAQ
+CHEF,Chefs Warehouse,필수소비재,MidCap,NASDAQ
+MRX,Marex,금융,MidCap,NASDAQ
+HUBG,Hub Group,산업,MidCap,NASDAQ
+GCMG,GCM Grosvenor,금융,MidCap,NASDAQ
+ALHC,얼라인먼트 헬스,헬스케어,MidCap,NASDAQ
+LIVN,LivaNova PLC,헬스케어,MidCap,NASDAQ
+FRME,First Merchants,금융,MidCap,NASDAQ
+BEAM,빔 테라퓨틱스,헬스케어,MidCap,NASDAQ
+LION,Lionsgate Studios,소비순환재,MidCap,NASDAQ
+POWL,Powell Ind.,산업,MidCap,NASDAQ
+BATRK,Atlanta Braves Holdings C,소비순환재,MidCap,NASDAQ
+BATRA,Atlanta Braves Holdings,소비순환재,MidCap,NASDAQ
+ARWR,Arrowhead Pharma,헬스케어,MidCap,NASDAQ
+PRGS,Progress SWare,기술,MidCap,NASDAQ
+STRA,Strategic Education,아카데믹 및 교육 서비스,MidCap,NASDAQ
+DIOD,Diodes Inc,기술,MidCap,NASDAQ
+TRIP,Tripadvisor,소비순환재,MidCap,NASDAQ
+SBCF,Seacoast Bank,금융,MidCap,NASDAQ
+ODD,Oddity Tech,필수소비재,MidCap,NASDAQ
+WSBC,WesBanco,금융,MidCap,NASDAQ
+NVCR,Novocure Ltd,헬스케어,MidCap,NASDAQ
+PPBI,Pacific Premier,금융,MidCap,NASDAQ
+FLYW,Flywire,산업,MidCap,NASDAQ
+JJSF,J & J Snack Foods,필수소비재,MidCap,NASDAQ
+WAFD,WaFd Inc,금융,MidCap,NASDAQ
+AGYS,Agilysys,기술,MidCap,NASDAQ
+TMDX,TransMedics,헬스케어,MidCap,NASDAQ
+INTR,Inter and Co A,금융,MidCap,NASDAQ
+AMRX,Amneal Pharma A,헬스케어,MidCap,NASDAQ
+MIRM,Mirum Pharmaceuticals,헬스케어,MidCap,NASDAQ
+EWTX,엣지와이즈,헬스케어,MidCap,NASDAQ
+JBLU,제트블루 항공,산업,MidCap,NASDAQ
+KYMR,Kymera,헬스케어,MidCap,NASDAQ
+BANR,Banner Corp,금융,MidCap,NASDAQ
+RNW,ReNew Energy Global,유틸리티,MidCap,NASDAQ
+OSW,OneSpaWorld,소비순환재,MidCap,NASDAQ
+PSNY,Polestar Automotive Holding A,소비순환재,MidCap,NASDAQ
+HWKN,Hawkins,소재,MidCap,NASDAQ
+TRMK,Trustmark Corp,금융,MidCap,NASDAQ
+PTGX,Protagonist Therapeutics,헬스케어,MidCap,NASDAQ
+APPN,애피안,기술,MidCap,NASDAQ
+VC,Visteon,소비순환재,MidCap,NASDAQ
+CERT,서타라,기술,MidCap,NASDAQ
+ZD,Ziff Davis,기술,MidCap,NASDAQ
+COCO,Vita Coco,필수소비재,MidCap,NASDAQ
+LGND,리간드 파마,헬스케어,MidCap,NASDAQ
+NBTB,NBT Bancorp Inc,금융,MidCap,NASDAQ
+VICR,Vicor Corp,산업,MidCap,NASDAQ
+EFSC,Enterprise Fin.,금융,MidCap,NASDAQ
+CENTA,Centaurus 2002,필수소비재,MidCap,NASDAQ
+CENT,Central Garden & Pet Co.,필수소비재,MidCap,NASDAQ
+RPD,Rapid7 Inc,기술,MidCap,NASDAQ
+CLOV,Clover Health Investments,헬스케어,MidCap,NASDAQ
+LMAT,LeMaitre Vascular Inc,헬스케어,MidCap,NASDAQ
+HRMY,하모니 바이오,헬스케어,MidCap,NASDAQ
+SYBT,Stock Yards Bancorp,금융,MidCap,NASDAQ
+KLIC,Kulicke and Soffa,기술,MidCap,NASDAQ
+TNDM,Tandem Diabetes Care,헬스케어,MidCap,NASDAQ
+ARCB,ArcBest Corp,산업,MidCap,NASDAQ
+UPWK,업워크,산업,MidCap,NASDAQ
+EXTR,Extreme Network,기술,MidCap,NASDAQ
+CGON,CG Oncology,헬스케어,MidCap,NASDAQ
+IBKR,Interactive Broke,금융,LargeCap,NASDAQ
+MRVL,마벨 테크놀로지,기술,LargeCap,NASDAQ
+EQIX,에퀴닉스,부동산,LargeCap,NASDAQ
+DASH,도어대시,기술,LargeCap,NASDAQ
+CME,CME그룹,금융,LargeCap,NASDAQ
+FTNT,포티넷,기술,LargeCap,NASDAQ
+MSTR,마이크로스트래티지,기술,LargeCap,NASDAQ
+CTAS,신타스,산업,LargeCap,NASDAQ
+TEAM,아틀라시안,기술,LargeCap,NASDAQ
+CDNS,케이든스디자인시스템,기술,LargeCap,NASDAQ
+SNPS,시놉시스,기술,LargeCap,NASDAQ
+MDLZ,몬델리즈 인터내셔널,필수소비재,LargeCap,NASDAQ
+MAR,메리어트인터내셔널,소비순환재,LargeCap,NASDAQ
+PYPL,페이팔 홀딩스,산업,LargeCap,NASDAQ
+ORLY,오릴리 오토모티브,소비순환재,LargeCap,NASDAQ
+REGN,리제네론 파마슈티컬스,헬스케어,LargeCap,NASDAQ
+COIN,코인베이스,기술,LargeCap,NASDAQ
+WDAY,워크데이,기술,LargeCap,NASDAQ
+ADSK,오토데스크,기술,LargeCap,NASDAQ
+CSX,CSX,산업,LargeCap,NASDAQ
+ROP,로퍼 테크놀로지,기술,LargeCap,NASDAQ
+HOOD,Robinhood Markets,기술,LargeCap,NASDAQ
+CPRT,코파츠,기술,LargeCap,NASDAQ
+CHTR,차터커뮤니케이션,기술,LargeCap,NASDAQ
+NXPI,NXP세미컨덕터즈,기술,LargeCap,NASDAQ
+PCAR,파카,산업,LargeCap,NASDAQ
+AEP,아메리칸 일렉트릭 파워,유틸리티,LargeCap,NASDAQ
+PAYX,페이첵스,산업,LargeCap,NASDAQ
+AXON,엑슨 엔터프라이즈,산업,LargeCap,NASDAQ
+MNST,몬스터 베버리지,필수소비재,LargeCap,NASDAQ
+NDAQ,나스닥,금융,LargeCap,NASDAQ
+BKR,Baker Hughes,에너지,LargeCap,NASDAQ
+FANG,다이아몬드백 에너지,에너지,LargeCap,NASDAQ
+ROST,로스 스토어스,소비순환재,LargeCap,NASDAQ
+CTSH,코그니전트 테크놀로지 솔루션 A,기술,LargeCap,NASDAQ
+LULU,룰루레몬,소비순환재,LargeCap,NASDAQ
+DDOG,데이터독,기술,LargeCap,NASDAQ
+ODFL,올드 도미니언 프레이트 라인,산업,LargeCap,NASDAQ
+EXC,엑셀론,유틸리티,LargeCap,NASDAQ
+KDP,큐리그 닥터 페퍼,필수소비재,LargeCap,NASDAQ
+FAST,패스널,산업,LargeCap,NASDAQ
+GEHC,GE HealthCare,헬스케어,LargeCap,NASDAQ
+VRSK,베리스크 어낼리틱스,기술,LargeCap,NASDAQ
+TTD,The Trade Desk,기술,LargeCap,NASDAQ
+XEL,엑셀 에너지,유틸리티,LargeCap,NASDAQ
+CCEP,Coca-Cola European,필수소비재,LargeCap,NASDAQ
+TTWO,테이크투인터랙티브 소프트웨어,기술,LargeCap,NASDAQ
+IDXX,아이덱스 래버러토리스,헬스케어,LargeCap,NASDAQ
+DXCM,덱스컴,헬스케어,LargeCap,NASDAQ
+KHC,크래프트 하인즈,필수소비재,LargeCap,NASDAQ
+UAL,유나이티드 항공,산업,LargeCap,NASDAQ
+EA,일렉트로닉 아츠,기술,LargeCap,NASDAQ
+EBAY,이베이,기술,LargeCap,NASDAQ
+ALNY,Alnylam Pharma,헬스케어,LargeCap,NASDAQ
+ACGL,Arch Capital,금융,LargeCap,NASDAQ
+MPWR,모놀리틱 파워,기술,LargeCap,NASDAQ
+ZS,지스케일러,기술,LargeCap,NASDAQ
+WTW,윌리스,금융,LargeCap,NASDAQ
+TSCO,트랙터 서플라이,소비순환재,LargeCap,NASDAQ
+CSGP,코스타 그룹,기술,LargeCap,NASDAQ
+TW,Tradeweb Markets,금융,LargeCap,NASDAQ
+MCHP,마이크로칩 테크,기술,LargeCap,NASDAQ
+ANSS,앤시스,기술,LargeCap,NASDAQ
+FITB,피프스 서드 뱅코프,금융,LargeCap,NASDAQ
+FCNCA,First Citizens Bancshares,금융,LargeCap,NASDAQ
+BNTX,바이오앤테크,헬스케어,LargeCap,NASDAQ
+SMCI,Super Micro,기술,LargeCap,NASDAQ
+LPLA,LPL Financial,금융,LargeCap,NASDAQ
+DKNG,드래프트킹스,소비순환재,LargeCap,NASDAQ
+ZM,줌 비디오 커뮤니케이션,기술,LargeCap,NASDAQ
+EXPE,익스피디아,소비순환재,LargeCap,NASDAQ
+LI,리오토,소비순환재,LargeCap,NASDAQ
+AFRM,어펌 홀딩스,기술,LargeCap,NASDAQ
+WBD,워너 브라더스 디스커버리,소비순환재,LargeCap,NASDAQ
+CDW,CDW Corp,기술,LargeCap,NASDAQ
+FOXA,폭스 코퍼레이션,소비순환재,LargeCap,NASDAQ
+FOX,폭스 B,소비순환재,LargeCap,NASDAQ
+CHKP,체크포인트 소프트웨어 테크놀로지스,기술,LargeCap,NASDAQ
+EXE,Expand Energy,에너지,LargeCap,NASDAQ
+FWONK,Liberty Media Formula C,소비순환재,LargeCap,NASDAQ
+FWONA,Liberty Media Formula A,소비순환재,LargeCap,NASDAQ
+HBAN,헌팅턴 뱅크셰어스,금융,LargeCap,NASDAQ
+NTAP,넷앱,기술,LargeCap,NASDAQ
+TROW,티 로우 프라이스,금융,LargeCap,NASDAQ
+GFS,GlobalFoundries,기술,LargeCap,NASDAQ
+WDC,웨스턴 디지털,기술,LargeCap,NASDAQ
+NTRA,Natera Inc,헬스케어,LargeCap,NASDAQ
+SBAC,SBA커뮤니케이션,부동산,LargeCap,NASDAQ
+SSNC,SS&C Tech,기술,LargeCap,NASDAQ
+ON,온 세미컨덕터,기술,LargeCap,NASDAQ
+NTRS,노던 트러스트,금융,LargeCap,NASDAQ
+VRSN,베리사인,기술,LargeCap,NASDAQ
+TPG,TPG Inc,금융,LargeCap,NASDAQ
+MDB,MongoDB,기술,LargeCap,NASDAQ
+STX,씨게이트,기술,LargeCap,NASDAQ
+CINF,신시내티 파이낸셜,금융,LargeCap,NASDAQ
+STLD,Steel Dynamics,소재,LargeCap,NASDAQ
+PTC,Parametric Tech,기술,LargeCap,NASDAQ
+ERIE,Erie Indemnity Co,금융,LargeCap,NASDAQ
+BIIB,Biogen,헬스케어,LargeCap,NASDAQ
+GRAB,그랩,기술,LargeCap,NASDAQ
+PODD,Insulet Corp,헬스케어,LargeCap,NASDAQ
+PFG,Principal Financial,금융,LargeCap,NASDAQ
+Z,Zillow C,부동산,LargeCap,NASDAQ
+ZG,Zillow Group Inc,부동산,LargeCap,NASDAQ
+DUOL,Duolingo,기술,LargeCap,NASDAQ
+WMG,Warner Music,소비순환재,LargeCap,NASDAQ
+NTNX,Nutanix,기술,LargeCap,NASDAQ
+RPRX,Royalty Pharma,헬스케어,LargeCap,NASDAQ
+TER,테라다인,기술,LargeCap,NASDAQ
+TRMB,Trimble,기술,LargeCap,NASDAQ
+NWSA,뉴스 코퍼레이션,소비순환재,LargeCap,NASDAQ
+NWS,21세기 폭스,소비순환재,LargeCap,NASDAQ
+FFIV,F5 네트웍스,기술,LargeCap,NASDAQ
+SOFI,SoFi Technologies,금융,LargeCap,NASDAQ
+AUR,Aurora Innovation,기술,LargeCap,NASDAQ
+SFM,Sprouts Farmers,필수소비재,LargeCap,NASDAQ
+DOCU,도큐사인,기술,LargeCap,NASDAQ
+COO,쿠퍼 컴퍼니스,헬스케어,LargeCap,NASDAQ
+FSLR,퍼스트 솔라,에너지,LargeCap,NASDAQ
+JBHT,J.B 헌트트랜스포트서비스,산업,LargeCap,NASDAQ
+GEN,Gen Digital,기술,LargeCap,NASDAQ
+ULTA,울타 뷰티,소비순환재,LargeCap,NASDAQ
+FUTU,푸투 홀딩스,기술,LargeCap,NASDAQ
+AZPN,Aspen Technology Inc,기술,LargeCap,NASDAQ
+UTHR,유나이티드 테라퓨틱스,헬스케어,LargeCap,NASDAQ
+OKTA,옥타,기술,LargeCap,NASDAQ
+ZBRA,Zebra Tech,기술,LargeCap,NASDAQ
+FLEX,Flex,기술,LargeCap,NASDAQ
+ENTG,Entegris Inc,기술,LargeCap,NASDAQ
+CASY,케이시제너럴스토어,필수소비재,LargeCap,NASDAQ
+ILMN,일루미나,헬스케어,LargeCap,NASDAQ
+SYM,Symbotic,산업,LargeCap,NASDAQ
+MNDY,Monday.Com,기술,LargeCap,NASDAQ
+LNT,얼라이언트 에너지,유틸리티,LargeCap,NASDAQ
+ARCC,아레스 캐피털,금융,LargeCap,NASDAQ
+ALGN,얼라인테크놀로지,헬스케어,LargeCap,NASDAQ
+DLTR,달러트리,소비순환재,LargeCap,NASDAQ
+ICLR,ICON PLC,헬스케어,LargeCap,NASDAQ
+EVRG,에버지,유틸리티,LargeCap,NASDAQ
+AKAM,아카마이,기술,LargeCap,NASDAQ
+BSY,벤틀리 시스템즈,기술,LargeCap,NASDAQ
+MBLY,Mobileye Global,기술,LargeCap,NASDAQ
+ROKU,로쿠,소비순환재,LargeCap,NASDAQ
+RIVN,리비안,소비순환재,LargeCap,NASDAQ
+ALAB,Astera Labs,기술,LargeCap,NASDAQ
+LINE,Lineage,부동산,LargeCap,NASDAQ
+HOLX,홀로직,헬스케어,LargeCap,NASDAQ
+INSM,Insmed,헬스케어,LargeCap,NASDAQ
+TEM,Tempus AI,헬스케어,LargeCap,NASDAQ
+RKLB,Rocket Lab USA,산업,LargeCap,NASDAQ
+MORN,Morningstar,산업,LargeCap,NASDAQ
+GLPI,Gaming & Leisure Properties,부동산,LargeCap,NASDAQ
+SAIL,Sailpoint,,LargeCap,NASDAQ
+EWBC,East West Bancorp,금융,LargeCap,NASDAQ
+INCY,인사이트 코퍼레이션,헬스케어,LargeCap,NASDAQ
+ITCI,Intracellular Th,헬스케어,LargeCap,NASDAQ
+LAMR,라마 어드벤티징 컴퍼니,부동산,LargeCap,NASDAQ
+ESLT,Elbit Systems,산업,LargeCap,NASDAQ
+POOL,Pool Corp,소비순환재,LargeCap,NASDAQ
+CART,Maplebear,기술,LargeCap,NASDAQ
+SAIA,Saia,산업,LargeCap,NASDAQ
+VTRS,비아트리스,헬스케어,LargeCap,NASDAQ
+PPC,Pilgrims Pride,필수소비재,LargeCap,NASDAQ
+MRNA,모더나,헬스케어,LargeCap,NASDAQ
+WIX,Wix.Com Ltd,기술,LargeCap,NASDAQ
+BMRN,바이오마린,헬스케어,LargeCap,NASDAQ
+NDSN,Nordson Corp,산업,LargeCap,NASDAQ
+COKE,Coca-Cola Bott,필수소비재,LargeCap,NASDAQ
+JKHY,잭 헨리 앤 어소시에이츠,기술,LargeCap,NASDAQ
+PCTY,Paylocity Holdng,기술,LargeCap,NASDAQ
+LECO,Lincoln Electric Holdings Inc,산업,LargeCap,NASDAQ
+CRDO,Credo Technology Holding,기술,LargeCap,NASDAQ
+CHRW,C.H.로빈슨,산업,LargeCap,NASDAQ
+LBRDK,Liberty Broadband Srs C,소비순환재,LargeCap,NASDAQ
+LBRDA,Liberty Broadband Srs A,소비순환재,LargeCap,NASDAQ
+FTAI,FTAI Aviation,금융,LargeCap,NASDAQ
+MANH,Manhattan Ass,기술,LargeCap,NASDAQ
+NBIX,뉴로크린 바이오사이언시스,헬스케어,LargeCap,NASDAQ
+HST,호스트 호텔 & 리조트,부동산,LargeCap,NASDAQ
+TXRH,Texas Roadhouse,소비순환재,LargeCap,NASDAQ
+CFLT,Confluent,기술,LargeCap,NASDAQ
+MMYT,MakeMyTrip Ltd,소비순환재,LargeCap,NASDAQ
+TLN,Talen Energy,유틸리티,LargeCap,NASDAQ
+WWD,Woodward,산업,LargeCap,NASDAQ
+GTLB,Gitlab,기술,LargeCap,NASDAQ
+SWKS,스카이웍스 솔루션즈,기술,LargeCap,NASDAQ
+AAL,아메리칸항공그룹,산업,LargeCap,NASDAQ
+GLBE,글로벌 E 온라인,기술,LargeCap,NASDAQ
+NBIS,Nebius NV,산업,LargeCap,NASDAQ
+PCVX,백스사이트,헬스케어,LargeCap,NASDAQ
+SEIC,SEI Investments,금융,LargeCap,NASDAQ
+TECH,Bio-Techne,헬스케어,LargeCap,NASDAQ
+MEDP,Medpace Holdings,헬스케어,LargeCap,NASDAQ
+SRPT,사렙타 테라퓨틱스,헬스케어,LargeCap,NASDAQ
+LKQ,LKQ,소비순환재,LargeCap,NASDAQ
+DBX,Dropbox,기술,LargeCap,NASDAQ
+AAPL,애플,기술,MegaCap,NASDAQ
+NVDA,엔비디아,기술,MegaCap,NASDAQ
+MSFT,마이크로소프트,기술,MegaCap,NASDAQ
+AMZN,아마존닷컴,소비순환재,MegaCap,NASDAQ
+GOOG,알파벳 C,기술,MegaCap,NASDAQ
+GOOGL,알파벳 A,기술,MegaCap,NASDAQ
+META,메타,기술,MegaCap,NASDAQ
+TSLA,테슬라,소비순환재,MegaCap,NASDAQ
+AVGO,브로드컴,기술,MegaCap,NASDAQ
+COST,코스트코,소비순환재,MegaCap,NASDAQ
+NFLX,넷플릭스,기술,MegaCap,NASDAQ
+TMUS,티모바일,기술,MegaCap,NASDAQ
+PLTR,팔란티어 테크,기술,MegaCap,NASDAQ
+CSCO,시스코 시스템즈,기술,MegaCap,NASDAQ
+ISRG,인튜이티브 서지컬,헬스케어,MegaCap,NASDAQ
+ADBE,어도비 시스템즈,기술,MegaCap,NASDAQ
