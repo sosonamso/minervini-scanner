@@ -497,7 +497,9 @@ if __name__=="__main__":
 
             score=calc_score(rs,pat["vr"],pat["cd"],pat["hd"])
             grade=score_grade(score)
-            signal=pat["vs"] and rs>0
+            # 완전 상승장: RS>0 필수 / 부분 상승장: RS 필터 완화
+            rs_ok = rs>0 if "완전" in market_str else rs>-20
+            signal=pat["vs"] and rs_ok
 
             all_scores.append({
                 "ticker":ticker,"name":name,"market":mkt,
