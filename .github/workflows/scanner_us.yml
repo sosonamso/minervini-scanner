@@ -34,5 +34,5 @@ jobs:
           git commit --allow-empty -m "scanner_us: $(date +'%Y-%m-%d') 스캔 결과"
           git pull --rebase origin main
           git push
-```
+
 
