@@ -258,6 +258,7 @@ if __name__=="__main__":
             res.append({
                 "sig_date":sig_str,"ticker":ticker,
                 "cap":info["cap"],"sector":info["sector"],
+                "exchange":info.get("exchange","NYSE"),
                 "cur":pat["cur"],"pivot":pat["pivot"],
                 "cd":pat["cd"],"hd":pat["hd"],
                 "cdays":pat["cdays"],"hdays":pat["hdays"],
@@ -285,6 +286,7 @@ if __name__=="__main__":
         rows.append({
             "date":r["sig_date"],"ticker":r["ticker"],
             "cap":r["cap"],"sector":r["sector"],
+            "exchange":r.get("exchange","NYSE"),
             "entry":r["cur"],"pivot":r["pivot"],
             "cup_depth":r["cd"],"handle_depth":r["hd"],
             "cup_days":r["cdays"],"handle_days":r["hdays"],
