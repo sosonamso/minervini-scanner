@@ -1,8 +1,8 @@
 """
-미너비니 컵&핸들 스캐너 - 미국 주식 (Massive/Polygon API 버전)
-- 대상: S&P1500 (S&P500 + MidCap400 + SmallCap600)
-- 데이터: Massive.com (구 Polygon.io) REST API
-- 결과: 텔레그램 전송 (한국어)
+미너비니 컵&핸들 스캐너 - 미국 주식 통합버전
+- 대상: tickers_us.csv (2800개+)
+- 데이터: yfinance
+- 결과: 텔레그램 전송 + CSV 저장
 """
 import os,time,warnings,requests
 import numpy as np,pandas as pd
@@ -11,32 +11,9 @@ warnings.filterwarnings("ignore")
 
 TOK=os.environ.get("TELEGRAM_TOKEN","")
 CID=os.environ.get("TELEGRAM_CHAT_ID","")
-MASSIVE=os.environ.get("MASSIVE_TOKEN","")
 SCAN_DAYS=7
 HISTORY_DAYS=420
-
-SP500 = [
-    "MMM","AOS","ABT","ABBV","ACN","ADBE","AMD","AES","AFL","A","APD","ABNB","AKAM","ALB","ARE","ALGN","ALLE","LNT","ALL","GOOGL","GOOG","MO","AMZN","AMCR","AEE","AEP","AXP","AIG","AMT","AWK","AMP","AME","AMGN","APH","ADI","ANSS","AON","APA","AAPL","AMAT","APTV","ACGL","ADM","ANET","AJG","AIZ","T","ATO","ADSK","ADP","AZO","AVB","AVY","AXON","BKR","BALL","BAC","BK","BBWI","BAX","BDX","WRB","BBY","TECH","BIIB","BLK","BX","BA","BSX","BMY","AVGO","BR","BRO","BLDR","BG","CDNS","CZR","CPT","CPB","COF","CAH","KMX","CCL","CARR","CAT","CBOE","CBRE","CDW","CE","COR","CNC","CNX","CF","CRL","SCHW","CHTR","CVX","CMG","CB","CHD","CI","CINF","CTAS","CSCO","C","CFG","CLX","CME","CMS","KO","CTSH","CL","CMCSA","CAG","COP","ED","STZ","CEG","COO","CPRT","GLW","CPAY","CTVA","CSGP","COST","CTRA","CRWD","CCI","CSX","CMI","CVS","DHR","DRI","DVA","DAY","DE","DAL","XRAY","DVN","DXCM","FANG","DLR","DFS","DG","DLTR","D","DPZ","DOV","DOW","DHI","DTE","DUK","DD","EMN","ETN","EBAY","ECL","EIX","EW","EA","ELV","EMR","ENPH","ETR","EOG","EPAM","EQT","EFX","EQIX","EQR","ESS","EL","ETSY","EG","EXPE","EXPD","EXR","XOM","FFIV","FDS","FICO","FAST","FRT","FDX","FIS","FITB","FSLR","FE","FI","FMC","F","FTNT","FTV","FOXA","FOX","BEN","FCX","GRMN","IT","GE","GEHC","GEV","GEN","GNRC","GD","GIS","GM","GPC","GILD","GS","HAL","HIG","HAS","HCA","DOC","HSIC","HSY","HES","HPE","HLT","HOLX","HD","HON","HRL","HST","HWM","HPQ","HUBB","HUM","HBAN","HII","IBM","IEX","IDXX","ITW","INCY","IR","PODD","INTC","ICE","IFF","IP","IPG","INTU","ISRG","IVZ","INVH","IQV","IRM","JBHT","JBL","JKHY","J","JNJ","JCI","JPM","JNPR","K","KVUE","KDP","KEY","KEYS","KMB","KIM","KMI","KLAC","KHC","KR","LHX","LH","LRCX","LW","LVS","LDOS","LEN","LLY","LIN","LYV","LKQ","LMT","L","LOW","LULU","LYB","MTB","MRO","MPC","MKTX","MAR","MMC","MLM","MAS","MA","MTCH","MKC","MCD","MCK","MDT","MRK","META","MET","MTD","MGM","MCHP","MU","MSFT","MAA","MRNA","MHK","MOH","TAP","MDLZ","MPWR","MNST","MCO","MS","MOS","MSI","MSCI","NDAQ","NTAP","NFLX","NEM","NWSA","NWS","NEE","NKE","NI","NDSN","NSC","NTRS","NOC","NCLH","NRG","NUE","NVDA","NVR","NXPI","ORLY","OXY","ODFL","OMC","ON","OKE","ORCL","OTIS","PCAR","PKG","PLTR","PANW","PARA","PH","PAYX","PAYC","PYPL","PNR","PEP","PFE","PCG","PM","PSX","PNW","PNC","POOL","PPG","PPL","PFG","PG","PGR","PLD","PRU","PEG","PTC","PSA","PHM","QRVO","PWR","QCOM","DGX","RL","RJF","RTX","O","REG","REGN","RF","RSG","RMD","RVTY","ROK","ROL","ROP","ROST","RCL","SPGI","CRM","SBAC","SLB","STX","SRE","NOW","SHW","SPG","SWKS","SJM","SW","SNA","SOLV","SO","LUV","SWK","SBUX","STT","STLD","STE","SYK","SMCI","SYF","SNPS","SYY","TMUS","TROW","TTWO","TPR","TRGP","TGT","TEL","TDY","TFX","TER","TSLA","TXN","TXT","TMO","TJX","TSCO","TT","TDG","TRV","TRMB","TFC","TYL","TSN","USB","UBER","UDR","ULTA","UNP","UAL","UPS","URI","UNH","UHS","VLO","VTR","VLTO","VRSN","VRSK","VZ","VRTX","VTRS","VICI","V","VST","VMC","WAB","WBA","WMT","DIS","WBD","WM","WAT","WEC","WFC","WELL","WST","WDC","WHR","WMB","WTW","GWW","WYNN","XEL","XYL","YUM","ZBRA","ZBH","ZTS"
-]
-SP400 = [
-    "AAN","ACC","ACHC","ACM","ACIW","ADNT","AEO","AGCO","AIT","AKR","AL","ALG","ALEX","ALGT","ALKS","ALRM","AM","AMG","AMKR","AMPH","AMWD","AN","ANF","AOUT","APAM","APOG","APPF","ARCB","AROC","ARW","ASB","ASGN","ASH","ASTE","ATMU","ATR","AUB","AVAV","AVT","AWI","AX","AYI","AZTA","B","BC","BCO","BCPC","BDC","BKH","BKU","BL","BLKB","BMI","BOOT","BOX","BRC","BRX","BURL","BWXT","BXC","CABO","CACI","CALM","CALX","CARS","CASH","CATY","CBT","CBZ","CC","CCOI","CDP","CECO","CENX","CHE","CHEF","CHH","CHS","CLB","CLF","CMC","CMCO","CNDT","CNO","COHU","COLB","COLM","CORT","CPRI","CR","CRUS","CRVL","CSGS","CSWI","CUZ","CVBF","CW","CWT","DAR","DBD","DCO","DEN","DFIN","DINO","DKS","DLX","DNOW","DORM","DRH","DSP","DV","DXC","DXPE","EEFT","EFC","EGP","EHC","ELAN","ELF","EME","EPC","ESE","ESNT","ESTE","EVTC","EXLS","EXPO","EXTN","EYE","FAF","FBIN","FBP","FCFS","FELE","FHB","FHN","FLO","FLR","FMC","FN","FORM","FR","FRME","FRPT","FSS","FUL","G","GATX","GFF","GGG","GHC","GKOS","GMS","GNRC","GOLF","GRBK","GRC","GTES","GTLS","HAFC","HBI","HCSG","HHH","HIBB","HNI","HOMB","HOPE","HP","HRB","HSII","HTH","HTLD","HUBG","HWC","IBP","ICFI","IDCC","IDA","INGR","ITRI","JACK","JBT","JELD","JJSF","JLL","KAI","KALU","KBH","KBR","KFY","KMPR","KNX","KRC","KRG","KSS","KTOS","KW","LAUR","LBRT","LEA","LECO","LII","LM","LNC","LNW","LOPE","LPX","LSTR","LTC","LXP","LZB","MANT","MATX","MCY","MD","MDU","MED","MEDP","MGA","MGY","MIDD","MMS","MP","MRC","MRCY","MSA","MSGS","MTG","MTSI","MUR","NAVI","NBR","NEO","NHC","NMRK","NOVA","NRC","NSA","NVT","NVTS","NX","NXST","OFG","OGE","OGS","OHI","OII","OIS","OLN","ONTO","OSCR","OUT","OZK","PAAS","PB","PCAR","PCH","PENN","PFSI","PJT","POR","POWL","PRG","PRGO","PRIM","PRK","PRKS","PSN","PTCT","PTEN","PTVE","PVH","QDEL","QGEN","QTWO","RCM","RDN","RHP","RNG","RNR","ROG","ROAD","RPM","RRX","RS","RUSHA","RXO","RYAM","SAFE","SANM","SBCF","SCI","SEIC","SF","SFM","SHAK","SHO","SIG","SITE","SIX","SKX","SLGN","SM","SMAR","SMPL","SNV","SPSC","SRC","SRI","SSB","SSNC","STAA","STC","STER","STL","STNE","SUPN","SWX","SYBT","SYNA","TALO","TBI","TBBK","TDOC","TDS","TEX","TGI","THO","TILE","TNET","TNL","TOL","TOWN","TPX","TREX","TRNO","TRMK","TRUP","TTGT","TTMI","TWI","TXRH","UE","UFPI","UHAL","UNFI","UNVR","UVV","VAC","VCEL","VCYT","VRTS","VSAT","VVV","WAFD","WASH","WD","WDFC","WEX","WINA","WMS","WOR","WPC","WPM","WSFS","WTS","WU","XPO"
-]
-SP600 = [
-    "ACAD","ACLS","ADMA","ADUS","AEHR","AHCO","AIRC","ALCO","ALGT","ALRM","AMBC","AMEH","AMKR","AMMO","AMSC","ANF","ANGO","AORT","AOSL","APAM","APPN","APLE","ARKO","ARLO","ARRY","ARWR","ASLE","ASND","ASPS","ASRT","ASTE","ATEN","ATNI","ATSG","AUBN","AUPH","AVNW","AWI","AXNX","AXSM","BAND","BANF","BANR","BCEL","BCPC","BFS","BGFV","BKD","BLDR","BLFS","BLNK","BMTC","BNL","BOOT","BPOP","BRKL","BRSP","BSIG","BSRR","BSVN","BURL","BUSE","BZH","CACC","CAKE","CALM","CARA","CARE","CARS","CASH","CASY","CATO","CBAN","CBRL","CBSH","CC","CCNE","CDMO","CDNA","CDRE","CEIX","CENT","CENX","CEVA","CFFI","CFFN","CHCO","CHDN","CHEF","CHUY","CIVB","CLAR","CLB","CLBK","CLDT","CLNE","CLPR","CMAX","CMCO","COHU","COLM","COOP","COUR","CPRI","CPRX","CRAI","CRDX","CRK","CRSP","CRVL","CSGS","CSII","CSTR","CTBI","CTLP","CTMX","CTRE","CTRN","CUBI","CULP","CUTR","CW","CWCO","DAKT","DAVA","DCOM","DFIN","DGII","DH","DHIL","DINO","DIOD","DK","DKL","DLX","DNOW","DORM","DRH","DRVN","DSP","DXC","DXPE","DXYN","EAF","EARN","EBC","EBMT","EFC","EGP","EIG","ELAN","ELY","EPC","EPRT","ESS","ESTE","EVTC","EXLS","EXPI","EXTN","EYE","EZPW","FARO","FBNC","FBRT","FCFS","FELE","FFBC","FFIN","FN","FORM","FOUR","FRAF","FRME","FULT","GBX","GCI","GFF","GHC","GKOS","GMS","GOLF","GOOD","GPX","GRPN","GSBC","GTLS","GWRE","HAFC","HAIN","HASI","HBI","HBT","HCSG","HFWA","HIBB","HIMS","HLNE","HMN","HNI","HOFT","HOMB","HQY","HRMY","HSII","HTH","HTLD","HTLF","HUBG","HWC","HZO","IART","IBCP","IBOC","IBTX","IDCC","IDEX","IESC","IIIN","IMKTA","IMXI","INDB","INFU","INGN","INMD","INSP","INSW","IRBT","IRWD","ISBA","ITRI","JACK","JBLU","JBSS","JELD","JOUT","JWN","KAI","KALU","KFY","KMPR","KNSA","KREF","KRNT","KSS","KTOS","KW","LADR","LAUR","LCNB","LGIH","LGND","LKFN","LMB","LNTH","LOPE","LSTR","LWAY","LXP","MAIN","MATV","MBIN","MBUU","MCBS","MCF","MCRI","MDGL","MED","MEDP","MEI","MERC","MFIN","MGY","MKSI","MLAB","MLKN","MMI","MMSI","MNRO","MOD","MOFG","MRC","MRCY","MSEX","MSTR","MTG","MTSI","MTRN","MTRX","MVBF","MYR","MYRG","NATH","NBTB","NCOM","NCNO","NEO","NEOG","NFBK","NHC","NMIH","NNBR","NPO","NRC","NRIM","NRP","NTST","NVT","NVTS","NWE","NXST","OBK","OCFC","OCSL","OFG","OGE","OII","OIS","ONTO","OPBK","OPCH","OSPN","OTTR","OUT","OXM","PAHC","PATK","PBF","PBPB","PDCO","PEGA","PENN","PFBC","PFIS","PFSI","PGNY","PHR","PKST","PLBC","PLMR","PLNT","PNM","POOL","POWL","PPBI","PRAA","PRDO","PRGO","PRIM","PRK","PRKS","PSN","PTCT","PTEN","PTLO","PTVE","PUMP","QCRH","QDEL","QGEN","QTWO","RBC","RCKT","RCKY","RCM","RDNT","RES","REVG","RGEN","RGP","RICK","RILY","RMBS","RMNI","RMR","RPRX","RRR","RUSHA","RWT","RYAM","SAFE","SANM","SASR","SBCF","SBSI","SCVL","SEIC","SF","SFST","SHAK","SHBI","SHO","SIG","SIGI","SIT","SITM","SKX","SLG","SLGN","SLVM","SM","SMBC","SNCY","SNDR","SNEX","SOFI","SPFI","SPOK","SRC","SRI","SSBK","SSRM","STBA","STLD","STRA","SUPN","SWX","SYBT","SYNA","TALO","TBNK","TCBK","TCMD","TEX","TFSL","TGI","TILE","TNDM","TOWN","TPIC","TREX","TRNO","TRMK","TROW","TRUP","TTGT","TTMI","TWI","TXRH","UBCP","UCBI","UFPI","ULCC","UNFI","UNVR","UPST","USPH","UVV","VBTX","VCEL","VCYT","VECO","VICR","VIRT","VLGEA","VRTS","VSAT","VSEC","WAFD","WASH","WD","WDFC","WERN","WFRD","WINA","WMS","WOOF","WOR","WPC","WSFS","WTS","XRX"
-]
-
-def send_file(filepath, caption=""):
-    if TOK:
-        try:
-            with open(filepath,"rb") as f:
-                requests.post(
-                    f"https://api.telegram.org/bot{TOK}/sendDocument",
-                    data={"chat_id":CID,"caption":caption},
-                    files={"document":f},
-                    timeout=30
-                )
-        except Exception as e:
-            print(f"파일 전송 실패: {e}")
+BATCH_SIZE=50
 
 def send(text):
     print(text)
@@ -45,53 +22,112 @@ def send(text):
                           data={"chat_id":CID,"text":text},timeout=10)
         except:pass
 
+def send_file(filepath,caption=""):
+    if TOK:
+        try:
+            with open(filepath,"rb") as f:
+                requests.post(f"https://api.telegram.org/bot{TOK}/sendDocument",
+                    data={"chat_id":CID,"caption":caption},
+                    files={"document":f},timeout=30)
+        except:pass
+
 def get_recent_dates(n=7):
-    dates=[]
-    d=datetime.today()
+    dates=[];d=datetime.today()
     while len(dates)<n:
-        if d.weekday()<5:
-            dates.append(d.strftime("%Y-%m-%d"))
+        if d.weekday()<5:dates.append(d.strftime("%Y-%m-%d"))
         d-=timedelta(days=1)
         if len(dates)>=n*3:break
     return dates[:n]
 
-# ─────────────────────────────────────
-# Massive(Polygon) API
-# ─────────────────────────────────────
-def get_massive_ohlcv(ticker, start, end):
-    """Massive REST API로 일별 OHLCV 수집"""
-    url=f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/day/{start}/{end}"
-    params={"adjusted":"true","sort":"asc","limit":50000,"apiKey":MASSIVE}
-    for attempt in range(2):
-        try:
-            resp=requests.get(url,params=params,timeout=30)
-            if resp.status_code==429:
-                time.sleep(12)
-                continue
-            if resp.status_code!=200:return None
-            data=resp.json()
-            results=data.get("results",[])
-            if not results or len(results)<100:return None
-            df=pd.DataFrame(results)
-            df["date"]=pd.to_datetime(df["t"],unit="ms").dt.tz_localize("UTC").dt.tz_convert("America/New_York").dt.normalize().dt.tz_localize(None)
-            df=df.set_index("date").sort_index()
-            df=df.rename(columns={"c":"Close","v":"Volume"})
-            df=df[["Close","Volume"]].astype(float).dropna()
-            if len(df)>=100:return df
-        except Exception as e:
-            time.sleep(3)
-    return None
+def load_tickers():
+    """tickers_us.csv 로드. 없으면 Wikipedia S&P1500 fallback"""
+    try:
+        df=pd.read_csv("tickers_us.csv",encoding="utf-8-sig")
+        tickers={}
+        for _,row in df.iterrows():
+            t=str(row["ticker"]).strip().replace(".","-")
+            if not t or t=="nan" or len(t)>6:continue
+            tickers[t]={
+                "cap":str(row.get("cap","SmallCap")),
+                "sector":str(row.get("sector","기타")),
+                "name":str(row.get("name",t)),
+                "exchange":str(row.get("exchange","NYSE")),
+            }
+        print(f"tickers_us.csv 로드: {len(tickers)}개")
+        return tickers
+    except Exception as e:
+        print(f"tickers_us.csv 로드 실패({e}) → Wikipedia S&P1500 사용")
+        return get_sp1500_fallback()
 
-# ─────────────────────────────────────
-# 미너비니 로직
-# ─────────────────────────────────────
+def get_sp1500_fallback():
+    tickers={}
+    sources=[
+        ("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies","LargeCap",0),
+        ("https://en.wikipedia.org/wiki/List_of_S%26P_400_companies","MidCap",0),
+        ("https://en.wikipedia.org/wiki/List_of_S%26P_600_companies","SmallCap",0),
+    ]
+    for url,cap,tbl_idx in sources:
+        try:
+            tables=pd.read_html(url)
+            df=tables[tbl_idx]
+            tick_col=next((c for c in df.columns if "ticker" in str(c).lower() or "symbol" in str(c).lower()),df.columns[0])
+            sec_col=next((c for c in df.columns if "sector" in str(c).lower() or "gics" in str(c).lower()),None)
+            for _,row in df.iterrows():
+                t=str(row[tick_col]).strip().replace(".","-")
+                if not t or t=="nan" or len(t)>6:continue
+                sec=str(row[sec_col]).strip() if sec_col else "기타"
+                tickers[t]={"cap":cap,"sector":sec,"name":t,"exchange":"NYSE"}
+            print(f"{cap}: {len([k for k,v in tickers.items() if v['cap']==cap])}개")
+            time.sleep(1)
+        except Exception as e:
+            print(f"{cap} 실패: {e}")
+    return tickers
+
+def batch_download(ticker_list,start,end):
+    result={}
+    for i in range(0,len(ticker_list),BATCH_SIZE):
+        batch=ticker_list[i:i+BATCH_SIZE]
+        if i%500==0:print(f"  다운로드 [{i}/{len(ticker_list)}]")
+        for attempt in range(3):
+            try:
+                import yfinance as yf
+                raw=yf.download(" ".join(batch),start=start,end=end,
+                                progress=False,auto_adjust=True,group_by="ticker")
+                if raw.empty:break
+                if isinstance(raw.columns,pd.MultiIndex):
+                    for t in batch:
+                        try:
+                            df=pd.DataFrame({
+                                "Close":pd.to_numeric(raw[t]["Close"],errors="coerce"),
+                                "Volume":pd.to_numeric(raw[t]["Volume"],errors="coerce")
+                            }).dropna()
+                            if len(df)>=100:result[t]=df
+                        except:pass
+                else:
+                    if len(batch)==1:
+                        t=batch[0]
+                        try:
+                            df=pd.DataFrame({
+                                "Close":pd.to_numeric(raw["Close"],errors="coerce"),
+                                "Volume":pd.to_numeric(raw["Volume"],errors="coerce")
+                            }).dropna()
+                            if len(df)>=100:result[t]=df
+                        except:pass
+                break
+            except Exception as e:
+                print(f"배치 오류(시도{attempt+1}): {e}")
+                time.sleep(5*(attempt+1))
+        time.sleep(0.5)
+    return result
+
 def check_market(mkt_df):
-    if mkt_df is None or len(mkt_df)<200:return True
+    if mkt_df is None or len(mkt_df)<200:return True,"데이터부족"
     c=mkt_df["Close"]
     ma200=c.rolling(200).mean()
     cur=float(c.iloc[-1]);ma=float(ma200.iloc[-1])
-    if pd.isna(ma):return True
-    return cur>ma
+    if pd.isna(ma):return True,"데이터부족"
+    if cur>ma:return True,"상승장(S&P500>200MA)"
+    return False,"하락장(S&P500<200MA)"
 
 def check_trend(df):
     if len(df)<200:return False
@@ -131,39 +167,26 @@ def detect(df):
                  "pivot":round(float(rh),2),"cur":round(float(cur),2),
                  "vr":round(vr,2),"vs":vr>=1.40}
 
-def calc_rs(df,mkt):
+def calc_rs(df,mkt_df):
     def p(d,n):return float(d["Close"].iloc[-1]/d["Close"].iloc[-n]-1)if len(d)>=n else 0.0
     s=sum([0.4,0.2,0.2,0.2][i]*p(df,[63,126,189,252][i])for i in range(4))
-    m=sum([0.4,0.2,0.2,0.2][i]*p(mkt,[63,126,189,252][i])for i in range(4))
+    m=sum([0.4,0.2,0.2,0.2][i]*p(mkt_df,[63,126,189,252][i])for i in range(4))
     return round((s-m)*100,1)
 
 def calc_score(rs,vr,cd,hd):
-    if rs>=25:s_rs=100
-    elif rs>=15:s_rs=80
-    elif rs>=10:s_rs=60
-    elif rs>=5:s_rs=40
-    else:s_rs=20
-    if vr>=3.0:s_vr=100
-    elif vr>=2.5:s_vr=85
-    elif vr>=2.0:s_vr=70
-    elif vr>=1.7:s_vr=55
-    else:s_vr=40
-    if 20<=cd<=35:s_cd=100
-    elif 15<=cd<20 or 35<cd<=40:s_cd=75
-    elif 40<cd<=50:s_cd=50
-    else:s_cd=30
-    if 5<=hd<=10:s_hd=100
-    elif 10<hd<=12:s_hd=75
-    elif hd>12:s_hd=50
-    else:s_hd=60
-    return round(s_rs*0.40+s_vr*0.35+s_cd*0.15+s_hd*0.10)
+    s=50
+    s+=min(30,max(-10,rs*0.3))
+    if vr>=3:s+=15
+    elif vr>=2:s+=10
+    elif vr>=1.4:s+=5
+    if 15<=cd<=25:s+=10
+    elif 25<=cd<=35:s+=5
+    if hd<=7:s+=10
+    elif hd<=10:s+=5
+    return min(100,max(0,int(s)))
 
-def score_grade(score):
-    if score>=90:return "S"
-    elif score>=80:return "A"
-    elif score>=70:return "B"
-    elif score>=60:return "C"
-    else:return "D"
+def score_grade(s):
+    return "S" if s>=90 else "A" if s>=80 else "B" if s>=70 else "C" if s>=60 else "D"
 
 def get_past_signals(df,exclude_ts):
     results=[]
@@ -185,28 +208,24 @@ def get_past_signals(df,exclude_ts):
 
 def format_past(history):
     if not history:return ""
-    lines=[]
     wins=sum(1 for h in history if h["r20"] is not None and h["r20"]>0)
     total=sum(1 for h in history if h["r20"] is not None)
-    for h in history[-3:]:
-        r5_s=f"{h['r5']:+.1f}%"if h["r5"] is not None else"-"
-        r20_s=f"{h['r20']:+.1f}%"if h["r20"] is not None else"미완"
-        ok="OK"if(h["r20"] is not None and h["r20"]>0)else("..."if h["r20"] is None else"XX")
-        vol="VOL"if h["vs"]else""
-        lines.append(f"  {h['date']}: 5일{r5_s}/20일{r20_s} {ok}{vol}")
-    result="[과거이력]\n"+"\n".join(lines)
-    if total>0:
-        wr=round(wins/total*100)
-        result+=f"\n  -> 과거{total}회 승률{wr}%"
-    return result
+    lines=[]
+    for h in history[-4:]:
+        r5s=f"+{h['r5']}%" if h['r5'] and h['r5']>0 else f"{h['r5']}%"
+        r20s=f"+{h['r20']}%" if h['r20'] and h['r20']>0 else f"{h['r20']}%"
+        tag="OK" if h['r20'] and h['r20']>0 else "NG"
+        if h['vs']:tag+="VOL"
+        lines.append(f"  {h['date']}: 5일{r5s}/20일{r20s} {tag}")
+    if total>0:lines.append(f"  -> 과거{len(history)}회 승률{round(wins/total*100)}%")
+    return "\n".join(lines)
 
-# ─────────────────────────────────────
-# 메인
-# ─────────────────────────────────────
-if __name__=="__main__":
-    if not MASSIVE:
-        send("MASSIVE_TOKEN이 없어요! GitHub Secrets 확인해주세요.")
-        exit(1)
+def cap_label(cap):
+    m={"MegaCap":"초대형","LargeCap":"대형","MidCap":"중형","SmallCap":"소형"}
+    return m.get(cap,cap)
+
+def main():
+    import yfinance as yf
 
     end=datetime.today()
     start=(end-timedelta(days=HISTORY_DAYS)).strftime("%Y-%m-%d")
@@ -215,48 +234,36 @@ if __name__=="__main__":
     data_cutoff=pd.Timestamp(sig_dates[0])-timedelta(days=7)
     print(f"탐색날짜: {sig_dates}")
 
-    # SPY로 시장 상태 체크
-    mkt_df=get_massive_ohlcv("SPY",start,end_str)
-    market_ok=check_market(mkt_df)
-    market_str="상승장(S&P500>200MA)"if market_ok else"하락장(S&P500<200MA)"
+    # SPY 지수
+    try:
+        mkt_raw=yf.download("SPY",start=start,end=end_str,progress=False,auto_adjust=True)
+        if isinstance(mkt_raw.columns,pd.MultiIndex):mkt_raw.columns=mkt_raw.columns.get_level_values(0)
+        mkt_df=pd.DataFrame({"Close":pd.to_numeric(mkt_raw["Close"],errors="coerce")}).dropna()
+        print(f"SPY {len(mkt_df)}일치 수신")
+    except:mkt_df=None
 
-    all_tickers=list(dict.fromkeys(SP500+SP400+SP600))
-    cap_map={t:"S&P500" for t in SP500}
-    cap_map.update({t:"MidCap400" for t in SP400 if t not in cap_map})
-    cap_map.update({t:"SmallCap600" for t in SP600 if t not in cap_map})
+    market_ok,market_str=check_market(mkt_df)
 
-    send(f"🇺🇸 미국 스캐너 시작 (Massive)\n최근 {SCAN_DAYS}거래일 | {market_str}\nS&P1500 {len(all_tickers)}개 종목 수집 중...")
+    # 티커 로드
+    all_tickers=load_tickers()
+    send(f"🇺🇸 미국 스캐너 시작\n최근 {SCAN_DAYS}거래일 | {market_str}\n{len(all_tickers)}개 종목 다운로드 중...\n(약 2~3시간 소요)")
     if not market_ok:
-        send("S&P500 200MA 하방 - 시그널 신뢰도 낮음, 주의!")
+        send("⚠️ S&P500 200MA 하방 - 시그널 신뢰도 낮음!")
 
-    # 데이터 수집
-    valid_data={};data_ok=0;data_old=0;last_dates=[]
-    for i,ticker in enumerate(all_tickers):
-        if i%100==0:print(f"[{i}/{len(all_tickers)}] 수신:{data_ok}")
-        df=get_massive_ohlcv(ticker,start,end_str)
-        if df is None:continue
-        last_date=df.index[-1]
-        if last_date<data_cutoff:
-            data_old+=1
-            continue
-        valid_data[ticker]=df
-        data_ok+=1
-        last_dates.append(last_date)
-        time.sleep(0.05)  # Massive Starter - 무제한이지만 여유있게
+    # 배치 다운로드
+    all_data=batch_download(list(all_tickers.keys()),start,end_str)
 
-    if last_dates:
-        last_dates.sort()
-        median_date=last_dates[len(last_dates)//2].strftime("%Y-%m-%d")
-        date_stat=f"데이터 기준일: {median_date}(중앙)"
-    else:
-        date_stat="데이터 기준일: 없음"
-
-    send(f"다운로드 완료\n수신: {data_ok}/{len(all_tickers)}개\n{date_stat}\n패턴 분석 시작...")
+    # 유효 데이터 필터
+    valid_data={}
+    for ticker,df in all_data.items():
+        if df.index[-1]>=data_cutoff:
+            valid_data[ticker]=df
+    send(f"다운로드 완료: {len(valid_data)}/{len(all_tickers)}개 유효\n패턴 분석 시작...")
 
     # 패턴 분석
     res=[];trend_pass=0
-    for i,ticker in enumerate(all_tickers):
-        if i%200==0:print(f"[{i}/{len(all_tickers)}] 트렌드:{trend_pass} 발견:{len(res)}")
+    for i,(ticker,info) in enumerate(all_tickers.items()):
+        if i%500==0:print(f"[{i}/{len(all_tickers)}] 트렌드:{trend_pass} 발견:{len(res)}")
         df=valid_data.get(ticker)
         if df is None:continue
         for sig_str in sig_dates:
@@ -276,64 +283,69 @@ if __name__=="__main__":
             history=get_past_signals(df,sig_ts)
             res.append({
                 "sig_date":sig_str,"ticker":ticker,
-                "cap":cap_map.get(ticker,"기타"),
+                "cap":info["cap"],"sector":info["sector"],"name":info.get("name",ticker),
                 "cur":pat["cur"],"pivot":pat["pivot"],
                 "cd":pat["cd"],"hd":pat["hd"],
                 "cdays":pat["cdays"],"hdays":pat["hdays"],
                 "vr":pat["vr"],"vs":pat["vs"],
-                "rs":rs,"score":score,"grade":grade,
-                "history":history,
+                "rs":rs,"score":score,"grade":grade,"history":history,
             })
             break
 
-    res.sort(key=lambda x:(x["sig_date"],x["score"],x["rs"]),reverse=True)
+    res.sort(key=lambda x:(x["sig_date"],x["rs"]),reverse=True)
     seen=set();deduped=[]
     for r in res:
         if r["ticker"] not in seen:
             seen.add(r["ticker"]);deduped.append(r)
     res=deduped
     print(f"완료: {len(res)}개 발견")
+    send(f"스캔 완료\n유효 데이터: {len(valid_data)}/{len(all_tickers)}개\n트렌드 통과: {trend_pass}개\n패턴+거래량+RS: {len(res)}개")
 
-    # RAW 저장
-    if res:
-        rows=[]
-        for r in res:
-            rows.append({
-                "date":r["sig_date"],"ticker":r["ticker"],
-                "cap":r["cap"],"cur":r["cur"],"pivot":r["pivot"],
-                "cup_depth":r["cd"],"handle_depth":r["hd"],
-                "cup_days":r["cdays"],"handle_days":r["hdays"],
-                "vol_ratio":r["vr"],"rs":r["rs"],
-                "score":r["score"],"grade":r["grade"],
-            })
-        pd.DataFrame(rows).to_csv("scanner_us_raw.csv",index=False,encoding="utf-8-sig")
-        print(f"RAW 저장 완료: scanner_us_raw.csv ({len(rows)}건)")
-        send_file("scanner_us_raw.csv",f"🇺🇸 미장 스캐너 RAW ({len(rows)}건) {datetime.today().strftime('%Y-%m-%d')}")
-
-    send(f"스캔 완료\n데이터 수신: {data_ok}/{len(all_tickers)}개\n{date_stat}\n트렌드 통과: {trend_pass}개\n패턴+거래량+RS: {len(res)}개")
-
-    # 시그널 0개여도 빈 CSV 저장 (자동 커밋용)
     if not res:
-        import pandas as pd
-        pd.DataFrame(columns=['date', 'ticker', 'cap', 'cur', 'pivot', 'cup_depth', 'handle_depth', 'cup_days', 'handle_days', 'vol_ratio', 'rs', 'score', 'grade']).to_csv("scanner_us_raw.csv",index=False,encoding="utf-8-sig")
-        print(f"빈 CSV 저장: scanner_us_raw.csv")
-        send(f"🇺🇸 미국 스캐너\n최근 {SCAN_DAYS}거래일 | {market_str}\n조건 충족 종목 없음\n(거래량급증+RS양수 기준)")
+        send(f"🇺🇸 미국 스캐너\n최근 {SCAN_DAYS}거래일 | {market_str}\n조건 충족 종목 없음")
     else:
-        hdr=f"🇺🇸 미너비니 컵&핸들(미국)\n최근 {SCAN_DAYS}거래일 | {market_str}\n{len(res)}개 발견(점수순)\n"+"─"*24+"\n"
+        hdr=f"🇺🇸 미너비니 컵&핸들 (미국)\n최근 {SCAN_DAYS}거래일 | {market_str}\n{len(res)}개 발견(RS순)\n"+"─"*24+"\n"
         msg=hdr
         for r in res:
             up=round((r["pivot"]/r["cur"]-1)*100,1)
-            grade_emoji={"S":"🏆","A":"🥇","B":"🥈","C":"🥉","D":"📊"}.get(r["grade"],"📊")
             past=format_past(r["history"])
-            blk=(f"[{r['sig_date']}] [{r['cap']}]\n"
-                 f"{r['ticker']}\n"
-                 f"  AI점수: {grade_emoji}{r['score']}점({r['grade']}등급)\n"
+            h_cnt=len(r["history"])
+            h_win=sum(1 for h in r["history"] if h["r20"] and h["r20"]>0)
+            hist_str=f"\n[과거이력]\n{past}" if past else ""
+            blk=(f"[{r['sig_date']}] [{cap_label(r['cap'])}] {r['sector']}\n"
+                 f"◆{r['ticker']}\n"
+                 f"  AI점수: {r['score']}점({r['grade']}등급)\n"
                  f"  현재가: ${r['cur']:,.2f}\n"
-                 f"  피벗  : ${r['pivot']:,.2f} ({up:+.1f}%)\n"
+                 f"  피벗: ${r['pivot']:,.2f} ({up:+.1f}%)\n"
                  f"  컵:{r['cd']}%/{r['cdays']}일 핸들:{r['hd']}%/{r['hdays']}일\n"
-                 f"  거래량:{r['vr']}x🔥 RS:{r['rs']:+.1f}%\n"
-                 +(past+"\n" if past else "")+"\n")
+                 f"  거래량:{r['vr']}x RS:{r['rs']:+.1f}%"
+                 +hist_str+"\n\n")
             if len(msg)+len(blk)>4000:
                 send(msg);msg="(이어서)\n\n"+blk
             else:msg+=blk
         send(msg)
+
+    # CSV 저장
+    rows=[]
+    for r in res:
+        h=r["history"]
+        h_cnt=len(h);h_win=sum(1 for x in h if x["r20"] and x["r20"]>0)
+        h_rate=round(h_win/h_cnt*100) if h_cnt else 0
+        h_detail="|".join(f"{x['date']}:{x['r5']}/{x['r20']}" for x in h)
+        rows.append({
+            "date":r["sig_date"],"ticker":r["ticker"],"cap":r["cap"],
+            "sector":r["sector"],"entry":r["cur"],"pivot":r["pivot"],
+            "cup_depth":r["cd"],"handle_depth":r["hd"],
+            "cup_days":r["cdays"],"handle_days":r["hdays"],
+            "vol_ratio":r["vr"],"rs":r["rs"],
+            "score":r["score"],"grade":r["grade"],
+            "hist_count":h_cnt,"hist_winrate":h_rate,"hist_detail":h_detail,
+        })
+    if rows:
+        pd.DataFrame(rows).to_csv("scanner_us_raw.csv",index=False,encoding="utf-8-sig")
+        send_file("scanner_us_raw.csv",f"🇺🇸 미국 스캐너 RAW ({len(rows)}건) {datetime.today().strftime('%Y-%m-%d')}")
+    else:
+        pd.DataFrame().to_csv("scanner_us_raw.csv",index=False,encoding="utf-8-sig")
+
+if __name__=="__main__":
+    main()
