@@ -144,7 +144,9 @@ function ExpandedRow({ row, isKR, colCount }) {
   );
 }
 
-function ScannerView({ data, market }) {
+const DAYS = [5,10,15,20];
+
+function ScannerView({ data=[], market }) {
   const [sort, setSort] = useState({ col:"score", dir:-1 });
   const [filter, setFilter] = useState({ search:"", minScore:0 });
   const [expanded, setExpanded] = useState(null);
@@ -279,45 +281,36 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
 
   const handleInput = (val) => {
     setInput(val);
-    if (val.length >= 1 && allData.length) {
+    if (val.length >= 1 && (allData||[]).length) {
       const q = val.toLowerCase();
-      const found = allData.filter(r =>
+      const hits = (allData||[]).filter(r =>
         String(r.name||"").toLowerCase().includes(q) ||
         String(r.ticker||"").startsWith(q)
       ).slice(0, 8);
-      setSuggestions(found);
+      setSuggestions(hits);
     } else {
       setSuggestions([]);
     }
   };
 
-  const handleSelect = (row) => {
-    setInput(row.name);
-    setSuggestions([]);
-    onSearch(row.name);
-  };
-
   return (
     <div>
-      <div style={{ marginBottom:20, position:"relative" }}>
+      <div style={{ marginBottom:20 }}>
         <div style={{ fontSize:12, color:"#64748b", marginBottom:8 }}>
-          {allData.length > 0 ? allData.length+"개 종목 로딩됨 · 종목명으로 검색" : "⏳ 데이터 로딩 중..."}
+          {(allData||[]).length > 0 ? (allData||[]).length+"개 종목 로딩됨 · 종목명으로 검색" : "⏳ 데이터 로딩 중..."}
         </div>
-        <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+        <div style={{ display:"flex", gap:8, flexWrap:"wrap", position:"relative" }}>
           <div style={{ position:"relative" }}>
-            <input
-              placeholder="예: 삼성전자, 서진시스템"
-              value={input}
+            <input placeholder="예: 삼성전자, 서진시스템" value={input}
               onChange={e => handleInput(e.target.value)}
               onKeyDown={e => { if(e.key==="Enter"){ setSuggestions([]); onSearch(input); }}}
               style={{ padding:"8px 14px", borderRadius:8, border:"1px solid #334155",
-                background:"#1e293b", color:"#f1f5f9", fontSize:13, outline:"none", width:220 }}
-            />
+                background:"#1e293b", color:"#f1f5f9", fontSize:13, outline:"none", width:220 }} />
             {suggestions.length > 0 && (
-              <div style={{ position:"absolute", top:"100%", left:0, width:260, background:"#1e293b",
-                border:"1px solid #334155", borderRadius:8, zIndex:100, marginTop:4 }}>
+              <div style={{ position:"absolute", top:"100%", left:0, width:260,
+                background:"#1e293b", border:"1px solid #334155", borderRadius:8, zIndex:100, marginTop:4 }}>
                 {suggestions.map((s,i) => (
-                  <div key={i} onClick={() => handleSelect(s)}
+                  <div key={i} onClick={() => { setInput(s.name); setSuggestions([]); onSearch(s.name); }}
                     style={{ padding:"8px 14px", cursor:"pointer", fontSize:12,
                       borderBottom:"1px solid #0f172a", display:"flex", justifyContent:"space-between" }}>
                     <span style={{ color:"#f1f5f9" }}>{s.name}</span>
@@ -335,35 +328,30 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
         </div>
       </div>
 
-      {result && (
+      {result && !result.error && (
         <div style={{ background:"#0f172a", borderRadius:12, padding:20, border:"1px solid #1e293b" }}>
-          {/* 헤더 */}
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16, flexWrap:"wrap", gap:8 }}>
             <div>
               <div style={{ fontSize:18, fontWeight:900, color:"#f1f5f9" }}>
                 {result.name} <span style={{ color:"#64748b", fontSize:13 }}>({result.ticker})</span>
               </div>
-              <div style={{ fontSize:11, color:"#475569", marginTop:2 }}>
-                {result.market} · 분석일: {result.analyzed_at}
-              </div>
+              <div style={{ fontSize:11, color:"#475569", marginTop:2 }}>{result.market}</div>
             </div>
             {result.score > 0 && (
               <div style={{ textAlign:"center", background:"#1e293b", borderRadius:10, padding:"8px 16px" }}>
                 <div style={{ fontSize:11, color:"#64748b" }}>미너비니 점수</div>
                 <div style={{ fontSize:28, fontWeight:900, color:"#fb923c" }}>
-                  {gradeEmoji[result.grade]||"📊"} {result.score}
+                  {(gradeEmoji[result.grade]||"📊")+" "+result.score}
                 </div>
                 <div style={{ fontSize:12, color:"#94a3b8" }}>{result.grade}등급</div>
               </div>
             )}
           </div>
 
-          {/* 기본 정보 */}
           <div style={{ display:"flex", gap:10, marginBottom:16, flexWrap:"wrap" }}>
-            {[
-              ["현재가", result.cur ? Number(result.cur).toLocaleString()+"원" : "-"],
-              ["RS", result.rs !== undefined ? (result.rs > 0 ? "+":"")+result.rs+"%" : "-"],
-              ["거래대금(20일평균)", result.trdval ? result.trdval+"억" : "-"],
+            {[["현재가", result.cur?Number(result.cur).toLocaleString()+"원":"-"],
+              ["RS", result.rs!==undefined?(result.rs>0?"+":"")+result.rs+"%":"-"],
+              ["거래대금", result.trdval_20?result.trdval_20+"억":"-"],
             ].map(([label,val]) => (
               <div key={label} style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
                 <div style={{ fontSize:10, color:"#64748b" }}>{label}</div>
@@ -372,92 +360,59 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
             ))}
           </div>
 
-          {/* 트렌드 체크리스트 */}
-          <div style={{ marginBottom:16 }}>
-            <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>
-              📈 트렌드 템플릿 (7가지 조건)
-            </div>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:4 }}>
-              {result.trend_checks && Object.entries(result.trend_checks).map(([label, {ok, val, threshold}]) => (
-                <div key={label} style={{ background:"#1e293b", borderRadius:6, padding:"6px 10px",
-                  borderLeft:"3px solid "+(ok?"#22c55e":"#ef4444") }}>
-                  <span style={{ fontSize:11 }}>{ok?"✅":"❌"} {label}</span>
-                </div>
-              ))}
-            </div>
-            <div style={{ marginTop:8, fontSize:12, fontWeight:700,
-              color:result.trend_ok?"#22c55e":"#ef4444" }}>
-              {result.trend_ok ? "✅ 트렌드 통과" : "❌ 트렌드 미통과"}
-            </div>
+          <div style={{ marginBottom:12 }}>
+            <div style={{ fontSize:12, color:"#94a3b8", marginBottom:6 }}>트렌드</div>
+            <span style={{ fontSize:12, fontWeight:700, color:result.trend_ok?"#22c55e":"#ef4444" }}>
+              {result.trend_ok?"✅ 통과":"❌ 미통과"}
+            </span>
           </div>
 
-          {/* 컵핸들 패턴 */}
-          <div style={{ marginBottom:16 }}>
-            <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>
-              🥤 컵&핸들 패턴
-            </div>
-            {result.pattern && (
-              <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:8 }}>
-                {result.pattern.cup_depth && <span style={{ background:"#1e293b", borderRadius:6, padding:"4px 10px", fontSize:11 }}>컵 {result.pattern.cup_depth}%</span>}
-                {result.pattern.cdays && <span style={{ background:"#1e293b", borderRadius:6, padding:"4px 10px", fontSize:11 }}>컵 {result.pattern.cdays}일</span>}
-                {result.pattern.handle_depth && <span style={{ background:"#1e293b", borderRadius:6, padding:"4px 10px", fontSize:11 }}>핸들 {result.pattern.handle_depth}%</span>}
-                {result.pattern.hdays && <span style={{ background:"#1e293b", borderRadius:6, padding:"4px 10px", fontSize:11 }}>핸들 {result.pattern.hdays}일</span>}
-                {result.pattern.vr && <span style={{ background:"#1e293b", borderRadius:6, padding:"4px 10px", fontSize:11 }}>거래량 {result.pattern.vr}x</span>}
+          {result.pattern_ok && result.pivot > 0 && (
+            <div style={{ display:"flex", gap:12, marginBottom:12 }}>
+              <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
+                <div style={{ fontSize:10, color:"#64748b" }}>피벗가</div>
+                <div style={{ fontSize:15, fontWeight:700, color:"#fb923c" }}>{Number(result.pivot).toLocaleString()}원</div>
               </div>
-            )}
-            {result.pattern && result.pattern.pivot && (
-              <div style={{ display:"flex", gap:12 }}>
-                <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
-                  <div style={{ fontSize:10, color:"#64748b" }}>피벗가</div>
-                  <div style={{ fontSize:15, fontWeight:700, color:"#fb923c" }}>{Number(result.pattern.pivot).toLocaleString()}원</div>
-                </div>
-                <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
-                  <div style={{ fontSize:10, color:"#64748b" }}>손절가 (-7%)</div>
-                  <div style={{ fontSize:15, fontWeight:700, color:"#ef4444" }}>{Math.round(result.pattern.pivot*0.93).toLocaleString()}원</div>
-                </div>
+              <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
+                <div style={{ fontSize:10, color:"#64748b" }}>손절가 (-7%)</div>
+                <div style={{ fontSize:15, fontWeight:700, color:"#ef4444" }}>{Math.round(result.pivot*0.93).toLocaleString()}원</div>
               </div>
-            )}
-            <div style={{ marginTop:8, fontSize:12,
-              color:result.pattern_ok?"#22c55e":"#ef4444" }}>
-              {result.pattern_reason}
             </div>
-          </div>
+          )}
 
-          {/* 최종 결론 */}
           <div style={{ borderRadius:8, padding:"12px 16px",
             background:result.signal?"#14532d":"#450a0a",
             border:"1px solid "+(result.signal?"#22c55e":"#ef4444") }}>
-            <div style={{ fontSize:13, fontWeight:700,
-              color:result.signal?"#86efac":"#fca5a5" }}>
-              {result.signal ? "🚀 스캐너 조건 충족! 시그널 종목입니다" : "⛔ 스캐너 미검출"}
+            <div style={{ fontSize:13, fontWeight:700, color:result.signal?"#86efac":"#fca5a5" }}>
+              {result.signal?"🚀 시그널 조건 충족!":"⛔ 미검출 - "+result.reason}
             </div>
-            {!result.signal && (
-              <div style={{ fontSize:11, color:"#94a3b8", marginTop:4 }}>
-                미검출 이유: {result.pattern_reason}
-              </div>
-            )}
           </div>
         </div>
       )}
 
-      {!result && !loading && (
+      {result && result.error && (
+        <div style={{ background:"#450a0a", borderRadius:10, padding:16, color:"#fca5a5" }}>
+          {result.error}
+        </div>
+      )}
+
+      {!result && (
         <div style={{ textAlign:"center", padding:"40px 20px", color:"#475569" }}>
           <div style={{ fontSize:40, marginBottom:12 }}>🔍</div>
-          <div style={{ fontSize:14 }}>종목코드를 입력하고 분석 요청해보세요</div>
-          <div style={{ fontSize:11, marginTop:8 }}>분석 후 "결과 새로고침"을 눌러주세요</div>
+          <div style={{ fontSize:14 }}>종목명을 입력하고 검색해보세요</div>
+          <div style={{ fontSize:11, marginTop:8, color:"#334155" }}>매일 스캐너 실행 후 전체 종목 데이터가 로딩됩니다</div>
         </div>
       )}
     </div>
   );
 }
 
-function BacktestView({ data, market }) {
+function BacktestView({ data=[], market }) {
   const [sort, setSort] = useState({ col:"r20", dir:-1 });
   const [filter, setFilter] = useState({ search:"", minScore:0, cap:"전체" });
   const [expanded, setExpanded] = useState(null);
   const handleSort = col => setSort(s => s.col===col ? {col,dir:-s.dir} : {col,dir:-1});
   const isKR = market === "KR";
-  const DAYS = [5,10,15,20];
   const caps = ["전체",...new Set(data.map(r=>r.cap||r.market).filter(Boolean))];
 
   const filtered = useMemo(() => data.filter(r => {
@@ -471,7 +426,7 @@ function BacktestView({ data, market }) {
     return (av>bv?1:-1)*sort.dir;
   }), [data, filter, sort]);
 
-  const winStats = DAYS.map(d => {
+    const winStats = DAYS.map(d => {
     const vals = filtered.map(r=>r["r"+d]).filter(v=>v!==null&&!isNaN(v));
     return { day:d, vals, win:vals.filter(v=>v>0).length, total:vals.length,
       rate: vals.length ? Math.round(vals.filter(v=>v>0).length/vals.length*100) : 0,
@@ -655,6 +610,18 @@ function App() {
   const [datasets, setDatasets] = useState({ kr_scanner:[], kr_backtest:[], us_scanner:[], us_small:[], us_backtest:[], kr_all:[] });
   const [loadState, setLoadState] = useState({ kr_scanner:"idle", kr_backtest:"idle", us_scanner:"idle", us_small:"idle", us_backtest:"idle", kr_all:"idle", ticker_search:"done" });
   const [lastUpdated, setLastUpdated] = useState({});
+  const [tickerInput, setTickerInput] = useState("");
+  const [tickerResult, setTickerResult] = useState(null);
+
+  const searchTicker = useCallback((query) => {
+    if (!query) return;
+    const q = query.trim().toLowerCase();
+    const found = datasets.kr_all.find(r =>
+      String(r.ticker||"").toLowerCase() === q ||
+      String(r.name||"").toLowerCase().includes(q)
+    );
+    setTickerResult(found || { error: "종목을 찾을 수 없어요: " + query });
+  }, [datasets.kr_all]);
 
   const fetchCSV = useCallback(async (tabId) => {
     setLoadState(s => ({...s, [tabId]:"loading"}));
@@ -684,7 +651,7 @@ function App() {
     }
   }, []);
 
-  useEffect(() => { TABS.forEach(t => { if(t.type!=="search") fetchCSV(t.id); }); fetchCSV("kr_all"); }, []);
+  useEffect(() => { TABS.forEach(t => { if(t.type!=="search") fetchCSV(t.id); }); if(DATA_FILES.kr_all) fetchCSV("kr_all"); }, []);
 
   const handleUpload = useCallback((tabId) => (e) => {
     const file = e.target.files[0];
@@ -717,14 +684,14 @@ function App() {
             <div style={{ fontSize:10, color:"#475569", marginTop:2 }}>sosonamso/minervini-scanner · 자동 업데이트</div>
           </div>
           <div style={{ display:"flex", gap:8, flexWrap:"wrap", alignItems:"center" }}>
-            {TABS.map(t => (
+            {TABS.filter(t=>t.type!=="search").map(t => (
               <div key={t.id} style={{ display:"flex", alignItems:"center", gap:4, fontSize:11 }}>
                 <span style={{ color:"#475569" }}>{t.id.split("_")[0].toUpperCase()}</span>
                 <span>{loadState[t.id]==="loading"?"⏳":loadState[t.id]==="done"?"✅":"❌"}</span>
-                {datasets[t.id].length>0 && <span style={{ color:"#22c55e", fontSize:10 }}>{datasets[t.id].length}건</span>}
+                {(datasets[t.id]||[]).length>0 && <span style={{ color:"#22c55e", fontSize:10 }}>{datasets[t.id].length}건</span>}
               </div>
             ))}
-            <button onClick={() => TABS.forEach(t => fetchCSV(t.id))}
+            <button onClick={() => TABS.forEach(t => { if(t.type!=="search") fetchCSV(t.id); }); fetchCSV("kr_all");}
               style={{ padding:"6px 14px", borderRadius:8, border:"1px solid #334155", background:"#1e293b", color:"#94a3b8", cursor:"pointer", fontSize:12, fontFamily:"inherit", fontWeight:700 }}>
               새로고침
             </button>
@@ -748,7 +715,7 @@ function App() {
             fontWeight:700, fontSize:13, fontFamily:"inherit",
             borderBottom:activeTab===t.id?"2px solid #fb923c":"2px solid transparent" }}>
             {t.label}
-            {datasets[t.id].length > 0 && (
+            {t.type!=="search" && (datasets[t.id]||[]).length > 0 && (
               <span style={{ marginLeft:5, background:"#1e293b", borderRadius:99, padding:"1px 5px", fontSize:10, color:"#22c55e" }}>
                 {datasets[t.id].length}
               </span>
@@ -777,14 +744,6 @@ function App() {
               </label>
             </div>
           </div>
-        ) : activeInfo.type==="search" ? (
-          <TickerSearchView
-            result={tickerResult}
-            input={tickerInput}
-            setInput={setTickerInput}
-            onSearch={searchTicker}
-            allData={datasets.kr_all||[]}
-          />
         ) : activeInfo.type==="search" ? (
           <TickerSearchView
             result={tickerResult}
