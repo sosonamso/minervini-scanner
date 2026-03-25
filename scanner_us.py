@@ -106,27 +106,72 @@ def check_trend(df):
 def detect(df):
     cl=df["Close"].values.astype(float);vl=df["Volume"].values.astype(float);n=len(cl)
     if n<60:return False,{}
-    c=cl[-min(200,n):];v=vl[-min(200,n):];w=len(c)
-    li=int(np.argmax(c[:w//2]));lh=c[li]
-    cup=c[li:]
-    if len(cup)<20:return False,{}
-    bi=li+int(np.argmin(cup));bot=c[bi];cd=(lh-bot)/lh
-    if not(0.15<=cd<=0.50)or(bi-li)<35:return False,{}
-    rc=c[bi:]
-    if len(rc)<10:return False,{}
-    ri=bi+int(np.argmax(rc));rh=c[ri]
-    if rh<lh*0.90:return False,{}
-    hnd=c[ri:];hl=len(hnd)
-    if not(5<=hl<=20):return False,{}
-    hlow=float(np.min(hnd));hd=(rh-hlow)/rh
-    if not(0.05<=hd<=0.15):return False,{}
-    if(hlow-bot)/(lh-bot)<0.60:return False,{}
-    cur=cl[-1]
-    if not(rh*0.97<=cur<=rh*1.05):return False,{}
-    vr=float(np.mean(v[-5:]))/float(np.mean(v[-40:-5]))if len(v)>=40 else 1.0
-    return True,{"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":bi-li,"hdays":hl,
-                 "pivot":round(float(rh),2),"cur":round(float(cur),2),
-                 "vr":round(vr,2),"vs":vr>=1.40}
+
+    # ① 기간 확장: 325일
+    c=cl[-min(325,n):];v=vl[-min(325,n):];w=len(c)
+
+    # ② 급등 필터: 최근 20일 +40% 이상이면 제외 (이벤트성 급등)
+    if len(c)>=20:
+        recent_gain=(c[-1]-c[-20])/c[-20]
+        if recent_gain>0.40:return False,{}
+
+    # ③ 여러 고점 후보 탐색 (로컬 최고점들)
+    # 조건: 이후 최소 55일 이상 구간 필요 (컵35일 + 핸들20일)
+    best=None
+    peak_candidates=[]
+
+    # 전체 구간에서 로컬 최고점 찾기 (윈도우 20일 기준)
+    for i in range(10, w-55):
+        # 로컬 최고점: 앞뒤 10일보다 높아야 함
+        lo=max(0,i-10);hi=min(w,i+10)
+        if c[i]==np.max(c[lo:hi]) and c[i]==np.max(c[max(0,i-5):min(w,i+5)]):
+            peak_candidates.append(i)
+
+    # 후보가 없으면 단순 최고점 사용 (fallback)
+    if not peak_candidates:
+        peak_candidates=[int(np.argmax(c[:w//2]))]
+
+    # 각 후보에서 컵핸들 패턴 검사 → 가장 최근 유효 패턴 선택
+    for li in reversed(peak_candidates):  # 최근 후보부터 탐색
+        lh=c[li]
+        cup=c[li:]
+        if len(cup)<55:continue  # 컵+핸들 최소 기간
+
+        bi=li+int(np.argmin(cup))
+        bot=c[bi];cd=(lh-bot)/lh
+        cup_days=bi-li
+
+        # 컵 조건
+        if not(0.15<=cd<=0.50):continue
+        if cup_days<35:continue
+
+        rc=c[bi:]
+        if len(rc)<10:continue
+        ri=bi+int(np.argmax(rc));rh=c[ri]
+
+        # 오른쪽 고점이 왼쪽의 90% 이상
+        if rh<lh*0.90:continue
+
+        hnd=c[ri:];hl=len(hnd)
+        if not(5<=hl<=20):continue
+
+        hlow=float(np.min(hnd));hd=(rh-hlow)/rh
+        if not(0.05<=hd<=0.15):continue
+
+        # 핸들 위치: 컵 바닥에서 60% 이상 회복
+        if(hlow-bot)/(lh-bot)<0.60:continue
+
+        cur=cl[-1]
+        if not(rh*0.97<=cur<=rh*1.05):continue
+
+        vr=float(np.mean(v[-5:]))/float(np.mean(v[-40:-5]))if len(v)>=40 else 1.0
+        best={"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":cup_days,"hdays":hl,
+              "pivot":round(float(rh),2),"cur":round(float(cur),2),
+              "vr":round(vr,2),"vs":vr>=1.40}
+        break  # 가장 최근 유효 패턴 선택
+
+    if best is None:return False,{}
+    return True,best
 
 def calc_rs(df,mkt):
     def p(d,n):return float(d["Close"].iloc[-1]/d["Close"].iloc[-n]-1)if len(d)>=n else 0.0
