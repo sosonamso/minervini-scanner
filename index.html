@@ -739,6 +739,7 @@ function App() {
   const [lastUpdated, setLastUpdated] = useState({});
   const [tickerInput, setTickerInput] = useState("");
   const [tickerResult, setTickerResult] = useState(null);
+  const [tickerMarket, setTickerMarket] = useState("KR");
 
   const fetchCSV = useCallback(async (tabId) => {
     const path = DATA_FILES_MAP[tabId];
