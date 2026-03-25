@@ -342,7 +342,7 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
               <div style={{ position:"absolute", top:"100%", left:0, width:260,
                 background:"#1e293b", border:"1px solid #334155", borderRadius:8, zIndex:100, marginTop:4 }}>
                 {suggestions.map((s,i) => (
-                  <div key={i} onClick={() => { setInput(s.ticker); setSuggestions([]); onSearch(s.ticker, market); }}
+                  <div key={i} onClick={() => { const val=isKR?(s.name||s.ticker):s.ticker; setInput(val); setSuggestions([]); onSearch(val, market); }}
                     style={{ padding:"8px 14px", cursor:"pointer", fontSize:12,
                       borderBottom:"1px solid #0f172a", display:"flex", justifyContent:"space-between" }}>
                     <span style={{ color:"#f1f5f9" }}>{s.name}</span>
@@ -771,10 +771,11 @@ function App() {
     }
   }, []);
 
-  const searchTicker = useCallback((query) => {
+  const searchTicker = useCallback((query, market) => {
     if (!query || !query.trim()) return;
     const q = query.trim().toLowerCase();
-    const list = datasets.kr_all || [];
+    const mkt = market || tickerMarket;
+    const list = mkt === "KR" ? (datasets.kr_all||[]) : (datasets.us_all||[]);
     const found = list.find(r =>
       String(r.ticker||"").toLowerCase() === q ||
       String(r.ticker||"").toUpperCase() === query.trim().toUpperCase() ||
