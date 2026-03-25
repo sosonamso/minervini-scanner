@@ -146,7 +146,8 @@ def detect(df):
         if len(rc)<10:continue
         ri=bi+int(np.argmax(rc));rh=c[ri]
 
-        if rh<lh*0.90:continue
+        if rh<lh*0.90:continue   # 하한: 90% 이상
+        if rh>lh*1.05:continue   # 상한: 105% 이하 (신고가 돌파 제외)
 
         hnd=c[ri:];hl=len(hnd)
         if not(5<=hl<=20):continue
@@ -203,6 +204,14 @@ def calc_score(rs,vr,cd,hd):
 
 def score_grade(s):
     return "S" if s>=90 else "A" if s>=80 else "B" if s>=70 else "C" if s>=60 else "D"
+
+def get_base_count(history):
+    """과거 시그널 횟수로 베이스 카운트 추정"""
+    n=len(history)
+    if n==0:return "1st"
+    elif n==1:return "2nd"
+    elif n==2:return "3rd"
+    else:return f"{n+1}th+"
 
 def get_past_signals(df,exclude_ts):
     results=[]
@@ -362,6 +371,7 @@ if __name__=="__main__":
             if not signal:break
 
             history=get_past_signals(df,sig_ts)
+            base_count=get_base_count(history)
             res.append({
                 "sig_date":sig_str,"ticker":ticker,
                 "cap":info["cap"],"sector":info["sector"],
@@ -371,7 +381,8 @@ if __name__=="__main__":
                 "cdays":pat["cdays"],"hdays":pat["hdays"],
                 "cup_start":pat.get("cup_start",""),"cup_end":pat.get("cup_end",""),
                 "vr":pat["vr"],"vs":pat["vs"],
-                "rs":rs,"score":score,"grade":grade,"history":history,
+                "rs":rs,"score":score,"grade":grade,
+                "history":history,"base_count":base_count,
             })
             break
 
@@ -399,6 +410,7 @@ if __name__=="__main__":
             "cup_depth":r["cd"],"handle_depth":r["hd"],
             "cup_days":r["cdays"],"handle_days":r["hdays"],
             "cup_start":r.get("cup_start",""),"cup_end":r.get("cup_end",""),
+            "base_count":r.get("base_count","1st"),
             "vol_ratio":r["vr"],"rs":r["rs"],
             "score":r["score"],"grade":r["grade"],
             "hist_count":h_cnt,"hist_winrate":h_rate,"hist_detail":h_detail,
@@ -422,7 +434,8 @@ if __name__=="__main__":
             grade_emoji={"S":"🏆","A":"🥇","B":"🥈","C":"🥉","D":"📊"}.get(r["grade"],"📊")
             past=format_past(r["history"])
             cup_date_str=f"({r.get('cup_start','')}~{r.get('cup_end','')})" if r.get('cup_start') else ""
-            blk=(f"[{r['sig_date']}] [{cap_label(r['cap'])}] {r['sector']}\n"
+            base_str=r.get('base_count','1st')
+            blk=(f"[{r['sig_date']}] [{cap_label(r['cap'])}] {r['sector']} [{base_str} base]\n"
                  f"◆{r['ticker']}\n"
                  f"  AI점수: {grade_emoji}{r['score']}점({r['grade']}등급)\n"
                  f"  현재가: ${r['cur']:,.2f}\n"
