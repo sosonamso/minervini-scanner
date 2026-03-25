@@ -33,5 +33,6 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add scanner_us_raw.csv scanner_us_all.csv || true
           git commit --allow-empty -m "scanner_us: $(date +'%Y-%m-%d') 스캔 결과"
-          git pull --rebase origin main
+          git fetch origin main
+          git rebase origin/main || git rebase --abort
           git push
