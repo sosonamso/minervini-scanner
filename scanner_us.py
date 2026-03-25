@@ -287,21 +287,73 @@ if __name__=="__main__":
             if sig_ts not in df.index:continue
             pos=df.index.tolist().index(sig_ts)
             sl=df.iloc[:pos+1]
-            if not check_trend(sl):continue
+            trend_ok=check_trend(sl)
+            cur=float(sl["Close"].iloc[-1])
+            rs=calc_rs(sl,mkt_df.loc[:sig_ts])if mkt_df is not None else 0.0
+
+            if not trend_ok:
+                all_scores.append({
+                    "ticker":ticker,"name":info.get("name",ticker),
+                    "cap":info["cap"],"sector":info["sector"],
+                    "exchange":info.get("exchange","NYSE"),
+                    "cur":round(cur,2),"rs":rs,
+                    "trend_ok":False,"pattern_ok":False,"signal":False,
+                    "score":0,"grade":"D","pivot":0,
+                    "cup_depth":0,"handle_depth":0,"vol_ratio":0,
+                    "cup_days":0,"handle_days":0,
+                    "reason":"트렌드 미통과","pct_from_pivot":0,"safety":""
+                })
+                break
+
             trend_pass+=1
             ok,pat=detect(sl)
-            if not ok:continue
-            if not pat["vs"]:continue
-            rs=calc_rs(sl,mkt_df.loc[:sig_ts])if mkt_df is not None else 0.0
-            if rs<=0:continue
+
+            if not ok:
+                score=calc_score(rs,1.0,0,0)
+                all_scores.append({
+                    "ticker":ticker,"name":info.get("name",ticker),
+                    "cap":info["cap"],"sector":info["sector"],
+                    "exchange":info.get("exchange","NYSE"),
+                    "cur":round(cur,2),"rs":rs,
+                    "trend_ok":True,"pattern_ok":False,"signal":False,
+                    "score":score,"grade":score_grade(score),"pivot":0,
+                    "cup_depth":0,"handle_depth":0,"vol_ratio":0,
+                    "cup_days":0,"handle_days":0,
+                    "reason":"패턴 미감지","pct_from_pivot":0,"safety":""
+                })
+                break
+
             score=calc_score(rs,pat["vr"],pat["cd"],pat["hd"])
             grade=score_grade(score)
+            pivot=pat["pivot"]
+            pct=round((cur-pivot)/pivot*100,1) if pivot>0 else 0
+            if cur>=pivot*0.93:safety="safe"
+            elif cur>=pivot*0.90:safety="caution"
+            else:safety="danger"
+            signal=pat["vs"] and rs>0
+
+            all_scores.append({
+                "ticker":ticker,"name":info.get("name",ticker),
+                "cap":info["cap"],"sector":info["sector"],
+                "exchange":info.get("exchange","NYSE"),
+                "cur":pat["cur"],"rs":rs,
+                "trend_ok":True,"pattern_ok":True,"signal":signal,
+                "score":score,"grade":grade,"pivot":pivot,
+                "cup_depth":pat["cd"],"handle_depth":pat["hd"],
+                "vol_ratio":pat["vr"],"cup_days":pat["cdays"],
+                "handle_days":pat["hdays"],
+                "reason":"시그널" if signal else ("거래량 미충족" if not pat["vs"] else "RS 미충족"),
+                "pct_from_pivot":pct,"safety":safety
+            })
+
+            if not signal:break
+
             history=get_past_signals(df,sig_ts)
             res.append({
                 "sig_date":sig_str,"ticker":ticker,
                 "cap":info["cap"],"sector":info["sector"],
                 "exchange":info.get("exchange","NYSE"),
-                "cur":pat["cur"],"pivot":pat["pivot"],
+                "cur":pat["cur"],"pivot":pivot,
                 "cd":pat["cd"],"hd":pat["hd"],
                 "cdays":pat["cdays"],"hdays":pat["hdays"],
                 "vr":pat["vr"],"vs":pat["vs"],
@@ -342,9 +394,8 @@ if __name__=="__main__":
         send_file("scanner_us_raw.csv",f"🇺🇸 미장 스캐너 RAW ({len(rows)}건) {datetime.today().strftime('%Y-%m-%d')}")
 
     # 전체 종목 점수 저장 (종목 검색용)
-    if all_scores:
-        pd.DataFrame(all_scores).to_csv("scanner_us_all.csv",index=False,encoding="utf-8-sig")
-        print(f"전체 종목 점수 저장: scanner_us_all.csv ({len(all_scores)}건)")
+    pd.DataFrame(all_scores if all_scores else []).to_csv("scanner_us_all.csv",index=False,encoding="utf-8-sig")
+    print(f"전체 종목 점수 저장: scanner_us_all.csv ({len(all_scores)}건)")
 
     if not res:
         send(f"🇺🇸 미국 스캐너\n최근 {SCAN_DAYS}거래일 | {market_str}\n조건 충족 종목 없음")
