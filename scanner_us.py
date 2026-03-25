@@ -168,12 +168,12 @@ def detect(df):
             # 날짜 계산: c는 df의 마지막 min(500,n)개
             start_offset=n-len(c)  # 슬라이스 시작 위치
             try:
-                cs=idx[start_offset+li]
-                ce=idx[start_offset+ri]
-                cup_start_date=cs.strftime("%y.%m.%d")
-                cup_end_date=ce.strftime("%y.%m.%d")
+                start_pos=n-len(c)  # 원본 df에서 슬라이스 시작 위치
+                cup_start_date=idx[start_pos+li].strftime("%y.%m.%d")
+                cup_end_date=idx[start_pos+ri].strftime("%y.%m.%d")
+                print(f"날짜OK: start_pos={start_pos} li={li} ri={ri} → {cup_start_date}~{cup_end_date}")
             except Exception as e:
-                print(f"날짜변환오류: {e}, n={n}, len(c)={len(c)}, li={li}, ri={ri}")
+                print(f"날짜오류: {e} n={n} len(c)={len(c)} len(idx)={len(idx)} li={li} ri={ri}")
                 cup_start_date="";cup_end_date=""
             best={"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":full_cup_days,"hdays":hl,
                   "pivot":round(float(rh),2),"cur":round(float(cur),2),
