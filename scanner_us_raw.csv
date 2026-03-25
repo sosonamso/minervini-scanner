@@ -1,3 +1,3 @@
-﻿date,ticker,cap,sector,exchange,entry,pivot,cup_depth,handle_depth,cup_days,handle_days,vol_ratio,rs,score,grade,hist_count,hist_winrate,hist_detail
-2026-03-24,BHE,SmallCap,기술,NYSE,59.5,60.36,23.7,12.4,49,20,1.84,40.6,77,B,0,0,
-2026-03-24,RNGR,SmallCap,에너지,NYSE,17.44,17.67,41.1,7.0,71,17,1.85,26.1,72,B,1,0,26-03-17:1.5/None
+﻿date,ticker,cap,sector,exchange,entry,pivot,cup_depth,handle_depth,cup_days,handle_days,cup_start,cup_end,vol_ratio,rs,score,grade,hist_count,hist_winrate,hist_detail
+2026-03-24,BHE,SmallCap,기술,NYSE,59.5,60.36,23.7,12.4,255,20,,,1.84,40.6,77,B,0,0,
+2026-03-24,RNGR,SmallCap,에너지,NYSE,17.44,17.67,41.1,7.0,259,17,,,1.85,26.1,72,B,1,0,26-03-17:1.5/None

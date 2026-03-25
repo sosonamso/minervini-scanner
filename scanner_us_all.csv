@@ -74,7 +74,7 @@ MMI,Marcus & Millichap,SmallCap,부동산,NYSE,25.91,-16.9,False,False,False,0,D
 AMC,AMC 엔터,SmallCap,소비순환재,NYSE,1.0,-58.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 ELME,Elme,SmallCap,부동산,NYSE,2.01,-90.2,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 LOB,Live Oak Bancshares Inc,SmallCap,금융,NYSE,32.75,-1.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-BHE,Benchmark Elect,SmallCap,기술,NYSE,59.5,40.6,True,True,True,77,B,60.36,23.7,12.4,1.84,49,20,시그널,-1.4,safe
+BHE,Benchmark Elect,SmallCap,기술,NYSE,59.5,40.6,True,True,True,77,B,60.36,23.7,12.4,1.84,255,20,시그널,-1.4,safe
 JBGS,JBG SMITH Properties,SmallCap,부동산,NYSE,15.72,-14.2,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 KOS,Kosmos Energy Ltd,SmallCap,에너지,NYSE,2.72,94.8,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 LADR,Ladder Capital A,SmallCap,부동산,NYSE,9.9,-14.5,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
@@ -283,7 +283,7 @@ KOP,Koppers Hldg,SmallCap,소재,NYSE,37.21,27.3,False,False,False,0,D,0.0,0.0,0
 IIIN,Insteel Industries,SmallCap,소비순환재,NYSE,33.32,-1.1,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 USNA,USANA Hlth Sci,SmallCap,필수소비재,NYSE,17.01,-32.3,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 SMBK,SmartFinancial Inc,SmallCap,금융,NYSE,38.51,5.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-NPKI,NPK International,SmallCap,에너지,NYSE,14.88,57.7,True,True,False,72,B,14.89,29.4,11.5,1.0,35,19,거래량 미충족,-0.1,safe
+NPKI,NPK International,SmallCap,에너지,NYSE,14.88,57.7,True,True,False,72,B,14.89,29.4,11.5,1.0,257,19,거래량 미충족,-0.1,safe
 RGR,스텀루거,SmallCap,소비순환재,NYSE,40.74,11.3,True,False,False,63,C,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 PLOW,Douglas Dynamic,SmallCap,산업,NYSE,42.68,39.5,True,False,False,71,B,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 TTI,Tetra Tech,SmallCap,에너지,NYSE,8.51,62.3,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
@@ -356,7 +356,7 @@ TRAK,Repositrak,SmallCap,기술,NYSE,7.58,-55.3,False,False,False,0,D,0.0,0.0,0.
 GTN,Gray Television Inc,SmallCap,소비순환재,NYSE,4.81,-5.3,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 QUAD,Quad Graphics,SmallCap,산업,NYSE,6.64,7.3,True,False,False,62,C,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 DIN,Dine Brands Global,SmallCap,소비순환재,NYSE,27.31,-4.8,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-RNGR,Ranger Energy Services,SmallCap,에너지,NYSE,17.44,26.1,True,True,True,72,B,17.67,41.1,7.0,1.85,71,17,시그널,-1.3,safe
+RNGR,Ranger Energy Services,SmallCap,에너지,NYSE,17.44,26.1,True,True,True,72,B,17.67,41.1,7.0,1.85,259,17,시그널,-1.3,safe
 JILL,J.Jill,SmallCap,소비순환재,NYSE,15.35,-5.1,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 PKST,Peakstone Realty Trust,SmallCap,부동산,NYSE,20.85,49.7,True,False,False,74,B,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 MLP,Maui Land & Pineapple Comp Inc,SmallCap,부동산,NYSE,15.66,-15.1,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
@@ -375,7 +375,7 @@ MBI,MBIA Inc,SmallCap,금융,NYSE,5.83,-5.8,False,False,False,0,D,0.0,0.0,0.0,0.
 SAR,Saratoga Investment Corp,SmallCap,금융,NYSE,21.77,-11.5,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 RM,Regional Mgmt,SmallCap,금융,NYSE,32.44,-12.0,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 CHPT,ChargePoint Holdings,SmallCap,산업,NYSE,5.29,-48.2,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-TBN,Tamboran Resources,SmallCap,에너지,NYSE,31.61,32.5,True,True,False,59,D,32.2,38.6,10.9,0.93,95,17,거래량 미충족,-1.8,safe
+TBN,Tamboran Resources,SmallCap,에너지,NYSE,31.61,32.5,True,True,False,59,D,32.2,38.6,10.9,0.93,258,17,거래량 미충족,-1.8,safe
 HVT,Haverty,SmallCap,소비순환재,NYSE,20.69,-9.4,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 VENU,Venu Holding,SmallCap,소비순환재,NYSE,3.18,-71.4,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 NL,NL Industries,SmallCap,산업,NYSE,5.77,-9.0,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
@@ -895,7 +895,7 @@ IIPR,Innovative Industrial Properties,MidCap,부동산,NYSE,52.55,-8.4,False,Fal
 STNG,Scorpio Tankers,MidCap,에너지,NYSE,75.12,56.8,True,False,False,77,B,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 HTH,Hilltop Hldg,MidCap,금융,NYSE,35.34,6.0,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 SPB,Spectrum Brands,MidCap,소비순환재,NYSE,74.22,24.8,True,False,False,67,C,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
-UNFI,Uni Ntrl Foods,MidCap,필수소비재,NYSE,41.26,41.6,True,True,False,77,B,41.66,27.0,6.9,1.25,39,8,거래량 미충족,-1.0,safe
+UNFI,Uni Ntrl Foods,MidCap,필수소비재,NYSE,41.26,41.6,True,True,False,77,B,41.66,27.0,6.9,1.25,102,8,거래량 미충족,-1.0,safe
 SDRL,Seadrill,MidCap,에너지,NYSE,45.09,51.5,True,False,False,75,B,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 DAVA,Endava,MidCap,기술,NYSE,4.44,-56.1,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 AGX,아간,MidCap,산업,NYSE,444.83,94.2,True,False,False,88,A,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
@@ -1245,7 +1245,7 @@ CAVA,CAVA Group,LargeCap,소비순환재,NYSE,84.43,23.4,False,False,False,0,D,0
 BAH,부즈 앨런 해밀턴,LargeCap,기술,NYSE,78.88,-18.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 BALL,볼 코퍼레이션,LargeCap,소재,NYSE,59.12,11.5,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 KIM,Kimco Realty,LargeCap,부동산,NYSE,22.56,5.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-WLK,Westlake Chemical,LargeCap,소재,NYSE,114.09,40.2,True,True,False,67,C,114.22,40.5,7.1,0.9,146,9,거래량 미충족,-0.1,safe
+WLK,Westlake Chemical,LargeCap,소재,NYSE,114.09,40.2,True,True,False,67,C,114.22,40.5,7.1,0.9,221,9,거래량 미충족,-0.1,safe
 IEX,IDEX,LargeCap,산업,NYSE,192.88,7.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 BAP,Credicorp Ltd,LargeCap,금융,NYSE,330.24,33.1,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 AMCR,암코,LargeCap,소재,NYSE,39.13,-11.7,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
@@ -1928,7 +1928,7 @@ MERC,Mercer Int,SmallCap,소재,NYSE,1.3,-55.9,False,False,False,0,D,0.0,0.0,0.0
 SVC,Service Properties,SmallCap,부동산,NYSE,1.76,-24.4,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 SATL,Satellogic V,SmallCap,소재,NYSE,5.38,83.6,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 CVGW,Calavo Growers,SmallCap,필수소비재,NYSE,25.51,4.5,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-GPRE,Green Plains,SmallCap,에너지,NYSE,16.3,123.0,True,True,False,95,S,16.7,20.5,8.0,1.3,46,6,거래량 미충족,-2.4,safe
+GPRE,Green Plains,SmallCap,에너지,NYSE,16.3,123.0,True,True,False,95,S,16.7,20.5,8.0,1.3,104,6,거래량 미충족,-2.4,safe
 ZVRA,Zevra Therapeutics,SmallCap,헬스케어,NYSE,9.15,5.5,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 BSRR,Sierra Bancorp,SmallCap,금융,NYSE,33.5,6.7,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 ITIC,Investors Title,SmallCap,금융,NYSE,213.4,-13.6,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
