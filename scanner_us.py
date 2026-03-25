@@ -165,10 +165,13 @@ def detect(df):
         full_cup_days=ri-li
         if full_cup_days>best_cup_days:
             best_cup_days=full_cup_days
-            # 날짜 계산 (500일 슬라이스 기준 → 원래 인덱스로 변환)
-            offset=max(0,n-min(500,n))
-            cup_start_date=idx[offset+li].strftime("%y.%m.%d") if offset+li<len(idx) else ""
-            cup_end_date=idx[offset+ri].strftime("%y.%m.%d") if offset+ri<len(idx) else ""
+            # 날짜 계산: c는 idx의 마지막 min(500,n)개 슬라이스
+            start_offset=n-min(500,n)  # 슬라이스 시작 위치
+            try:
+                cup_start_date=idx[start_offset+li].strftime("%y.%m.%d")
+                cup_end_date=idx[start_offset+ri].strftime("%y.%m.%d")
+            except:
+                cup_start_date="";cup_end_date=""
             best={"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":full_cup_days,"hdays":hl,
                   "pivot":round(float(rh),2),"cur":round(float(cur),2),
                   "vr":round(vr,2),"vs":vr>=1.40,
