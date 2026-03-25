@@ -238,7 +238,7 @@ def detect(df):
     cup=c[li:]
     if len(cup)<20:return False,{}
     bi=li+int(np.argmin(cup));bot=c[bi];cd=(lh-bot)/lh
-    if not(0.15<=cd<=0.50)or(bi-li)<35:return False,{}
+    if not(0.20<=cd<=0.50)or(bi-li)<35:return False,{}
     rc=c[bi:]
     if len(rc)<10:return False,{}
     ri=bi+int(np.argmax(rc));rh=c[ri]
@@ -288,7 +288,7 @@ def get_pattern_fail_reason(df):
     li=int(np.argmax(c[:w//2]));lh=c[li];cup=c[li:]
     if len(cup)<20:return "컵 구간 부족"
     bi=li+int(np.argmin(cup));bot=c[bi];cd=(lh-bot)/lh;cup_days=bi-li
-    if cd<0.15:return f"컵 깊이 얕음({round(cd*100,1)}%)"
+    if cd<0.20:return f"컵 깊이 얕음({round(cd*100,1)}%)"
     if cd>0.50:return f"컵 깊이 깊음({round(cd*100,1)}%)"
     if cup_days<35:return f"컵 기간 짧음({cup_days}일)"
     rc=c[bi:]
