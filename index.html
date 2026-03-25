@@ -807,6 +807,9 @@ function App() {
   // kr_scanner 탭은 kr_all에서 유효 시그널만 필터링
   const getActiveData = () => {
     if (activeTab === "kr_scanner") {
+      const raw = datasets.kr_scanner || [];
+      if (raw.length > 0) return raw;
+      // kr_all fallback
       return (datasets.kr_all || []).filter(r => {
         const sig = r.signal === true || r.signal === "True" || r.signal === "true" || r.signal === 1;
         if (!sig) return false;
