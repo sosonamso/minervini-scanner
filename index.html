@@ -342,7 +342,7 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
               <div style={{ position:"absolute", top:"100%", left:0, width:260,
                 background:"#1e293b", border:"1px solid #334155", borderRadius:8, zIndex:100, marginTop:4 }}>
                 {suggestions.map((s,i) => (
-                  <div key={i} onClick={() => { setInput(s.ticker||s.name); setSuggestions([]); onSearch(s.ticker||s.name, market); }}
+                  <div key={i} onClick={() => { setInput(s.ticker); setSuggestions([]); onSearch(s.ticker, market); }}
                     style={{ padding:"8px 14px", cursor:"pointer", fontSize:12,
                       borderBottom:"1px solid #0f172a", display:"flex", justifyContent:"space-between" }}>
                     <span style={{ color:"#f1f5f9" }}>{s.name}</span>
