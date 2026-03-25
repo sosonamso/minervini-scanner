@@ -1,5 +1,2 @@
-﻿date,ticker,cap,sector,exchange,entry,pivot,cup_depth,handle_depth,cup_days,handle_days,cup_start,cup_end,vol_ratio,rs,score,grade,hist_count,hist_winrate,hist_detail
-2026-03-25,SPHR,SmallCap,소비순환재,NYSE,115.82,119.01,49.6,11.2,259,19,25.02.14,26.02.27,2.02,114.5,90,S,4,50,26-01-09:1.2/-0.4|26-01-12:0.6/2.8|26-02-10:18.2/16.7|26-03-09:-5.8/None
-2026-03-25,LMAT,MidCap,헬스케어,NYSE,111.08,113.69,20.1,6.6,128,20,25.08.22,26.02.26,1.5,28.1,83,A,3,0,26-03-16:-2.6/None|26-03-17:-2.0/None|26-03-18:0.2/None
-2026-03-25,VIST,MidCap,에너지,NYSE,71.33,72.96,39.2,7.0,270,5,25.02.20,26.03.19,1.49,54.5,81,A,0,0,
-2026-03-25,RNGR,SmallCap,에너지,NYSE,17.39,17.67,41.1,7.0,259,18,25.02.18,26.03.02,1.81,23.8,72,B,1,0,26-03-17:1.5/None
+﻿date,ticker,cap,sector,exchange,entry,pivot,cup_depth,handle_depth,cup_days,handle_days,cup_start,cup_end,base_count,vol_ratio,rs,score,grade,hist_count,hist_winrate,hist_detail
+2026-03-25,RNGR,SmallCap,에너지,NYSE,17.39,17.67,41.1,7.0,259,18,25.02.18,26.03.02,2nd,1.81,23.8,72,B,1,0,26-03-17:1.5/None

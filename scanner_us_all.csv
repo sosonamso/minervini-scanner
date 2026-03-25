@@ -40,13 +40,13 @@ DBD,Diebold Nixdorf,SmallCap,기술,NYSE,79.35,38.7,True,False,False,71,B,0.0,0.
 PD,Pagerduty,SmallCap,기술,NYSE,6.33,-59.8,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 KMT,Kennametal,SmallCap,산업,NYSE,36.37,46.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 PRM,Perimeter Solutions,SmallCap,소재,NYSE,21.79,28.1,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-SPHR,Sphere Entertainment,SmallCap,소비순환재,NYSE,115.82,114.5,True,True,True,90,S,119.01,49.6,11.2,2.02,259,19,시그널,-2.7,safe
+SPHR,Sphere Entertainment,SmallCap,소비순환재,NYSE,115.82,114.5,True,False,False,90,S,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 PHR,Phreesia,SmallCap,기술,NYSE,11.28,-49.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 KEN,Kenon Holdings,SmallCap,유틸리티,NYSE,81.36,78.0,True,False,False,83,A,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 TALO,Talos Energy,SmallCap,에너지,NYSE,16.28,62.2,True,False,False,78,B,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 HMN,H.M.E.C.,SmallCap,금융,NYSE,42.65,-6.8,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 FCF,First Commonwe.,SmallCap,금융,NYSE,17.29,1.4,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-ROG,Rogers Corp,SmallCap,기술,NYSE,109.71,35.0,True,True,False,60,C,111.91,42.0,11.9,1.28,259,18,거래량 미충족,-2.0,safe
+ROG,Rogers Corp,SmallCap,기술,NYSE,109.71,35.0,True,False,False,70,B,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 NPWR,NET Power,SmallCap,유틸리티,NYSE,1.75,-30.2,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 CABO,Cable One Inc,SmallCap,기술,NYSE,96.24,-35.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 TNC,Tennant Co.,SmallCap,산업,NYSE,68.19,-14.8,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
@@ -375,7 +375,7 @@ MBI,MBIA Inc,SmallCap,금융,NYSE,5.79,-5.7,False,False,False,0,D,0.0,0.0,0.0,0.
 SAR,Saratoga Investment Corp,SmallCap,금융,NYSE,22.17,-9.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 RM,Regional Mgmt,SmallCap,금융,NYSE,32.27,-12.3,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 CHPT,ChargePoint Holdings,SmallCap,산업,NYSE,5.35,-47.7,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-TBN,Tamboran Resources,SmallCap,에너지,NYSE,31.95,32.4,True,True,False,59,D,32.2,38.6,10.9,0.96,258,18,거래량 미충족,-0.8,safe
+TBN,Tamboran Resources,SmallCap,에너지,NYSE,31.95,32.4,True,False,False,69,C,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 HVT,Haverty,SmallCap,소비순환재,NYSE,21.24,-6.3,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 VENU,Venu Holding,SmallCap,소비순환재,NYSE,3.32,-69.3,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 NL,NL Industries,SmallCap,산업,NYSE,5.81,-6.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
@@ -618,7 +618,7 @@ PIPR,Piper Sandler,MidCap,금융,NYSE,74.5,-7.6,False,False,False,0,D,0.0,0.0,0.
 SLG,SL 그린 리얼티,MidCap,부동산,NYSE,37.18,-31.6,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 ACA,Arcosa,MidCap,산업,NYSE,106.72,9.4,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 COTY,코티,MidCap,필수소비재,NYSE,2.05,-48.6,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-VIST,Vista Oil Gas,MidCap,에너지,NYSE,71.33,54.5,True,True,True,81,A,72.96,39.2,7.0,1.49,270,5,시그널,-2.2,safe
+VIST,Vista Oil Gas,MidCap,에너지,NYSE,71.33,54.5,True,False,False,76,B,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 MOD,Modine Manu,MidCap,소비순환재,NYSE,232.89,93.6,True,False,False,88,A,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 MATX,Matson,MidCap,산업,NYSE,164.3,37.2,True,False,False,71,B,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 AROC,Archrock,MidCap,에너지,NYSE,36.86,40.1,True,False,False,72,B,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
@@ -1245,7 +1245,7 @@ CAVA,CAVA Group,LargeCap,소비순환재,NYSE,80.29,16.4,False,False,False,0,D,0
 BAH,부즈 앨런 해밀턴,LargeCap,기술,NYSE,80.12,-17.6,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 BALL,볼 코퍼레이션,LargeCap,소재,NYSE,60.75,14.5,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 KIM,Kimco Realty,LargeCap,부동산,NYSE,22.41,5.4,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-WLK,Westlake Chemical,LargeCap,소재,NYSE,114.22,42.0,True,True,False,67,C,114.22,40.5,7.1,0.87,221,10,거래량 미충족,0.0,safe
+WLK,Westlake Chemical,LargeCap,소재,NYSE,114.22,42.0,True,False,False,72,B,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 IEX,IDEX,LargeCap,산업,NYSE,191.63,6.7,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 BAP,Credicorp Ltd,LargeCap,금융,NYSE,338.9,35.4,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 AMCR,암코,LargeCap,소재,NYSE,40.55,-7.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
@@ -1477,7 +1477,7 @@ DSGR,Distribution Solutions,SmallCap,산업,NYSE,26.5,-9.9,False,False,False,0,D
 NAVI,Navient,SmallCap,금융,NYSE,8.17,-40.7,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 TASK,Taskus,SmallCap,산업,NYSE,10.48,-26.0,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 DYN,다인 테라,SmallCap,헬스케어,NYSE,18.98,33.2,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-CLMT,Calumet Specialty,SmallCap,에너지,NYSE,29.99,77.5,True,True,False,88,A,30.4,21.6,7.8,1.07,180,14,거래량 미충족,-1.3,safe
+CLMT,Calumet Specialty,SmallCap,에너지,NYSE,29.99,77.5,True,False,False,83,A,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 UNIT,Uniti Group,SmallCap,부동산,NYSE,7.87,35.2,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 PLAB,Photronics,SmallCap,기술,NYSE,43.26,69.0,True,False,False,80,A,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 VECO,Veeco Instr,SmallCap,기술,NYSE,36.96,42.5,True,False,False,72,B,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
@@ -1781,7 +1781,7 @@ ATRO,Astronics Corp,SmallCap,산업,NYSE,68.38,72.0,False,False,False,0,D,0.0,0.
 DHC,Diversified Healthcare,SmallCap,부동산,NYSE,6.86,79.0,True,False,False,83,A,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 APPS,Digital Turbine,SmallCap,기술,NYSE,2.95,-40.7,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 SHEN,Shenandoah Tel,SmallCap,기술,NYSE,14.77,16.5,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-ANAB,AnaptysBio,SmallCap,헬스케어,NYSE,65.39,136.0,True,True,False,90,S,67.29,28.1,7.3,1.22,163,7,거래량 미충족,-2.8,safe
+ANAB,AnaptysBio,SmallCap,헬스케어,NYSE,65.39,136.0,True,False,False,90,S,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 KRT,카랫 패키징,SmallCap,소재,NYSE,28.39,12.0,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 KURA,Kura Oncology Inc,SmallCap,헬스케어,NYSE,8.55,3.1,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 TMC,TMC the metals company,SmallCap,소재,NYSE,4.59,1.0,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
@@ -2434,7 +2434,7 @@ CENTA,Centaurus 2002,MidCap,필수소비재,NYSE,32.87,6.6,False,False,False,0,D
 CENT,Central Garden & Pet Co.,MidCap,필수소비재,NYSE,37.58,9.7,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 RPD,Rapid7 Inc,MidCap,기술,NYSE,5.6,-73.5,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 CLOV,Clover Health Investments,MidCap,헬스케어,NYSE,1.82,-39.6,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
-LMAT,LeMaitre Vascular Inc,MidCap,헬스케어,NYSE,111.08,28.1,True,True,True,83,A,113.69,20.1,6.6,1.5,128,20,시그널,-2.3,safe
+LMAT,LeMaitre Vascular Inc,MidCap,헬스케어,NYSE,111.08,28.1,True,False,False,68,C,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
 HRMY,하모니 바이오,MidCap,헬스케어,NYSE,27.59,-19.0,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 SYBT,Stock Yards Bancorp,MidCap,금융,NYSE,64.36,-10.9,False,False,False,0,D,0.0,0.0,0.0,0.0,0,0,트렌드 미통과,0.0,
 KLIC,Kulicke and Soffa,MidCap,기술,NYSE,68.8,67.1,True,False,False,80,A,0.0,0.0,0.0,0.0,0,0,패턴 미감지,0.0,
