@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -295,7 +296,7 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
       const q = val.toLowerCase();
       const hits = (allData||[]).filter(r =>
         String(r.name||"").toLowerCase().includes(q) ||
-        String(r.ticker||"").startsWith(q.toUpperCase()) ||
+        String(r.ticker||"").toLowerCase() === q ||
         String(r.ticker||"").toLowerCase().startsWith(q)
       ).slice(0, 8);
       setSuggestions(hits);
@@ -776,6 +777,7 @@ function App() {
     const list = datasets.kr_all || [];
     const found = list.find(r =>
       String(r.ticker||"").toLowerCase() === q ||
+      String(r.ticker||"").toUpperCase() === query.trim().toUpperCase() ||
       String(r.name||"").toLowerCase().includes(q)
     );
     setTickerResult(found || { error: "종목을 찾을 수 없어요: " + query });
