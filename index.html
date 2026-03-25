@@ -237,6 +237,14 @@ function ScannerView({ data=[], market }) {
                         {row.cap==="MegaCap"?"초대형":row.cap==="LargeCap"?"대형":row.cap==="MidCap"?"중형":"소형"}
                       </span>
                       {row.sector && <div style={{ fontSize:10, color:"#64748b", marginTop:2 }}>{row.sector}</div>}
+                      {row.base_count && (
+                        <div style={{ fontSize:10, fontWeight:700, marginTop:2,
+                          color:row.base_count==="1st"?"#94a3b8":
+                               row.base_count==="2nd"?"#22c55e":
+                               row.base_count==="3rd"?"#fb923c":"#ef4444" }}>
+                          {row.base_count} base
+                        </div>
+                      )}
                     </td>
                   )}
                   <td style={{ padding:"8px 12px", textAlign:"center", fontWeight:800, color:(row.score||0)>=80?"#fb923c":(row.score||0)>=70?"#f1f5f9":"#475569" }}>{row.score||"-"}</td>
