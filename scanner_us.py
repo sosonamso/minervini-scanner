@@ -369,6 +369,7 @@ if __name__=="__main__":
                 "cur":pat["cur"],"pivot":pivot,
                 "cd":pat["cd"],"hd":pat["hd"],
                 "cdays":pat["cdays"],"hdays":pat["hdays"],
+                "cup_start":pat.get("cup_start",""),"cup_end":pat.get("cup_end",""),
                 "vr":pat["vr"],"vs":pat["vs"],
                 "rs":rs,"score":score,"grade":grade,"history":history,
             })
