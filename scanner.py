@@ -232,6 +232,7 @@ def check_trend(df):
 
 def detect(df):
     cl=df["Close"].values.astype(float);vl=df["Volume"].values.astype(float);n=len(cl)
+    idx=df.index
     if n<60:return False,{}
     c=cl[-min(200,n):];v=vl[-min(200,n):];w=len(c)
     li=int(np.argmax(c[:w//2]));lh=c[li]
@@ -243,6 +244,7 @@ def detect(df):
     if len(rc)<10:return False,{}
     ri=bi+int(np.argmax(rc));rh=c[ri]
     if rh<lh*0.90:return False,{}
+    if rh>lh*1.05:return False,{}   # 상한: 105% 이하
     hnd=c[ri:];hl=len(hnd)
     if not(5<=hl<=20):return False,{}
     hlow=float(np.min(hnd));hd=(rh-hlow)/rh
@@ -251,9 +253,17 @@ def detect(df):
     cur=cl[-1]
     if not(rh*0.97<=cur<=rh*1.05):return False,{}
     vr=float(np.mean(v[-5:]))/float(np.mean(v[-40:-5]))if len(v)>=40 else 1.0
-    return True,{"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":bi-li,"hdays":hl,
+    # 컵 날짜 계산
+    try:
+        start_pos=n-len(c)
+        cup_start=idx[start_pos+li].strftime("%y.%m.%d")
+        cup_end=idx[start_pos+ri].strftime("%y.%m.%d")
+    except:
+        cup_start="";cup_end=""
+    return True,{"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":ri-li,"hdays":hl,
                  "pivot":round(float(rh),0),"cur":round(float(cur),0),
-                 "vr":round(vr,2),"vs":vr>=1.40}
+                 "vr":round(vr,2),"vs":vr>=1.40,
+                 "cup_start":cup_start,"cup_end":cup_end}
 
 def check_trend_detail(df):
     if len(df)<200:return False,{}
@@ -553,6 +563,7 @@ if __name__=="__main__":
             if not signal:break
 
             history=get_past_signals(df,sig_ts)
+            base_count=get_base_count(history)
             trdval_20=round(float(sl["TrdVal"].tail(20).mean())/1e8,1) if "TrdVal" in sl.columns else 0.0
             res.append({
                 "sig_date":sig_str,"ticker":ticker,
@@ -561,9 +572,10 @@ if __name__=="__main__":
                 "cur":pat["cur"],"pivot":pat["pivot"],
                 "cd":pat["cd"],"hd":pat["hd"],
                 "cdays":pat["cdays"],"hdays":pat["hdays"],
+                "cup_start":pat.get("cup_start",""),"cup_end":pat.get("cup_end",""),
                 "vr":pat["vr"],"vs":pat["vs"],
                 "rs":rs,"score":score,"grade":grade,
-                "trdval_20":trdval_20,"history":history,
+                "trdval_20":trdval_20,"history":history,"base_count":base_count,
             })
             break
 
@@ -596,7 +608,7 @@ if __name__=="__main__":
                  f"  AI점수: {grade_emoji}{r['score']}점({r['grade']}등급)\n"
                  f"  현재가:{r['cur']:,.0f}원\n"
                  f"  피벗:{r['pivot']:,.0f}원({up:+.1f}%)\n"
-                 f"  컵:{r['cd']}%/{r['cdays']}일 핸들:{r['hd']}%/{r['hdays']}일\n"
+                 f"  컵:{r['cd']}%/{r['cdays']}일{cup_date_str} 핸들:{r['hd']}%/{r['hdays']}일\n"
                  f"  거래량:{r['vr']}x🔥 RS:{r['rs']:+.1f}% 거래대금:{r.get('trdval_20',0):.0f}억\n"
                  +(past+"\n" if past else "")+"\n")
             if len(msg)+len(blk)>4000:
