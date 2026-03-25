@@ -142,7 +142,7 @@ def detect(df):
         cup_days=bi-li
 
         # 컵 조건
-        if not(0.15<=cd<=0.50):continue
+        if not(0.20<=cd<=0.50):continue
         if cup_days<35:continue
 
         rc=c[bi:]
