@@ -283,9 +283,11 @@ function ScannerView({ data=[], market }) {
   );
 }
 
-function TickerSearchView({ result, input, setInput, onSearch, allData }) {
+function TickerSearchView({ result, input, setInput, onSearch, market, setMarket, krData, usData }) {
   const gradeEmoji = {"S":"🏆","A":"🥇","B":"🥈","C":"🥉","D":"📊"};
   const [suggestions, setSuggestions] = useState([]);
+  const allData = market === "KR" ? krData : usData;
+  const isKR = market === "KR";
 
   const handleInput = (val) => {
     setInput(val);
@@ -293,7 +295,8 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
       const q = val.toLowerCase();
       const hits = (allData||[]).filter(r =>
         String(r.name||"").toLowerCase().includes(q) ||
-        String(r.ticker||"").startsWith(q)
+        String(r.ticker||"").startsWith(q.toUpperCase()) ||
+        String(r.ticker||"").toLowerCase().startsWith(q)
       ).slice(0, 8);
       setSuggestions(hits);
     } else {
@@ -314,6 +317,17 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
   return (
     <div>
       <div style={{ marginBottom:20 }}>
+        <div style={{ display:"flex", gap:8, marginBottom:12 }}>
+          {["KR","US"].map(m => (
+            <button key={m} onClick={() => { setMarket(m); setInput(""); setSuggestions([]); }}
+              style={{ padding:"6px 16px", borderRadius:8, border:"none", cursor:"pointer",
+                fontFamily:"inherit", fontWeight:700, fontSize:13,
+                background:market===m?"linear-gradient(90deg,#fb923c,#f59e0b)":"#1e293b",
+                color:market===m?"#000":"#64748b" }}>
+              {m==="KR"?"🇰🇷 국장":"🇺🇸 미장"}
+            </button>
+          ))}
+        </div>
         <div style={{ fontSize:12, color:"#64748b", marginBottom:8 }}>
           {(allData||[]).length > 0 ? (allData||[]).length+"개 종목 로딩됨 · 종목명으로 검색" : "⏳ 데이터 로딩 중..."}
         </div>
@@ -321,14 +335,14 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
           <div style={{ position:"relative" }}>
             <input placeholder="예: 삼성전자, 서진시스템" value={input}
               onChange={e => handleInput(e.target.value)}
-              onKeyDown={e => { if(e.key==="Enter"){ setSuggestions([]); onSearch(input); }}}
+              onKeyDown={e => { if(e.key==="Enter"){ setSuggestions([]); onSearch(input, market); }}}
               style={{ padding:"8px 14px", borderRadius:8, border:"1px solid #334155",
                 background:"#1e293b", color:"#f1f5f9", fontSize:13, outline:"none", width:220 }} />
             {suggestions.length > 0 && (
               <div style={{ position:"absolute", top:"100%", left:0, width:260,
                 background:"#1e293b", border:"1px solid #334155", borderRadius:8, zIndex:100, marginTop:4 }}>
                 {suggestions.map((s,i) => (
-                  <div key={i} onClick={() => { setInput(s.name); setSuggestions([]); onSearch(s.name); }}
+                  <div key={i} onClick={() => { setInput(s.ticker||s.name); setSuggestions([]); onSearch(s.ticker||s.name, market); }}
                     style={{ padding:"8px 14px", cursor:"pointer", fontSize:12,
                       borderBottom:"1px solid #0f172a", display:"flex", justifyContent:"space-between" }}>
                     <span style={{ color:"#f1f5f9" }}>{s.name}</span>
@@ -338,7 +352,7 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
               </div>
             )}
           </div>
-          <button onClick={() => { setSuggestions([]); onSearch(input); }}
+          <button onClick={() => { setSuggestions([]); onSearch(input, market); }}
             style={{ padding:"8px 18px", borderRadius:8, background:"linear-gradient(90deg,#fb923c,#f59e0b)",
               color:"#000", fontWeight:800, fontSize:13, border:"none", cursor:"pointer", fontFamily:"inherit" }}>
             검색
@@ -378,7 +392,7 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
           {/* 기본 정보 */}
           <div style={{ display:"flex", gap:8, marginBottom:16, flexWrap:"wrap" }}>
             {[
-              ["현재가", result.cur?Number(result.cur).toLocaleString()+"원":"-","#f1f5f9"],
+              ["현재가", result.cur?(result._market==="US"?"$"+Number(result.cur).toFixed(2):Number(result.cur).toLocaleString()+"원"):"-","#f1f5f9"],
               ["RS", result.rs!==undefined?(result.rs>0?"+":"")+result.rs+"%":"-", result.rs>0?"#22c55e":"#ef4444"],
               ["거래대금(20일)", result.trdval_20?result.trdval_20+"억":"-","#f1f5f9"],
             ].map(([label,val,color]) => (
@@ -443,11 +457,15 @@ function TickerSearchView({ result, input, setInput, onSearch, allData }) {
               <div style={{ display:"flex", gap:8, flexWrap:"wrap", alignItems:"center" }}>
                 <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
                   <div style={{ fontSize:10, color:"#64748b" }}>피벗가</div>
-                  <div style={{ fontSize:15, fontWeight:700, color:"#fb923c" }}>{Number(result.pivot).toLocaleString()}원</div>
+                  <div style={{ fontSize:15, fontWeight:700, color:"#fb923c" }}>
+                    {result._market==="US"?"$"+Number(result.pivot).toFixed(2):Number(result.pivot).toLocaleString()+"원"}
+                  </div>
                 </div>
                 <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
                   <div style={{ fontSize:10, color:"#64748b" }}>손절가 (-7%)</div>
-                  <div style={{ fontSize:15, fontWeight:700, color:"#ef4444" }}>{Math.round(result.pivot*0.93).toLocaleString()}원</div>
+                  <div style={{ fontSize:15, fontWeight:700, color:"#ef4444" }}>
+                    {result._market==="US"?"$"+(result.pivot*0.93).toFixed(2):Math.round(result.pivot*0.93).toLocaleString()+"원"}
+                  </div>
                 </div>
                 <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
                   <div style={{ fontSize:10, color:"#64748b" }}>피벗 대비</div>
@@ -712,11 +730,11 @@ const DATA_FILES_MAP = {
 function App() {
   const [activeTab, setActiveTab] = useState("kr_scanner");
   const [datasets, setDatasets] = useState({
-    kr_scanner:[], kr_backtest:[], us_scanner:[], us_small:[], us_backtest:[], kr_all:[]
+    kr_scanner:[], kr_backtest:[], us_scanner:[], us_small:[], us_backtest:[], kr_all:[], us_all:[]
   });
   const [loadState, setLoadState] = useState({
     kr_scanner:"idle", kr_backtest:"idle", us_scanner:"idle",
-    us_small:"idle", us_backtest:"idle", kr_all:"idle"
+    us_small:"idle", us_backtest:"idle", kr_all:"idle", us_all:"idle"
   });
   const [lastUpdated, setLastUpdated] = useState({});
   const [tickerInput, setTickerInput] = useState("");
@@ -767,6 +785,7 @@ function App() {
       if (t.type !== "search") fetchCSV(t.id);
     });
     fetchCSV("kr_all");
+    fetchCSV("us_all");
   }, []);
 
   const handleUpload = useCallback((tabId) => (e) => {
@@ -885,7 +904,10 @@ function App() {
             input={tickerInput}
             setInput={setTickerInput}
             onSearch={searchTicker}
-            allData={datasets.kr_all||[]}
+            market={tickerMarket}
+            setMarket={setTickerMarket}
+            krData={datasets.kr_all||[]}
+            usData={datasets.us_all||[]}
           />
         ) : loadState[activeTab] === "loading" ? (
           <div style={{ textAlign:"center", padding:"60px 20px", color:"#64748b" }}>⏳ 로딩 중...</div>
