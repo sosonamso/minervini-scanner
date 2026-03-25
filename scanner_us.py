@@ -165,12 +165,15 @@ def detect(df):
         full_cup_days=ri-li
         if full_cup_days>best_cup_days:
             best_cup_days=full_cup_days
-            # 날짜 계산: c는 idx의 마지막 min(500,n)개 슬라이스
-            start_offset=n-min(500,n)  # 슬라이스 시작 위치
+            # 날짜 계산: c는 df의 마지막 min(500,n)개
+            start_offset=n-len(c)  # 슬라이스 시작 위치
             try:
-                cup_start_date=idx[start_offset+li].strftime("%y.%m.%d")
-                cup_end_date=idx[start_offset+ri].strftime("%y.%m.%d")
-            except:
+                cs=idx[start_offset+li]
+                ce=idx[start_offset+ri]
+                cup_start_date=cs.strftime("%y.%m.%d")
+                cup_end_date=ce.strftime("%y.%m.%d")
+            except Exception as e:
+                print(f"날짜변환오류: {e}, n={n}, len(c)={len(c)}, li={li}, ri={ri}")
                 cup_start_date="";cup_end_date=""
             best={"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":full_cup_days,"hdays":hl,
                   "pivot":round(float(rh),2),"cur":round(float(cur),2),
