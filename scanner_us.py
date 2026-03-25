@@ -276,7 +276,7 @@ if __name__=="__main__":
     send(f"다운로드 완료\n수신: {data_ok}/{len(ticker_list)}개\n{date_stat}\n패턴 분석 시작...")
 
     # 패턴 분석
-    res=[];trend_pass=0
+    res=[];trend_pass=0;all_scores=[]
     for i,ticker in enumerate(ticker_list):
         if i%500==0:print(f"[{i}/{len(ticker_list)}] 트렌드:{trend_pass} 발견:{len(res)}")
         df=valid_data.get(ticker)
