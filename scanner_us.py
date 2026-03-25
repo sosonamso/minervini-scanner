@@ -105,6 +105,7 @@ def check_trend(df):
 
 def detect(df):
     cl=df["Close"].values.astype(float);vl=df["Volume"].values.astype(float);n=len(cl)
+    idx=df.index  # 날짜 인덱스
     if n<60:return False,{}
 
     # ① 기간 확장: 500일
@@ -160,12 +161,18 @@ def detect(df):
 
         vr=float(np.mean(v[-5:]))/float(np.mean(v[-40:-5]))if len(v)>=40 else 1.0
 
-        # 가장 긴 컵 선택
-        if cup_days>best_cup_days:
-            best_cup_days=cup_days
-            best={"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":cup_days,"hdays":hl,
+        # 가장 긴 컵 선택 (전체 컵 = 왼쪽 고점 → 오른쪽 고점)
+        full_cup_days=ri-li
+        if full_cup_days>best_cup_days:
+            best_cup_days=full_cup_days
+            # 날짜 계산 (500일 슬라이스 기준 → 원래 인덱스로 변환)
+            offset=max(0,n-min(500,n))
+            cup_start_date=idx[offset+li].strftime("%y.%m.%d") if offset+li<len(idx) else ""
+            cup_end_date=idx[offset+ri].strftime("%y.%m.%d") if offset+ri<len(idx) else ""
+            best={"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":full_cup_days,"hdays":hl,
                   "pivot":round(float(rh),2),"cur":round(float(cur),2),
-                  "vr":round(vr,2),"vs":vr>=1.40}
+                  "vr":round(vr,2),"vs":vr>=1.40,
+                  "cup_start":cup_start_date,"cup_end":cup_end_date}
 
     if best is None:return False,{}
     return True,best
@@ -384,6 +391,7 @@ if __name__=="__main__":
             "entry":r["cur"],"pivot":r["pivot"],
             "cup_depth":r["cd"],"handle_depth":r["hd"],
             "cup_days":r["cdays"],"handle_days":r["hdays"],
+            "cup_start":r.get("cup_start",""),"cup_end":r.get("cup_end",""),
             "vol_ratio":r["vr"],"rs":r["rs"],
             "score":r["score"],"grade":r["grade"],
             "hist_count":h_cnt,"hist_winrate":h_rate,"hist_detail":h_detail,
@@ -406,12 +414,13 @@ if __name__=="__main__":
             up=round((r["pivot"]/r["cur"]-1)*100,1)
             grade_emoji={"S":"🏆","A":"🥇","B":"🥈","C":"🥉","D":"📊"}.get(r["grade"],"📊")
             past=format_past(r["history"])
+            cup_date_str=f"({r.get('cup_start','')}~{r.get('cup_end','')})" if r.get('cup_start') else ""
             blk=(f"[{r['sig_date']}] [{cap_label(r['cap'])}] {r['sector']}\n"
                  f"◆{r['ticker']}\n"
                  f"  AI점수: {grade_emoji}{r['score']}점({r['grade']}등급)\n"
                  f"  현재가: ${r['cur']:,.2f}\n"
                  f"  피벗: ${r['pivot']:,.2f} ({up:+.1f}%)\n"
-                 f"  컵:{r['cd']}%/{r['cdays']}일 핸들:{r['hd']}%/{r['hdays']}일\n"
+                 f"  컵:{r['cd']}%/{r['cdays']}일{cup_date_str} 핸들:{r['hd']}%/{r['hdays']}일\n"
                  f"  거래량:{r['vr']}x🔥 RS:{r['rs']:+.1f}%\n"
                  +(past+"\n"if past else"")+"\n")
             if len(msg)+len(blk)>4000:
