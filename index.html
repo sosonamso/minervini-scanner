@@ -107,7 +107,8 @@ function ExpandedRow({ row, isKR, colCount }) {
           <div>
             <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>상세 정보</div>
             <div style={{ fontSize:12, color:"#94a3b8" }}>
-              {"컵: "+(row.cup_depth||"-")+"% / "+(row.cup_days||"-")+"일"}<br/>
+              {"컵: "+(row.cup_depth||"-")+"% / "+(row.cup_days||"-")+"일"}
+              {row.cup_start&&row.cup_end&&<span style={{color:"#fb923c",marginLeft:4}}>{"("+row.cup_start+"~"+row.cup_end+")"}</span>}<br/>
               {"핸들: "+(row.handle_depth||"-")+"% / "+(row.handle_days||"-")+"일"}<br/>
               {"거래량배율: "+(row.vol_ratio||"-")+"x"}
             </div>
