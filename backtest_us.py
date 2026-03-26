@@ -13,8 +13,8 @@ TOK=os.environ.get("TELEGRAM_TOKEN","")
 CID=os.environ.get("TELEGRAM_CHAT_ID","")
 MASSIVE=os.environ.get("MASSIVE_TOKEN","")
 
-LOOKBACK_DAYS=1000
-HISTORY_DAYS=1600
+LOOKBACK_DAYS=1500
+HISTORY_DAYS=2100
 MAX_HOLD=90
 
 SP500 = [
@@ -82,27 +82,54 @@ def check_trend(df):
 def detect(df):
     cl=df["Close"].values.astype(float);vl=df["Volume"].values.astype(float);n=len(cl)
     if n<60:return False,{}
-    c=cl[-min(200,n):];v=vl[-min(200,n):];w=len(c)
-    li=int(np.argmax(c[:w//2]));lh=c[li]
-    cup=c[li:]
-    if len(cup)<20:return False,{}
-    bi=li+int(np.argmin(cup));bot=c[bi];cd=(lh-bot)/lh
-    if not(0.15<=cd<=0.50)or(bi-li)<35:return False,{}
-    rc=c[bi:]
-    if len(rc)<10:return False,{}
-    ri=bi+int(np.argmax(rc));rh=c[ri]
-    if rh<lh*0.90:return False,{}
-    hnd=c[ri:];hl=len(hnd)
-    if not(5<=hl<=20):return False,{}
-    hlow=float(np.min(hnd));hd=(rh-hlow)/rh
-    if not(0.05<=hd<=0.15):return False,{}
-    if(hlow-bot)/(lh-bot)<0.60:return False,{}
-    cur=cl[-1]
-    if not(rh*0.97<=cur<=rh*1.05):return False,{}
-    vr=float(np.mean(v[-5:]))/float(np.mean(v[-40:-5]))if len(v)>=40 else 1.0
-    return True,{"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":bi-li,"hdays":hl,
-                 "pivot":round(float(rh),2),"cur":round(float(cur),2),
-                 "vr":round(vr,2),"vs":vr>=1.40}
+
+    # 500일 + 급등 필터
+    c=cl[-min(500,n):];v=vl[-min(500,n):];w=len(c)
+    if len(c)>=20:
+        recent_gain=(c[-1]-c[-20])/c[-20]
+        if recent_gain>0.40:return False,{}
+
+    # 로컬 최고점 후보 탐색
+    peak_candidates=[]
+    for i in range(10, w-55):
+        lo=max(0,i-10);hi=min(w,i+10)
+        if c[i]==np.max(c[lo:hi]) and c[i]==np.max(c[max(0,i-5):min(w,i+5)]):
+            peak_candidates.append(i)
+    if not peak_candidates:
+        peak_candidates=[int(np.argmax(c[:w//2]))]
+
+    # 가장 긴 컵 선택
+    best=None;best_cup_days=0
+    for li in peak_candidates:
+        lh=c[li]
+        cup=c[li:]
+        if len(cup)<55:continue
+        bi=li+int(np.argmin(cup))
+        bot=c[bi];cd=(lh-bot)/lh
+        cup_days=bi-li
+        if not(0.20<=cd<=0.50):continue
+        if cup_days<35:continue
+        rc=c[bi:]
+        if len(rc)<10:continue
+        ri=bi+int(np.argmax(rc));rh=c[ri]
+        if rh<lh*0.90:continue
+        if rh>lh*1.05:continue
+        hnd=c[ri:];hl=len(hnd)
+        if not(5<=hl<=20):continue
+        hlow=float(np.min(hnd));hd=(rh-hlow)/rh
+        if not(0.05<=hd<=0.15):continue
+        if(hlow-bot)/(lh-bot)<0.60:continue
+        cur=cl[-1]
+        if not(rh*0.97<=cur<=rh*1.05):continue
+        vr=float(np.mean(v[-5:]))/float(np.mean(v[-40:-5]))if len(v)>=40 else 1.0
+        full_cup_days=ri-li
+        if full_cup_days>best_cup_days:
+            best_cup_days=full_cup_days
+            best={"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":full_cup_days,"hdays":hl,
+                  "pivot":round(float(rh),2),"cur":round(float(cur),2),
+                  "vr":round(vr,2),"vs":vr>=1.40}
+    if best is None:return False,{}
+    return True,best
 
 def calc_rs(df,mkt):
     def p(d,n):return float(d["Close"].iloc[-1]/d["Close"].iloc[-n]-1)if len(d)>=n else 0.0
