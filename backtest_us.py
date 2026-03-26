@@ -225,6 +225,7 @@ if __name__=="__main__":
                 "entry":entry,"pivot":pat["pivot"],
                 "cup_depth":pat["cd"],"handle_depth":pat["hd"],
                 "cup_days":pat["cdays"],"handle_days":pat["hdays"],
+                "cup_start":pat.get("cup_start",""),"cup_end":pat.get("cup_end",""),
                 "vol_ratio":pat["vr"],"rs":rs,"score":score,
                 "r5":daily_r.get(5),"r20":daily_r.get(20),"r60":daily_r.get(60),
                 "alpha5":alpha.get(5),"alpha20":alpha.get(20),"alpha60":alpha.get(60),
