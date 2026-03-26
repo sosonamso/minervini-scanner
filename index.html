@@ -662,9 +662,13 @@ function BacktestView({ data=[], market }) {
                       <div>
                         <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>상세 정보</div>
                         <div style={{ fontSize:12, color:"#94a3b8" }}>
-                          {"컵: "+(row.cup_depth||"-")+"% / "+(row.cup_days||"-")+"일"}<br/>
+                          {"컵: "+(row.cup_depth||"-")+"% / "+(row.cup_days||"-")+"일"}
+                          {row.cup_start&&row.cup_end&&<span style={{color:"#fb923c",marginLeft:4}}>{"("+row.cup_start+"~"+row.cup_end+")"}</span>}<br/>
                           {"핸들: "+(row.handle_depth||"-")+"% / "+(row.handle_days||"-")+"일"}<br/>
-                          {"거래량배율: "+(row.vol_ratio||"-")+"x"}<br/>
+                          {"거래량배율: "+(row.vol_ratio||"-")+"x"}
+                          {row.base_count&&<span style={{marginLeft:8,fontWeight:700,
+                            color:row.base_count==="1st"?"#94a3b8":row.base_count==="2nd"?"#22c55e":row.base_count==="3rd"?"#fb923c":"#ef4444"}}>
+                            {row.base_count+" base"}</span>}<br/>
                           {"진입가: "+(isKR?Number(row.entry||0).toLocaleString():"$"+(row.entry||0).toFixed(2))}
                         </div>
                       </div>
