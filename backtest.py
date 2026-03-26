@@ -12,8 +12,8 @@ TOK=os.environ.get("TELEGRAM_TOKEN","")
 CID=os.environ.get("TELEGRAM_CHAT_ID","")
 KRX=os.environ.get("KRX_TOKEN","")
 
-LOOKBACK_DAYS=900   # 시그널 탐색 기간
-HISTORY_DAYS=1500   # 데이터 수집 기간
+LOOKBACK_DAYS=1500  # 시그널 탐색 기간
+HISTORY_DAYS=2100   # 데이터 수집 기간
 MAX_HOLD=90         # 최대 보유일
 _row_meta={}        # ticker -> {name, sector}
 
@@ -177,11 +177,12 @@ def detect(df):
     cup=c[li:]
     if len(cup)<20:return False,{}
     bi=li+int(np.argmin(cup));bot=c[bi];cd=(lh-bot)/lh
-    if not(0.15<=cd<=0.50)or(bi-li)<35:return False,{}
+    if not(0.20<=cd<=0.50)or(bi-li)<35:return False,{}
     rc=c[bi:]
     if len(rc)<10:return False,{}
     ri=bi+int(np.argmax(rc));rh=c[ri]
     if rh<lh*0.90:return False,{}
+    if rh>lh*1.05:return False,{}
     hnd=c[ri:];hl=len(hnd)
     if not(5<=hl<=20):return False,{}
     hlow=float(np.min(hnd));hd=(rh-hlow)/rh
@@ -190,7 +191,7 @@ def detect(df):
     cur=cl[-1]
     if not(rh*0.97<=cur<=rh*1.05):return False,{}
     vr=float(np.mean(v[-5:]))/float(np.mean(v[-40:-5]))if len(v)>=40 else 1.0
-    return True,{"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":bi-li,"hdays":hl,
+    return True,{"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":ri-li,"hdays":hl,
                  "pivot":round(float(rh),0),"cur":round(float(cur),0),
                  "vr":round(vr,2),"vs":vr>=1.40}
 
