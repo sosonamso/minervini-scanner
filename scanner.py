@@ -239,12 +239,12 @@ def detect(df):
     cup=c[li:]
     if len(cup)<20:return False,{}
     bi=li+int(np.argmin(cup));bot=c[bi];cd=(lh-bot)/lh
-    if not(0.20<=cd<=0.50)or(bi-li)<35:return False,{}
+    if not(0.15<=cd<=0.50)or(bi-li)<35:return False,{}
     rc=c[bi:]
     if len(rc)<10:return False,{}
     ri=bi+int(np.argmax(rc));rh=c[ri]
     if rh<lh*0.90:return False,{}
-    if rh>lh*1.05:return False,{}   # 상한: 105% 이하
+    if rh>lh*1.15:return False,{}   # 상한: 115% 이하
     hnd=c[ri:];hl=len(hnd)
     if not(5<=hl<=20):return False,{}
     hlow=float(np.min(hnd));hd=(rh-hlow)/rh
@@ -298,7 +298,7 @@ def get_pattern_fail_reason(df):
     li=int(np.argmax(c[:w//2]));lh=c[li];cup=c[li:]
     if len(cup)<20:return "컵 구간 부족"
     bi=li+int(np.argmin(cup));bot=c[bi];cd=(lh-bot)/lh;cup_days=bi-li
-    if cd<0.20:return f"컵 깊이 얕음({round(cd*100,1)}%)"
+    if cd<0.15:return f"컵 깊이 얕음({round(cd*100,1)}%)"
     if cd>0.50:return f"컵 깊이 깊음({round(cd*100,1)}%)"
     if cup_days<35:return f"컵 기간 짧음({cup_days}일)"
     rc=c[bi:]
