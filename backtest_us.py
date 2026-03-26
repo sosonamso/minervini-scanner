@@ -168,10 +168,19 @@ if __name__=="__main__":
     signal_start=end-timedelta(days=LOOKBACK_DAYS)
     signal_dates=set(pd.bdate_range(signal_start,end).map(pd.Timestamp))
 
-    all_tickers=list(dict.fromkeys(SP500+SP400+SP600))
-    cap_map={t:"S&P500" for t in SP500}
-    cap_map.update({t:"MidCap400" for t in SP400 if t not in cap_map})
-    cap_map.update({t:"SmallCap600" for t in SP600 if t not in cap_map})
+    # tickers_us.csv 로드 (없으면 SP500+SP400+SP600 fallback)
+    try:
+        import pandas as pd
+        tdf=pd.read_csv("tickers_us.csv",encoding="utf-8-sig")
+        all_tickers=[str(r["ticker"]).strip() for _,r in tdf.iterrows() if str(r["ticker"]).strip()]
+        cap_map={str(r["ticker"]).strip():str(r.get("cap","SmallCap")) for _,r in tdf.iterrows()}
+        print(f"tickers_us.csv 로드: {len(all_tickers)}개")
+    except Exception as e:
+        print(f"tickers_us.csv 실패({e}) → S&P1500 사용")
+        all_tickers=list(dict.fromkeys(SP500+SP400+SP600))
+        cap_map={t:"S&P500" for t in SP500}
+        cap_map.update({t:"MidCap400" for t in SP400 if t not in cap_map})
+        cap_map.update({t:"SmallCap600" for t in SP600 if t not in cap_map})
 
     send(f"🇺🇸 미국 백테스트 시작 (Massive)\n기간: 최근 {LOOKBACK_DAYS}일\nS&P1500 {len(all_tickers)}개 데이터 수집 중...\n(약 1~2시간 소요)")
 
