@@ -171,6 +171,7 @@ def check_trend(df):
 
 def detect(df):
     cl=df["Close"].values.astype(float);vl=df["Volume"].values.astype(float);n=len(cl)
+    idx=df.index
     if n<60:return False,{}
     c=cl[-min(200,n):];v=vl[-min(200,n):];w=len(c)
     li=int(np.argmax(c[:w//2]));lh=c[li]
@@ -191,9 +192,16 @@ def detect(df):
     cur=cl[-1]
     if not(rh*0.97<=cur<=rh*1.05):return False,{}
     vr=float(np.mean(v[-5:]))/float(np.mean(v[-40:-5]))if len(v)>=40 else 1.0
+    try:
+        start_pos=n-len(c)
+        cup_start=idx[start_pos+li].strftime("%y.%m.%d")
+        cup_end=idx[start_pos+ri].strftime("%y.%m.%d")
+    except:
+        cup_start="";cup_end=""
     return True,{"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":ri-li,"hdays":hl,
                  "pivot":round(float(rh),0),"cur":round(float(cur),0),
-                 "vr":round(vr,2),"vs":vr>=1.40}
+                 "vr":round(vr,2),"vs":vr>=1.40,
+                 "cup_start":cup_start,"cup_end":cup_end}
 
 def calc_rs(df,mkt_df):
     def p(d,n):return float(d["Close"].iloc[-1]/d["Close"].iloc[-n]-1)if len(d)>=n else 0.0
