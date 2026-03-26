@@ -81,6 +81,7 @@ def check_trend(df):
 
 def detect(df):
     cl=df["Close"].values.astype(float);vl=df["Volume"].values.astype(float);n=len(cl)
+    idx=df.index
     if n<60:return False,{}
 
     # 500일 + 급등 필터
@@ -125,9 +126,16 @@ def detect(df):
         full_cup_days=ri-li
         if full_cup_days>best_cup_days:
             best_cup_days=full_cup_days
+            try:
+                start_pos=n-len(c)
+                cup_start=idx[start_pos+li].strftime("%y.%m.%d")
+                cup_end=idx[start_pos+ri].strftime("%y.%m.%d")
+            except:
+                cup_start="";cup_end=""
             best={"cd":round(cd*100,1),"hd":round(hd*100,1),"cdays":full_cup_days,"hdays":hl,
                   "pivot":round(float(rh),2),"cur":round(float(cur),2),
-                  "vr":round(vr,2),"vs":vr>=1.40}
+                  "vr":round(vr,2),"vs":vr>=1.40,
+                  "cup_start":cup_start,"cup_end":cup_end}
     if best is None:return False,{}
     return True,best
 
@@ -174,6 +182,7 @@ if __name__=="__main__":
         tdf=pd.read_csv("tickers_us.csv",encoding="utf-8-sig")
         all_tickers=[str(r["ticker"]).strip() for _,r in tdf.iterrows() if str(r["ticker"]).strip()]
         cap_map={str(r["ticker"]).strip():str(r.get("cap","SmallCap")) for _,r in tdf.iterrows()}
+        sector_map={str(r["ticker"]).strip():str(r.get("sector","기타")) for _,r in tdf.iterrows()}
         print(f"tickers_us.csv 로드: {len(all_tickers)}개")
     except Exception as e:
         print(f"tickers_us.csv 실패({e}) → S&P1500 사용")
@@ -181,6 +190,7 @@ if __name__=="__main__":
         cap_map={t:"S&P500" for t in SP500}
         cap_map.update({t:"MidCap400" for t in SP400 if t not in cap_map})
         cap_map.update({t:"SmallCap600" for t in SP600 if t not in cap_map})
+        sector_map={}
 
     send(f"🇺🇸 미국 백테스트 시작 (Massive)\n기간: 최근 {LOOKBACK_DAYS}일\nS&P1500 {len(all_tickers)}개 데이터 수집 중...\n(약 1~2시간 소요)")
 
@@ -231,6 +241,7 @@ if __name__=="__main__":
                 "date":sig_ts.strftime("%Y-%m-%d"),
                 "ticker":ticker,
                 "cap":cap_map.get(ticker,"기타"),
+                "sector":sector_map.get(ticker,"기타"),
                 "entry":entry,"pivot":pat["pivot"],
                 "cup_depth":pat["cd"],"handle_depth":pat["hd"],
                 "cup_days":pat["cdays"],"handle_days":pat["hdays"],
