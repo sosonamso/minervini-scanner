@@ -1,2 +1,2 @@
 ﻿date,ticker,cap,sector,exchange,entry,pivot,cup_depth,handle_depth,cup_days,handle_days,cup_start,cup_end,base_count,vol_ratio,rs,score,grade,hist_count,hist_winrate,hist_detail
-2026-03-25,RNGR,SmallCap,에너지,NYSE,17.39,17.67,41.1,7.0,259,18,25.02.18,26.03.02,2nd,1.81,23.8,72,B,1,0,26-03-17:1.5/None
+2026-03-26,RNGR,SmallCap,에너지,NYSE,17.27,17.67,41.1,7.0,259,19,25.02.18,26.03.02,2nd,1.66,24.8,72,B,1,0,26-03-17:1.5/None
