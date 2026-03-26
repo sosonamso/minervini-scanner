@@ -178,12 +178,12 @@ def detect(df):
     cup=c[li:]
     if len(cup)<20:return False,{}
     bi=li+int(np.argmin(cup));bot=c[bi];cd=(lh-bot)/lh
-    if not(0.20<=cd<=0.50)or(bi-li)<35:return False,{}
+    if not(0.15<=cd<=0.50)or(bi-li)<35:return False,{}
     rc=c[bi:]
     if len(rc)<10:return False,{}
     ri=bi+int(np.argmax(rc));rh=c[ri]
     if rh<lh*0.90:return False,{}
-    if rh>lh*1.05:return False,{}
+    if rh>lh*1.15:return False,{}
     hnd=c[ri:];hl=len(hnd)
     if not(5<=hl<=20):return False,{}
     hlow=float(np.min(hnd));hd=(rh-hlow)/rh
