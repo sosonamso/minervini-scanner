@@ -17,7 +17,7 @@ CUP_MIN_DAYS  = 35     # 컵 최소 너비 (일)
 CUP_MAX_DAYS  = 400    # 컵 최대 너비 (일)
 CUP_MIN_DEPTH = 0.15   # 컵 최소 깊이 15%
 CUP_MAX_DEPTH = 0.60   # 컵 최대 깊이 60%
-RH_LH_MAX     = 1.15   # RH <= LH * 이 값
+RH_LH_MAX     = 1.10   # RH <= LH * 이 값
 HDL_MIN_DEPTH = 0.05   # 핸들 최소 깊이 5%
 HDL_MAX_DEPTH = 0.20   # 핸들 최대 깊이 20%
 HDL_MIN_DAYS  = 3      # 핸들 최소 기간
