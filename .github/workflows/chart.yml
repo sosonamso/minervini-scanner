@@ -35,3 +35,10 @@ jobs:
           name: backtest-charts-kr
           path: backtest_charts_kr.pdf
           retention-days: 30
+
+      - name: 라벨링 CSV 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: backtest-label-kr
+          path: backtest_label_kr.csv
+          retention-days: 30
