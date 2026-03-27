@@ -1,0 +1,257 @@
+"""
+국장 백테스트 차트 생성기
+- 데이터: yfinance (.KS/.KQ)
+- 출력: backtest_charts_kr.pdf (artifact)
+- 실행: python chart_backtest_kr.py [샘플수]
+"""
+import sys, time, warnings
+warnings.filterwarnings("ignore")
+
+import pandas as pd
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+import matplotlib.patches as mpatches
+from matplotlib.lines import Line2D
+from matplotlib.patches import Rectangle
+from matplotlib.backends.backend_pdf import PdfPages
+from datetime import datetime, timedelta
+import yfinance as yf
+
+# ─────────────────────────────────────
+# 설정
+# ─────────────────────────────────────
+CSV_FILE   = "backtest_raw.csv"
+OUTPUT_PDF = "backtest_charts_kr.pdf"
+SAMPLE_N   = int(sys.argv[1]) if len(sys.argv) > 1 else None
+
+BG   = "#0d1117"
+UP   = "#ef5350"   # 양봉 빨강
+DN   = "#1565c0"   # 음봉 파랑
+GRID = "#1e2736"
+TXT  = "#e0e0e0"
+MA_C = {"MA5":"#f9a825","MA10":"#66bb6a","MA20":"#42a5f5","MA200":"#ce93d8"}
+CUP_C  = "#26a69a"
+SIG_C  = "#ef5350"
+PIV_C  = "#ff9800"
+
+
+def fetch_ohlcv(ticker, market, start, end):
+    suffix = ".KS" if market == "KOSPI" else ".KQ"
+    sym = str(ticker).zfill(6) + suffix
+    for attempt in range(3):
+        try:
+            df = yf.download(sym, start=start, end=end,
+                             progress=False, auto_adjust=True)
+            if df.empty:
+                return None
+            if isinstance(df.columns, pd.MultiIndex):
+                df.columns = df.columns.get_level_values(0)
+            df = df[["Open","High","Low","Close","Volume"]].dropna()
+            df.index = pd.to_datetime(df.index)
+            return df
+        except Exception as e:
+            print(f"  시도{attempt+1} 실패: {e}")
+            time.sleep(3 * (attempt + 1))
+    return None
+
+
+def add_ma(df):
+    for p in [5, 10, 20, 200]:
+        df[f"MA{p}"] = df["Close"].rolling(p).mean()
+    return df
+
+
+def nearest_x(dates, dt_str, fmt="%y.%m.%d"):
+    try:
+        dt = pd.Timestamp(datetime.strptime(str(dt_str), fmt))
+        diffs = abs(dates - dt)
+        return int(diffs.argmin())
+    except:
+        return None
+
+
+def nearest_x2(dates, dt_str, fmt="%Y-%m-%d"):
+    try:
+        dt = pd.Timestamp(datetime.strptime(str(dt_str), fmt))
+        diffs = abs(dates - dt)
+        return int(diffs.argmin())
+    except:
+        return None
+
+
+def draw(ax_c, ax_v, df, row):
+    dates = df.index
+    n     = len(dates)
+    xs    = range(n)
+    W     = 0.45  # 캔들 폭
+
+    # ── 캔들 ──────────────────────────
+    for i, (_, r) in enumerate(df.iterrows()):
+        o, h, l, c = r["Open"], r["High"], r["Low"], r["Close"]
+        col = UP if c >= o else DN
+        ax_c.plot([i, i], [l, h], color=col, lw=0.7, zorder=2)
+        rect = Rectangle((i-W/2, min(o,c)), W, max(abs(c-o), (h-l)*0.01),
+                          fc=col, ec=col, zorder=3)
+        ax_c.add_patch(rect)
+
+    # ── MA ────────────────────────────
+    for ma, col in MA_C.items():
+        if ma in df.columns:
+            v = df[ma].values
+            ok = ~np.isnan(v)
+            if ok.sum() > 1:
+                ax_c.plot(np.array(list(xs))[ok], v[ok],
+                          color=col, lw=0.9, alpha=0.85,
+                          label=ma, zorder=4)
+
+    # ── 거래량 ────────────────────────
+    for i, (_, r) in enumerate(df.iterrows()):
+        col = UP if r["Close"] >= r["Open"] else DN
+        ax_v.bar(i, r["Volume"], width=0.7,
+                 color=col+"99", zorder=2)
+
+    # ── 마커 ──────────────────────────
+    cup_s = nearest_x(dates, row.get("cup_start",""))
+    cup_e = nearest_x(dates, row.get("cup_end",""))
+    sig   = nearest_x2(dates, row.get("date",""))
+    pivot = float(row.get("pivot", 0) or 0)
+    stop  = pivot * 0.93 if pivot else 0
+
+    for x, col, ls, lbl in [
+        (cup_s, CUP_C, "--", "컵시작"),
+        (cup_e, CUP_C, "-",  "컵끝"),
+        (sig,   SIG_C, "-.", "시그널"),
+    ]:
+        if x is not None:
+            ax_c.axvline(x, color=col, lw=1.3, ls=ls, alpha=0.85, zorder=5)
+            ax_v.axvline(x, color=col, lw=1.0, ls=ls, alpha=0.6)
+
+    if pivot:
+        ax_c.axhline(pivot, color=PIV_C, lw=1.0, ls=":", alpha=0.9, zorder=5)
+        ax_c.text(n-1, pivot, f"  ₩{int(pivot):,}",
+                  color=PIV_C, fontsize=7, va="bottom", ha="right")
+    if stop:
+        ax_c.axhline(stop, color="#ef9a9a", lw=0.8, ls=":", alpha=0.7, zorder=5)
+        ax_c.text(n-1, stop, f"  손절₩{int(stop):,}",
+                  color="#ef9a9a", fontsize=6.5, va="top", ha="right")
+
+    # ── X축 ───────────────────────────
+    step = max(1, n // 8)
+    xtix = list(range(0, n, step))
+    ax_c.set_xticks(xtix); ax_c.set_xticklabels([])
+    ax_v.set_xticks(xtix)
+    ax_v.set_xticklabels([dates[i].strftime("%y.%m") for i in xtix],
+                          fontsize=7, color=TXT)
+
+    # ── 스타일 ────────────────────────
+    ax_c.set_xlim(-1, n)
+    ax_v.set_xlim(-1, n)
+
+    pmin = df["Low"].min(); pmax = df["High"].max()
+    pad  = (pmax - pmin) * 0.06
+    ax_c.set_ylim(pmin - pad, pmax + pad + pad)
+
+    ax_v.set_ylim(0, df["Volume"].max() * 3)
+    ax_v.yaxis.set_major_formatter(
+        mticker.FuncFormatter(
+            lambda x, _: f"{x/1e6:.1f}M" if x >= 1e6 else f"{int(x/1000)}K"))
+
+    for ax in [ax_c, ax_v]:
+        ax.set_facecolor(BG)
+        ax.tick_params(colors=TXT, labelsize=7)
+        for sp in ax.spines.values(): sp.set_color(GRID)
+        ax.grid(color=GRID, lw=0.4, alpha=0.5)
+        ax.yaxis.tick_right()
+        ax.yaxis.set_label_position("right")
+
+    # ── 범례 ──────────────────────────
+    legend_elems = [
+        mpatches.Patch(color=UP, label="양봉"),
+        mpatches.Patch(color=DN, label="음봉"),
+    ] + [Line2D([0],[0], color=c, lw=1.5, label=m)
+         for m, c in MA_C.items()] + [
+        Line2D([0],[0], color=CUP_C, ls="--", lw=1.2, label="컵시작"),
+        Line2D([0],[0], color=CUP_C, ls="-",  lw=1.2, label="컵끝"),
+        Line2D([0],[0], color=SIG_C, ls="-.", lw=1.5, label="시그널"),
+        Line2D([0],[0], color=PIV_C, ls=":",  lw=1.0, label="피벗"),
+    ]
+    ax_c.legend(handles=legend_elems, loc="upper left",
+                fontsize=6.5, ncol=4,
+                facecolor="#1a2332", edgecolor=GRID,
+                labelcolor=TXT)
+
+
+def make_title(row):
+    r5  = row.get("r5");  r5s  = f"{r5:+.1f}%"  if pd.notna(r5)  else "-"
+    r20 = row.get("r20"); r20s = f"{r20:+.1f}%" if pd.notna(r20) else "-"
+    return (
+        f"{row['date']}  {row.get('name','')}({row['ticker']})  {row.get('market','')}\n"
+        f"점수:{row.get('score','-')}  RS:{row.get('rs','-')}%  "
+        f"5일:{r5s}  20일:{r20s}\n"
+        f"컵:{row.get('cup_depth','-')}%/{row.get('cup_days','-')}일"
+        f"({row.get('cup_start','')}~{row.get('cup_end','')})"
+        f"  핸들:{row.get('handle_depth','-')}%/{row.get('handle_days','-')}일"
+        f"  거래량:{row.get('vol_ratio','-')}x"
+    )
+
+
+# ─────────────────────────────────────
+# 메인
+# ─────────────────────────────────────
+df_bt = pd.read_csv(CSV_FILE).dropna(subset=["date"])
+if SAMPLE_N:
+    df_bt = df_bt.head(SAMPLE_N)
+
+print(f"총 {len(df_bt)}건 차트 생성 시작...")
+
+success = 0
+with PdfPages(OUTPUT_PDF) as pdf:
+    for i, (_, row) in enumerate(df_bt.iterrows()):
+        ticker = str(row["ticker"]).zfill(6)
+        market = row.get("market", "KOSPI")
+        sig_dt = pd.Timestamp(row["date"])
+        cup_st = str(row.get("cup_start", ""))
+
+        # X축: 컵 시작 -40일 ~ 시그널 +35일
+        try:
+            cs_dt = pd.Timestamp(datetime.strptime(cup_st, "%y.%m.%d"))
+            s = (cs_dt - timedelta(days=40)).strftime("%Y-%m-%d")
+        except:
+            s = (sig_dt - timedelta(days=200)).strftime("%Y-%m-%d")
+        e = (sig_dt + timedelta(days=35)).strftime("%Y-%m-%d")
+
+        print(f"[{i+1}/{len(df_bt)}] {ticker} {row.get('name','')} {row['date']}")
+
+        ohlcv = fetch_ohlcv(ticker, market, s, e)
+        if ohlcv is None or len(ohlcv) < 5:
+            print("  → 데이터 없음, 스킵")
+            continue
+
+        ohlcv = add_ma(ohlcv)
+
+        fig = plt.figure(figsize=(14, 8), facecolor=BG)
+        gs  = fig.add_gridspec(4, 1, hspace=0.04)
+        ax_c = fig.add_subplot(gs[:3, 0])
+        ax_v = fig.add_subplot(gs[3, 0])
+
+        try:
+            draw(ax_c, ax_v, ohlcv, row)
+        except Exception as ex:
+            print(f"  → 차트 오류: {ex}")
+            plt.close(fig)
+            continue
+
+        fig.text(0.01, 0.99, make_title(row),
+                 color=TXT, fontsize=8.5, va="top", ha="left",
+                 fontfamily="monospace", transform=fig.transFigure,
+                 linespacing=1.5)
+
+        pdf.savefig(fig, bbox_inches="tight", facecolor=BG, dpi=120)
+        plt.close(fig)
+        success += 1
+        time.sleep(1)  # 레이트리밋 방지
+
+print(f"\n✅ 완료: {success}건 → {OUTPUT_PDF}")
