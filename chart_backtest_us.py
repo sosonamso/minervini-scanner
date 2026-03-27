@@ -201,7 +201,30 @@ if not MASSIVE:
 
 df_bt = pd.read_csv(CSV_FILE).dropna(subset=["date"])
 
-print(f"총 {len(df_bt)}건 차트 생성 시작...")
+# ── 전처리 ──────────────────────────
+# 1. ticker+cup_start 기준 중복 제거
+df_bt["_key"] = df_bt["ticker"].astype(str) + "_" + df_bt["cup_start"].astype(str)
+df_bt = df_bt.drop_duplicates(subset="_key", keep="first")
+df_bt = df_bt.drop(columns=["_key"])
+
+# 2. date 오름차순 정렬
+df_bt["date"] = pd.to_datetime(df_bt["date"])
+df_bt = df_bt.sort_values("date").reset_index(drop=True)
+
+# 3. 라벨링용 CSV 저장
+LABEL_CSV = "backtest_label_us.csv"
+label_cols = ["date","ticker","cap","sector",
+              "score","rs","cup_depth","handle_depth",
+              "cup_days","handle_days","cup_start","cup_end",
+              "vol_ratio","r5","r20","r60"]
+label_df = df_bt[[c for c in label_cols if c in df_bt.columns]].copy()
+label_df["date"] = label_df["date"].dt.strftime("%Y-%m-%d")
+label_df["label"] = ""
+label_df.to_csv(LABEL_CSV, index=False, encoding="utf-8-sig")
+print(f"라벨링용 CSV 저장: {LABEL_CSV} ({len(label_df)}건)")
+
+df_bt["date"] = df_bt["date"].dt.strftime("%Y-%m-%d")
+print(f"중복 제거 후 총 {len(df_bt)}건 차트 생성 시작...")
 
 success = 0
 with PdfPages(OUTPUT_PDF) as pdf:
