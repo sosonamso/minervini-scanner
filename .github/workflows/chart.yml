@@ -1,0 +1,34 @@
+name: 백테스트 차트 생성
+
+on:
+  workflow_dispatch:
+    inputs:
+      sample:
+        description: '생성할 차트 수 (전체: 비워두기)'
+        required: false
+        default: '10'
+
+jobs:
+  chart:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 패키지 설치
+        run: pip install pandas numpy matplotlib yfinance
+
+      - name: 차트 생성
+        run: python chart_backtest_kr.py ${{ github.event.inputs.sample }}
+
+      - name: PDF 업로드
+        uses: actions/upload-artifact@v3
+        with:
+          name: backtest-charts-kr
+          path: backtest_charts_kr.pdf
+          retention-days: 30
