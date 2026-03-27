@@ -29,7 +29,7 @@ jobs:
         run: pip install pandas numpy matplotlib yfinance
 
       - name: matplotlib 캐시 초기화
-        run: python3 -c "import matplotlib; matplotlib.font_manager._load_fontmanager(try_read_cache=False)"
+        run: python3 -c "import matplotlib.font_manager; matplotlib.font_manager._load_fontmanager(try_read_cache=False)"
 
       - name: 차트 생성
         run: python chart_backtest_kr.py ${{ github.event.inputs.sample }}
