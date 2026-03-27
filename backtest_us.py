@@ -109,9 +109,13 @@ if __name__ == "__main__":
             except:
                 pass
 
-            # label_win: r20 기준 자동 계산 (양수=1, 음수=0)
-            r20       = daily_r.get(20)
-            label_win = (1 if r20 > 0 else 0) if r20 is not None else ""
+            # label_win: r5/r10/r20 기준 자동 계산 (양수=1, 음수=0)
+            r20        = daily_r.get(20)
+            r5_val     = daily_r.get(5)
+            r10_val    = daily_r.get(10)
+            label_win  = (1 if r20    > 0 else 0) if r20    is not None else ""
+            label_win5 = (1 if r5_val > 0 else 0) if r5_val is not None else ""
+            label_win10= (1 if r10_val> 0 else 0) if r10_val is not None else ""
 
             all_signals.append({
                 "date":         sig_ts.strftime("%Y-%m-%d"),
@@ -130,13 +134,16 @@ if __name__ == "__main__":
                 "rs":           rs,
                 "score":        score,
                 "r5":           daily_r.get(5),
+                "r10":          daily_r.get(10),
                 "r20":          r20,
                 "r60":          daily_r.get(60),
                 "alpha5":       alpha.get(5),
                 "alpha20":      alpha.get(20),
                 "alpha60":      alpha.get(60),
-                "label_cup":    "",        # 수동 라벨링 (1=진짜컵, 0=노이즈)
-                "label_win":    label_win, # r20 기준 자동 (1=수익, 0=손실)
+                "label_cup":     "",          # 수동 라벨링 (1=진짜컵, 0=노이즈)
+                "label_win5":    label_win5,  # r5  기준 자동 (1=수익, 0=손실)
+                "label_win10":   label_win10, # r10 기준 자동 (1=수익, 0=손실)
+                "label_win20":   label_win,   # r20 기준 자동 (1=수익, 0=손실)
             })
             found = True
             break  # 종목당 최근 1개
