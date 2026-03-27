@@ -44,7 +44,7 @@ set_korean_font()
 
 CSV_FILE   = "backtest_raw.csv"
 OUTPUT_PDF = "backtest_charts_kr.pdf"
-SAMPLE_N   = int(sys.argv[1]) if len(sys.argv) > 1 else None
+SAMPLE_N   = None  # 전체
 
 BG   = "#0d1117"
 UP   = "#ef5350"
@@ -192,8 +192,6 @@ def make_title(row):
 
 
 df_bt = pd.read_csv(CSV_FILE).dropna(subset=["date"])
-if SAMPLE_N:
-    df_bt = df_bt.head(SAMPLE_N)
 
 print(f"총 {len(df_bt)}건 차트 생성 시작...")
 
@@ -233,8 +231,7 @@ with PdfPages(OUTPUT_PDF) as pdf:
             plt.close(fig); continue
 
         fig.text(0.01, 0.99, make_title(row),
-                 color=TXT, fontsize=8.5, va="top", ha="left",
-                 fontfamily="monospace", transform=fig.transFigure,
+                 color=TXT, fontsize=8.5, va="top", ha="left", transform=fig.transFigure,
                  linespacing=1.5)
 
         pdf.savefig(fig, bbox_inches="tight", facecolor=BG, dpi=120)
