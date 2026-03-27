@@ -20,8 +20,16 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: 한글 폰트 설치
+        run: |
+          sudo apt-get install -y fonts-nanum
+          fc-cache -fv
+
       - name: 패키지 설치
         run: pip install pandas numpy matplotlib yfinance
+
+      - name: matplotlib 캐시 초기화
+        run: python3 -c "import matplotlib; matplotlib.font_manager._load_fontmanager(try_read_cache=False)"
 
       - name: 차트 생성
         run: python chart_backtest_kr.py ${{ github.event.inputs.sample }}
