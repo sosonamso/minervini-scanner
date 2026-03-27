@@ -39,7 +39,7 @@ set_korean_font()
 
 CSV_FILE   = "backtest_us_raw.csv"
 OUTPUT_PDF = "backtest_charts_us.pdf"
-SAMPLE_N   = int(sys.argv[1]) if len(sys.argv) > 1 else None
+SAMPLE_N   = None  # 전체
 MASSIVE    = os.environ.get("MASSIVE_TOKEN", "")
 
 BG   = "#0d1117"
@@ -200,8 +200,6 @@ if not MASSIVE:
     sys.exit(1)
 
 df_bt = pd.read_csv(CSV_FILE).dropna(subset=["date"])
-if SAMPLE_N:
-    df_bt = df_bt.head(SAMPLE_N)
 
 print(f"총 {len(df_bt)}건 차트 생성 시작...")
 
@@ -240,8 +238,7 @@ with PdfPages(OUTPUT_PDF) as pdf:
             plt.close(fig); continue
 
         fig.text(0.01, 0.99, make_title(row),
-                 color=TXT, fontsize=8.5, va="top", ha="left",
-                 fontfamily="monospace", transform=fig.transFigure,
+                 color=TXT, fontsize=8.5, va="top", ha="left", transform=fig.transFigure,
                  linespacing=1.5)
 
         pdf.savefig(fig, bbox_inches="tight", facecolor=BG, dpi=120)
