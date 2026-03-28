@@ -1,8 +1,9 @@
 """
 DNN 학습용 데이터 수집 스크립트
-- 미너비니 로직 없음, 순수 가격/거래량 데이터
+- 미너비니 로직 없음, 순수 가격/거래량 + RS 데이터
 - 양성: r5 최대값 >= 8% 날짜 기준 150일치
-- 음성: 급등 구간 미겹치는 구간에서 1개 150일치
+- 음성: 급등 구간 미겹치는 구간에서 3개 150일치
+- RS 피처: rs_at_d2 / rs_20 / rs_50 / rs_150 / rs_trend
 - 출력: dnn_raw_r5.csv / dnn_raw_r10.csv
 """
 import os, time, warnings, random
@@ -17,15 +18,15 @@ MASSIVE      = os.environ.get("MASSIVE_TOKEN", "")
 TOK          = os.environ.get("TELEGRAM_TOKEN", "")
 CID          = os.environ.get("TELEGRAM_CHAT_ID", "")
 
-HISTORY_DAYS = 1800   # 5년치
-WINDOW       = 150    # 입력 윈도우
-SKIP         = 2      # D-day 기준 D-2부터
-VOL_MA       = 20     # 거래량 정규화 기준
+HISTORY_DAYS = 1800
+WINDOW       = 150
+SKIP         = 2
+VOL_MA       = 20
 
-R5_THRESH    = 0.08   # r5 양성 기준 8%
-R10_THRESH   = 0.14   # r10 양성 기준 14%
-NEG_R5       = 0.03   # r5 음성 기준 (이하)
-NEG_R10      = 0.05   # r10 음성 기준 (이하)
+R5_THRESH    = 0.08
+R10_THRESH   = 0.14
+NEG_R5       = 0.03
+NEG_R10      = 0.05
 
 
 def send(text):
@@ -84,10 +85,63 @@ def get_ohlcv(ticker, start, end):
     return None
 
 
-def make_features(df, d_idx):
+def calc_rs_features(df, spy_df, d_idx):
+    """
+    D-2일 기준 RS 피처 5개 계산
+    rs_at_d2: D-2일 시점 RS 현재값
+    rs_20:    최근 20일 평균 RS
+    rs_50:    최근 50일 평균 RS
+    rs_150:   최근 150일 평균 RS
+    rs_trend: rs_20 - rs_50 (상승추세 여부)
+    """
+    ref_idx = d_idx - SKIP  # D-2일
+
+    if ref_idx < 150:
+        return None
+
+    # 종목/SPY 공통 날짜 맞추기
+    ticker_dates = df.index[:ref_idx + 1]
+    spy_aligned  = spy_df.reindex(ticker_dates).ffill()
+
+    if spy_aligned.isnull().all().any():
+        return None
+
+    ticker_close = df["Close"].iloc[:ref_idx + 1].values
+    spy_close    = spy_aligned["Close"].values
+
+    # 일별 RS = 종목 수익률 - SPY 수익률
+    if len(ticker_close) < 152:
+        return None
+
+    t_ret   = np.zeros(len(ticker_close))
+    s_ret   = np.zeros(len(spy_close))
+    t_ret[1:] = ticker_close[1:] / ticker_close[:-1] - 1
+    s_ret[1:] = spy_close[1:]    / spy_close[:-1]    - 1
+    rs_daily  = (t_ret - s_ret) * 100
+
+    # RS 현재값 (D-2일)
+    rs_at_d2 = round(float(rs_daily[-1]), 4)
+
+    # 평균 RS
+    rs_20  = round(float(np.mean(rs_daily[-20:])),  4)
+    rs_50  = round(float(np.mean(rs_daily[-50:])),  4)
+    rs_150 = round(float(np.mean(rs_daily[-150:])), 4)
+
+    # 추세: 단기 - 중기
+    rs_trend = round(float(rs_20 - rs_50), 4)
+
+    return {
+        "rs_at_d2": rs_at_d2,
+        "rs_20":    rs_20,
+        "rs_50":    rs_50,
+        "rs_150":   rs_150,
+        "rs_trend": rs_trend,
+    }
+
+
+def make_features(df, spy_df, d_idx):
     """
     d_idx 기준 D-SKIP ~ D-(SKIP+WINDOW) 구간 피처 생성
-    Returns: dict or None
     """
     start_idx = d_idx - SKIP - WINDOW
     end_idx   = d_idx - SKIP
@@ -108,46 +162,45 @@ def make_features(df, d_idx):
         return None
     close_norm = (close - c_min) / (c_max - c_min)
 
-    # 등락률 (전일 대비 %)
+    # 등락률
     ret = np.zeros(WINDOW)
     ret[1:] = (close[1:] / close[:-1] - 1) * 100
 
-    # 거래량 비율 (20일 평균 대비)
+    # 거래량 비율
     vol_ratio = np.zeros(WINDOW)
     for k in range(WINDOW):
-        abs_idx = start_idx + k
+        abs_idx  = start_idx + k
         past_vol = df["Volume"].iloc[max(0, abs_idx - VOL_MA): abs_idx]
-        ma = past_vol.mean()
+        ma       = past_vol.mean()
         vol_ratio[k] = volume[k] / ma if ma > 0 else 1.0
 
     feat = {}
     for k in range(WINDOW):
-        feat[f"ret_{k+1}"]       = round(ret[k], 4)
+        feat[f"ret_{k+1}"]        = round(ret[k], 4)
         feat[f"close_norm_{k+1}"] = round(float(close_norm[k]), 4)
         feat[f"vol_ratio_{k+1}"]  = round(float(vol_ratio[k]), 4)
+
+    # RS 피처 추가
+    rs_feat = calc_rs_features(df, spy_df, d_idx)
+    if rs_feat is None:
+        return None
+    feat.update(rs_feat)
 
     return feat
 
 
-def extract_samples(ticker, df, r5_thresh, r10_thresh, neg_r5, neg_r10):
-    """
-    종목 하나에서 양성/음성 샘플 추출
-    Returns: list of dicts
-    """
+def extract_samples(ticker, df, spy_df, r5_thresh, r10_thresh, neg_r5, neg_r10):
     n      = len(df)
     closes = df["Close"].values
     samples = []
 
-    # 전체 r5 / r10 계산
     r5  = np.full(n, np.nan)
     r10 = np.full(n, np.nan)
     for i in range(n):
-        if i + 5 < n:
-            r5[i]  = closes[i + 5]  / closes[i] - 1
-        if i + 10 < n:
-            r10[i] = closes[i + 10] / closes[i] - 1
+        if i + 5  < n: r5[i]  = closes[i + 5]  / closes[i] - 1
+        if i + 10 < n: r10[i] = closes[i + 10] / closes[i] - 1
 
-    # ── 양성 샘플 (r5 기준) ──────────────────────────
+    # ── 양성 샘플 (r5) ───────────────────────────────────
     valid_pos = np.where(
         (~np.isnan(r5)) & (r5 >= r5_thresh) &
         (np.arange(n) >= WINDOW + SKIP)
@@ -156,19 +209,19 @@ def extract_samples(ticker, df, r5_thresh, r10_thresh, neg_r5, neg_r10):
     pos_idx_r5 = None
     if len(valid_pos) > 0:
         pos_idx_r5 = valid_pos[np.argmax(r5[valid_pos])]
-        feat = make_features(df, pos_idx_r5)
+        feat = make_features(df, spy_df, pos_idx_r5)
         if feat:
             row = {
-                "ticker":   ticker,
-                "date":     df.index[pos_idx_r5].strftime("%Y-%m-%d"),
-                "label":    1,
-                "r5":       round(float(r5[pos_idx_r5]) * 100, 2),
-                "r10":      round(float(r10[pos_idx_r5]) * 100, 2) if not np.isnan(r10[pos_idx_r5]) else None,
+                "ticker": ticker,
+                "date":   df.index[pos_idx_r5].strftime("%Y-%m-%d"),
+                "label":  1,
+                "r5":     round(float(r5[pos_idx_r5]) * 100, 2),
+                "r10":    round(float(r10[pos_idx_r5]) * 100, 2) if not np.isnan(r10[pos_idx_r5]) else None,
             }
             row.update(feat)
             samples.append(("r5", row))
 
-    # ── 양성 샘플 (r10 기준) ──────────────────────────
+    # ── 양성 샘플 (r10) ──────────────────────────────────
     valid_pos10 = np.where(
         (~np.isnan(r10)) & (r10 >= r10_thresh) &
         (np.arange(n) >= WINDOW + SKIP)
@@ -177,27 +230,25 @@ def extract_samples(ticker, df, r5_thresh, r10_thresh, neg_r5, neg_r10):
     pos_idx_r10 = None
     if len(valid_pos10) > 0:
         pos_idx_r10 = valid_pos10[np.argmax(r10[valid_pos10])]
-        feat = make_features(df, pos_idx_r10)
+        feat = make_features(df, spy_df, pos_idx_r10)
         if feat:
             row = {
-                "ticker":   ticker,
-                "date":     df.index[pos_idx_r10].strftime("%Y-%m-%d"),
-                "label":    1,
-                "r5":       round(float(r5[pos_idx_r10]) * 100, 2) if not np.isnan(r5[pos_idx_r10]) else None,
-                "r10":      round(float(r10[pos_idx_r10]) * 100, 2),
+                "ticker": ticker,
+                "date":   df.index[pos_idx_r10].strftime("%Y-%m-%d"),
+                "label":  1,
+                "r5":     round(float(r5[pos_idx_r10]) * 100, 2) if not np.isnan(r5[pos_idx_r10]) else None,
+                "r10":    round(float(r10[pos_idx_r10]) * 100, 2),
             }
             row.update(feat)
             samples.append(("r10", row))
 
-    # ── 음성 샘플 ──────────────────────────────────────
-    # 양성 구간(±150일) 제외하고 나머지에서 랜덤 1개
+    # ── 음성 샘플 ────────────────────────────────────────
     exclude = set()
     for pos_idx in [pos_idx_r5, pos_idx_r10]:
         if pos_idx is not None:
             for k in range(pos_idx - WINDOW - SKIP - 10, pos_idx + 10):
                 exclude.add(k)
 
-    # r5/r10 음성 후보
     neg_candidates_r5 = [
         i for i in range(WINDOW + SKIP, n - 10)
         if i not in exclude
@@ -211,7 +262,6 @@ def extract_samples(ticker, df, r5_thresh, r10_thresh, neg_r5, neg_r10):
 
     for model, neg_candidates in [("r5", neg_candidates_r5), ("r10", neg_candidates_r10)]:
         if neg_candidates:
-            # 음성 샘플 최대 3개 - 구간 3등분해서 뽑기
             n_neg = min(3, len(neg_candidates))
             chunk = max(1, len(neg_candidates) // n_neg)
             chosen = []
@@ -221,7 +271,7 @@ def extract_samples(ticker, df, r5_thresh, r10_thresh, neg_r5, neg_r10):
                     chosen.append(random.choice(sub))
 
             for neg_idx in chosen:
-                feat = make_features(df, neg_idx)
+                feat = make_features(df, spy_df, neg_idx)
                 if feat:
                     row = {
                         "ticker": ticker,
@@ -256,10 +306,18 @@ if __name__ == "__main__":
         send(f"tickers_us.csv 로드 실패: {e}")
         exit(1)
 
+    # SPY 먼저 수집 (전체 공유)
+    send(f"🧠 DNN 데이터 수집 시작\n총 {len(ticker_list)}개 종목\nSPY 수집 중...")
+    spy_df = get_ohlcv("SPY", start, end_str)
+    if spy_df is None:
+        send("SPY 데이터 수집 실패!")
+        exit(1)
+    print(f"SPY 수집 완료: {len(spy_df)}일치")
+
     send(
-        f"🧠 DNN 데이터 수집 시작\n"
-        f"총 {len(ticker_list)}개 종목\n"
-        f"윈도우: {WINDOW}일 | r5>={R5_THRESH*100:.0f}% / r10>={R10_THRESH*100:.0f}%"
+        f"SPY 수집 완료\n"
+        f"윈도우: {WINDOW}일 | r5>={R5_THRESH*100:.0f}% / r10>={R10_THRESH*100:.0f}%\n"
+        f"RS 피처: rs_at_d2 / rs_20 / rs_50 / rs_150 / rs_trend"
     )
 
     samples_r5  = []
@@ -275,7 +333,7 @@ if __name__ == "__main__":
 
         try:
             results = extract_samples(
-                ticker, df,
+                ticker, df, spy_df,
                 R5_THRESH, R10_THRESH,
                 NEG_R5, NEG_R10
             )
@@ -291,7 +349,6 @@ if __name__ == "__main__":
 
     print(f"\n수집 완료: r5={len(samples_r5)}건 / r10={len(samples_r10)}건")
 
-    # 저장
     for fname, samples in [("dnn_raw_r5.csv", samples_r5), ("dnn_raw_r10.csv", samples_r10)]:
         if samples:
             df_out = pd.DataFrame(samples)
