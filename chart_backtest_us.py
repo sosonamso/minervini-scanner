@@ -236,7 +236,11 @@ df_bt = pd.read_csv(CSV_FILE).dropna(subset=["date"])
 df_bt["_key"] = df_bt["ticker"].astype(str) + "_" + df_bt["cup_start"].astype(str)
 df_bt = df_bt.drop_duplicates(subset="_key", keep="first").drop(columns=["_key"])
 
-# 2. date 오름차순 정렬
+# 2. RS 필터 (라벨링 효율화: RS>30만)
+df_bt = df_bt[df_bt["rs"] > 30].copy()
+print(f"RS>30 필터 후: {len(df_bt)}건")
+
+# 3. date 오름차순 정렬
 df_bt["date"] = pd.to_datetime(df_bt["date"])
 df_bt = df_bt.sort_values("date").reset_index(drop=True)
 
