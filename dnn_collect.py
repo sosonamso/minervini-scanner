@@ -211,18 +211,27 @@ def extract_samples(ticker, df, r5_thresh, r10_thresh, neg_r5, neg_r10):
 
     for model, neg_candidates in [("r5", neg_candidates_r5), ("r10", neg_candidates_r10)]:
         if neg_candidates:
-            neg_idx = random.choice(neg_candidates)
-            feat = make_features(df, neg_idx)
-            if feat:
-                row = {
-                    "ticker": ticker,
-                    "date":   df.index[neg_idx].strftime("%Y-%m-%d"),
-                    "label":  0,
-                    "r5":     round(float(r5[neg_idx]) * 100, 2) if not np.isnan(r5[neg_idx]) else None,
-                    "r10":    round(float(r10[neg_idx]) * 100, 2) if not np.isnan(r10[neg_idx]) else None,
-                }
-                row.update(feat)
-                samples.append((model, row))
+            # 음성 샘플 최대 3개 - 구간 3등분해서 뽑기
+            n_neg = min(3, len(neg_candidates))
+            chunk = max(1, len(neg_candidates) // n_neg)
+            chosen = []
+            for k in range(n_neg):
+                sub = neg_candidates[k*chunk:(k+1)*chunk]
+                if sub:
+                    chosen.append(random.choice(sub))
+
+            for neg_idx in chosen:
+                feat = make_features(df, neg_idx)
+                if feat:
+                    row = {
+                        "ticker": ticker,
+                        "date":   df.index[neg_idx].strftime("%Y-%m-%d"),
+                        "label":  0,
+                        "r5":     round(float(r5[neg_idx]) * 100, 2) if not np.isnan(r5[neg_idx]) else None,
+                        "r10":    round(float(r10[neg_idx]) * 100, 2) if not np.isnan(r10[neg_idx]) else None,
+                    }
+                    row.update(feat)
+                    samples.append((model, row))
 
     return samples
 
