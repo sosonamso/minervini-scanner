@@ -90,10 +90,18 @@ def get_ohlcv(ticker, start, end):
 
 
 def calc_rs_features(df, spy_df, d_idx):
-    """D-2일 기준 RS 피처 5개 계산"""
+    """
+    D-2일 기준 RS 피처 5개 계산 (미너비니 방식)
+    누적 수익률 기반: 63/126/189/252일 가중평균
+    rs_at_d2:  미너비니 RS 현재값
+    rs_20:     20일 누적 수익률 차이
+    rs_50:     50일 누적 수익률 차이
+    rs_150:    150일 누적 수익률 차이
+    rs_trend:  rs_20 - rs_50 (상승추세 여부)
+    """
     ref_idx = d_idx - SKIP
 
-    if ref_idx < 150:
+    if ref_idx < 252:
         return None
 
     ticker_dates = df.index[:ref_idx + 1]
@@ -102,23 +110,27 @@ def calc_rs_features(df, spy_df, d_idx):
     if spy_aligned.isnull().all().any():
         return None
 
-    ticker_close = df["Close"].iloc[:ref_idx + 1].values
-    spy_close    = spy_aligned["Close"].values
+    tc = df["Close"].iloc[:ref_idx + 1].values
+    sc = spy_aligned["Close"].values
 
-    if len(ticker_close) < 152:
+    if len(tc) < 253:
         return None
 
-    t_ret    = np.zeros(len(ticker_close))
-    s_ret    = np.zeros(len(spy_close))
-    t_ret[1:] = ticker_close[1:] / ticker_close[:-1] - 1
-    s_ret[1:] = spy_close[1:]    / spy_close[:-1]    - 1
-    rs_daily  = (t_ret - s_ret) * 100
+    def period_ret(arr, n):
+        return float(arr[-1] / arr[-n] - 1) if len(arr) >= n else 0.0
 
-    rs_at_d2 = round(float(rs_daily[-1]),          4)
-    rs_20    = round(float(np.mean(rs_daily[-20:])),  4)
-    rs_50    = round(float(np.mean(rs_daily[-50:])),  4)
-    rs_150   = round(float(np.mean(rs_daily[-150:])), 4)
-    rs_trend = round(float(rs_20 - rs_50),           4)
+    # 미너비니 RS: 63/126/189/252일 가중평균
+    weights = [0.4, 0.2, 0.2, 0.2]
+    periods = [63, 126, 189, 252]
+    t_rs = sum(w * period_ret(tc, p) for w, p in zip(weights, periods))
+    s_rs = sum(w * period_ret(sc, p) for w, p in zip(weights, periods))
+    rs_at_d2 = round((t_rs - s_rs) * 100, 4)
+
+    # 구간별 누적 수익률 차이
+    rs_20  = round((period_ret(tc, 20)  - period_ret(sc, 20))  * 100, 4)
+    rs_50  = round((period_ret(tc, 50)  - period_ret(sc, 50))  * 100, 4)
+    rs_150 = round((period_ret(tc, 150) - period_ret(sc, 150)) * 100, 4)
+    rs_trend = round(float(rs_20 - rs_50), 4)
 
     return {
         "rs_at_d2": rs_at_d2,
