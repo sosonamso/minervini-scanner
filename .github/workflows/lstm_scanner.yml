@@ -21,7 +21,9 @@ jobs:
           python-version: "3.11"
 
       - name: 패키지 설치
-        run: pip install requests pandas numpy torch --index-url https://download.pytorch.org/whl/cpu
+        run: 
+          pip install requests pandas numpy scikit-learn
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
 
       - name: LSTM 스캐너 실행
         env:
