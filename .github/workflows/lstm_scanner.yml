@@ -2,7 +2,7 @@ name: LSTM 스캐너 (평일 자동실행)
 
 on:
   schedule:
-    - cron: '0 22 * * 1-5'  # 평일 UTC 22:00 = 한국 07:00
+    - cron: '0 22 * * 1-5'
   workflow_dispatch:
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
           python-version: "3.11"
 
       - name: 패키지 설치
-        run: 
+        run: |
           pip install requests pandas numpy scikit-learn
           pip install torch --index-url https://download.pytorch.org/whl/cpu
 
