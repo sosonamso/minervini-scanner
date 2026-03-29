@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Minervini Dashboard</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #020617; color: #f1f5f9; font-family: 'SF Mono', monospace; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-    input[type=range] { accent-color: #fb923c; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Minervini Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #020617; color: #f1f5f9; font-family: 'SF Mono', monospace; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+input[type=range] { accent-color: #fb923c; }
+</style>
 </head>
 <body>
 <div id="root"></div>
@@ -27,12 +27,12 @@ const BRANCH = "main";
 const RAW = "https://raw.githubusercontent.com/" + GITHUB_USER + "/" + GITHUB_REPO + "/" + BRANCH;
 
 const DATA_FILES = {
-  kr_scanner:  RAW + "/scanner_kr_raw.csv",
+  kr_scanner: RAW + "/scanner_kr_raw.csv",
   kr_backtest: RAW + "/backtest_raw.csv",
-  us_scanner:  RAW + "/scanner_us_raw.csv",
-  us_small:    RAW + "/scanner_us_small_raw.csv",
+  us_scanner: RAW + "/scanner_us_raw.csv",
+  us_small: RAW + "/scanner_us_small_raw.csv",
   us_backtest: RAW + "/backtest_us_raw.csv",
-  kr_all:      RAW + "/scanner_kr_all.csv",
+  kr_all: RAW + "/scanner_kr_all.csv",
 };
 
 function parseCSV(text) {
@@ -63,8 +63,8 @@ function fmt(v) {
 function cellStyle(v) {
   if (v === null || v === undefined || isNaN(v)) return {};
   if (v > 10) return { background: "#14532d", color: "#86efac", fontWeight: 700 };
-  if (v > 5)  return { background: "#166534", color: "#bbf7d0", fontWeight: 700 };
-  if (v > 0)  return { background: "#1a2e05", color: "#86efac", fontWeight: 600 };
+  if (v > 5) return { background: "#166534", color: "#bbf7d0", fontWeight: 700 };
+  if (v > 0) return { background: "#1a2e05", color: "#86efac", fontWeight: 600 };
   if (v > -5) return { background: "#450a0a", color: "#fca5a5", fontWeight: 600 };
   return { background: "#7f1d1d", color: "#fecaca", fontWeight: 700 };
 }
@@ -156,7 +156,6 @@ function ScannerView({ data=[], market }) {
   const [expanded, setExpanded] = useState(null);
   const handleSort = col => setSort(s => s.col===col ? {col,dir:-s.dir} : {col,dir:-1});
   const isKR = market === "KR";
-
   const filtered = useMemo(() => data.filter(r => {
     if (filter.search && !String(r.ticker||r.name||"").toLowerCase().includes(filter.search.toLowerCase())) return false;
     if ((r.score||0) < filter.minScore) return false;
@@ -166,9 +165,7 @@ function ScannerView({ data=[], market }) {
     if (av==null) return 1; if (bv==null) return -1;
     return (av>bv?1:-1)*sort.dir;
   }), [data, filter, sort]);
-
   const colCount = isKR ? 11 : 8;
-
   return (
     <div>
       <div style={{ display:"flex", gap:10, marginBottom:16, flexWrap:"wrap" }}>
@@ -215,15 +212,11 @@ function ScannerView({ data=[], market }) {
                   <td style={{ padding:"8px 12px", fontWeight:900 }}>
                     <span style={{ color:"#f1f5f9" }}>{row.ticker}</span>
                     <div style={{ display:"flex", gap:4, marginTop:3 }}>
-                      <a href={isKR
-                        ? "https://finance.naver.com/item/main.naver?code="+row.ticker
-                        : "https://finance.yahoo.com/quote/"+row.ticker}
+                      <a href={isKR ? "https://finance.naver.com/item/main.naver?code="+row.ticker : "https://finance.yahoo.com/quote/"+row.ticker}
                         target="_blank" rel="noreferrer"
                         style={{ fontSize:10, color:"#22c55e", textDecoration:"none", background:"#14532d", borderRadius:4, padding:"1px 5px" }}
                         onClick={e => e.stopPropagation()}>{isKR?"네이버":"야후"}</a>
-                      <a href={isKR
-                        ? "https://kr.tradingview.com/chart/?symbol=KRX:"+row.ticker
-                        : "https://kr.tradingview.com/chart/?symbol="+row.ticker}
+                      <a href={isKR ? "https://kr.tradingview.com/chart/?symbol=KRX:"+row.ticker : "https://kr.tradingview.com/chart/?symbol="+row.ticker}
                         target="_blank" rel="noreferrer"
                         style={{ fontSize:10, color:"#60a5fa", textDecoration:"none", background:"#1e3a5f", borderRadius:4, padding:"1px 5px" }}
                         onClick={e => e.stopPropagation()}>TV</a>
@@ -239,9 +232,7 @@ function ScannerView({ data=[], market }) {
                       {row.sector && <div style={{ fontSize:10, color:"#64748b", marginTop:2 }}>{row.sector}</div>}
                       {row.base_count && (
                         <div style={{ fontSize:10, fontWeight:700, marginTop:2,
-                          color:row.base_count==="1st"?"#94a3b8":
-                               row.base_count==="2nd"?"#22c55e":
-                               row.base_count==="3rd"?"#fb923c":"#ef4444" }}>
+                          color:row.base_count==="1st"?"#94a3b8":row.base_count==="2nd"?"#22c55e":row.base_count==="3rd"?"#fb923c":"#ef4444" }}>
                           {row.base_count} base
                         </div>
                       )}
@@ -265,9 +256,7 @@ function ScannerView({ data=[], market }) {
                     {row.handle_depth?(row.handle_depth+"%"+((row.handle_depth>=10)?" ⚠️":"")):"-"}
                   </td>
                   <td style={{ padding:"8px 12px", textAlign:"right", color:"#f1f5f9" }}>
-                    {isKR
-                      ? (row.cur?Number(row.cur).toLocaleString():"-")
-                      : ((row.cur||row.entry)?"$"+Number(row.cur||row.entry).toFixed(2):"-")}
+                    {isKR ? (row.cur?Number(row.cur).toLocaleString():"-") : ((row.cur||row.entry)?"$"+Number(row.cur||row.entry).toFixed(2):"-")}
                   </td>
                   <td style={{ padding:"8px 10px", textAlign:"right" }}>
                     <div style={{ color:"#fb923c", fontWeight:700 }}>
@@ -275,9 +264,7 @@ function ScannerView({ data=[], market }) {
                     </div>
                     {row.pivot && (
                       <div style={{ color:"#ef4444", fontSize:10, marginTop:2 }}>
-                        {isKR
-                          ? "↓"+Math.round(row.pivot*0.93).toLocaleString()
-                          : "↓$"+(row.pivot*0.93).toFixed(2)}
+                        {isKR ? "↓"+Math.round(row.pivot*0.93).toLocaleString() : "↓$"+(row.pivot*0.93).toFixed(2)}
                       </div>
                     )}
                   </td>
@@ -297,7 +284,6 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
   const [suggestions, setSuggestions] = useState([]);
   const allData = market === "KR" ? krData : usData;
   const isKR = market === "KR";
-
   const handleInput = (val) => {
     setInput(val);
     if (val.length >= 1 && (allData||[]).length) {
@@ -312,7 +298,6 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
       setSuggestions([]);
     }
   };
-
   const parseTrendDetail = (str) => {
     if (!str) return {};
     const obj = {};
@@ -322,7 +307,6 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
     });
     return obj;
   };
-
   return (
     <div>
       <div style={{ marginBottom:20 }}>
@@ -368,11 +352,8 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
           </button>
         </div>
       </div>
-
       {result && !result.error && (
         <div style={{ background:"#0f172a", borderRadius:12, padding:20, border:"1px solid #1e293b" }}>
-
-          {/* 헤더 */}
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16, flexWrap:"wrap", gap:8 }}>
             <div>
               <div style={{ fontSize:18, fontWeight:900, color:"#f1f5f9" }}>
@@ -397,8 +378,6 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
               </div>
             )}
           </div>
-
-          {/* 기본 정보 */}
           <div style={{ display:"flex", gap:8, marginBottom:16, flexWrap:"wrap" }}>
             {[
               ["현재가", result.cur?(result._market==="US"?"$"+Number(result.cur).toFixed(2):Number(result.cur).toLocaleString()+"원"):"-","#f1f5f9"],
@@ -411,8 +390,6 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
               </div>
             ))}
           </div>
-
-          {/* 트렌드 7조건 */}
           <div style={{ marginBottom:16 }}>
             <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>
               📈 트렌드 템플릿 (7가지 조건)
@@ -429,8 +406,6 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
               ))}
             </div>
           </div>
-
-          {/* 컵핸들 패턴 */}
           <div style={{ marginBottom:16 }}>
             <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>
               🥤 컵&핸들 패턴
@@ -458,8 +433,6 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
               </div>
             )}
           </div>
-
-          {/* 피벗 + 손절 */}
           {(result.pattern_ok===true||result.pattern_ok==="True"||result.pattern_ok==="true") && result.pivot > 0 && (
             <div style={{ marginBottom:16 }}>
               <div style={{ fontSize:12, fontWeight:700, color:"#94a3b8", marginBottom:8 }}>📍 가격 정보</div>
@@ -478,8 +451,7 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
                 </div>
                 <div style={{ background:"#1e293b", borderRadius:8, padding:"8px 14px" }}>
                   <div style={{ fontSize:10, color:"#64748b" }}>피벗 대비</div>
-                  <div style={{ fontSize:15, fontWeight:700,
-                    color:(result.pct_from_pivot||0)>=0?"#22c55e":"#ef4444" }}>
+                  <div style={{ fontSize:15, fontWeight:700, color:(result.pct_from_pivot||0)>=0?"#22c55e":"#ef4444" }}>
                     {result.pct_from_pivot!==undefined?((result.pct_from_pivot>=0?"+":"")+result.pct_from_pivot+"%"):"-"}
                   </div>
                 </div>
@@ -489,16 +461,13 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
                     border:"1px solid "+(result.safety==="safe"?"#22c55e":result.safety==="caution"?"#f59e0b":"#ef4444") }}>
                     <div style={{ fontSize:12, fontWeight:700,
                       color:result.safety==="safe"?"#86efac":result.safety==="caution"?"#fcd34d":"#fca5a5" }}>
-                      {result.safety==="safe"?"✅ 안전구간 (손절 7% 이내)":
-                       result.safety==="caution"?"⚠️ 주의구간 (7~10%)":"❌ 손절 위험 (10% 초과)"}
+                      {result.safety==="safe"?"✅ 안전구간 (손절 7% 이내)":result.safety==="caution"?"⚠️ 주의구간 (7~10%)":"❌ 손절 위험 (10% 초과)"}
                     </div>
                   </div>
                 )}
               </div>
             </div>
           )}
-
-          {/* 최종 결론 */}
           <div style={{ borderRadius:8, padding:"12px 16px",
             background:result.signal?"#14532d":"#450a0a",
             border:"1px solid "+(result.signal?"#22c55e":"#ef4444") }}>
@@ -511,13 +480,11 @@ function TickerSearchView({ result, input, setInput, onSearch, market, setMarket
           </div>
         </div>
       )}
-
       {result && result.error && (
         <div style={{ background:"#450a0a", borderRadius:10, padding:16, color:"#fca5a5" }}>
           {result.error}
         </div>
       )}
-
       {!result && (
         <div style={{ textAlign:"center", padding:"40px 20px", color:"#475569" }}>
           <div style={{ fontSize:40, marginBottom:12 }}>🔍</div>
@@ -536,7 +503,6 @@ function BacktestView({ data=[], market }) {
   const handleSort = col => setSort(s => s.col===col ? {col,dir:-s.dir} : {col,dir:-1});
   const isKR = market === "KR";
   const caps = ["전체",...new Set(data.map(r=>r.cap||r.market).filter(Boolean))];
-
   const filtered = useMemo(() => data.filter(r => {
     if (filter.search && !String(r.ticker||"").toLowerCase().includes(filter.search.toLowerCase())) return false;
     if ((r.score||0) < filter.minScore) return false;
@@ -547,14 +513,12 @@ function BacktestView({ data=[], market }) {
     if (av==null) return 1; if (bv==null) return -1;
     return (av>bv?1:-1)*sort.dir;
   }), [data, filter, sort]);
-
   const winStats = DAYS.map(d => {
     const vals = filtered.map(r=>r["r"+d]).filter(v=>v!==null&&!isNaN(v));
     return { day:d, vals, win:vals.filter(v=>v>0).length, total:vals.length,
       rate: vals.length ? Math.round(vals.filter(v=>v>0).length/vals.length*100) : 0,
       avg: mean(vals) };
   });
-
   return (
     <div>
       <div style={{ display:"flex", gap:10, marginBottom:16, flexWrap:"wrap" }}>
@@ -588,7 +552,7 @@ function BacktestView({ data=[], market }) {
               <SortTh col="date" label="날짜" sortState={sort} onSort={handleSort} />
               <SortTh col="ticker" label="티커" sortState={sort} onSort={handleSort} />
               {isKR ? <SortTh col="name" label="종목명" sortState={sort} onSort={handleSort} />
-                    : <SortTh col="cap" label="구분" sortState={sort} onSort={handleSort} center />}
+                : <SortTh col="cap" label="구분" sortState={sort} onSort={handleSort} center />}
               <SortTh col="score" label="점수" sortState={sort} onSort={handleSort} center />
               <SortTh col="rs" label="RS" sortState={sort} onSort={handleSort} center />
               <SortTh col="vol_ratio" label="거래량" sortState={sort} onSort={handleSort} center />
@@ -611,104 +575,71 @@ function BacktestView({ data=[], market }) {
           <tbody>
             {filtered.map((row,i) => (
               <React.Fragment key={i}>
-              <tr onClick={()=>setExpanded(expanded===i?null:i)}
-                style={{ borderBottom:"1px solid #1e293b", background:i%2===0?"#0f172a":"#111827", cursor:"pointer" }}>
-                <td style={{ padding:"7px 10px", color:"#475569", whiteSpace:"nowrap", fontSize:11 }}>
-                  {row.date ? row.date.replace(/^20(\d{2})-0?(\d+)-0?(\d+)$/,"$1.$2.$3") : "-"}
-                </td>
-                <td style={{ padding:"7px 12px", fontWeight:900 }}>
+                <tr onClick={()=>setExpanded(expanded===i?null:i)}
+                  style={{ borderBottom:"1px solid #1e293b", background:i%2===0?"#0f172a":"#111827", cursor:"pointer" }}>
+                  <td style={{ padding:"7px 10px", color:"#475569", whiteSpace:"nowrap", fontSize:11 }}>
+                    {row.date ? row.date.replace(/^20(\d{2})-0?(\d+)-0?(\d+)$/,"$1.$2.$3") : "-"}
+                  </td>
+                  <td style={{ padding:"7px 12px", fontWeight:900 }}>
                     <span style={{ color:"#f1f5f9" }}>{row.ticker}</span>
                     <div style={{ display:"flex", gap:4, marginTop:3 }}>
-                      <a href={isKR
-                        ? "https://finance.naver.com/item/main.naver?code="+row.ticker
-                        : "https://finance.yahoo.com/quote/"+row.ticker}
+                      <a href={isKR ? "https://finance.naver.com/item/main.naver?code="+row.ticker : "https://finance.yahoo.com/quote/"+row.ticker}
                         target="_blank" rel="noreferrer"
                         style={{ fontSize:10, color:"#22c55e", textDecoration:"none", background:"#14532d", borderRadius:4, padding:"1px 5px" }}
                         onClick={e => e.stopPropagation()}>{isKR?"네이버":"야후"}</a>
-                      <a href={isKR
-                        ? "https://kr.tradingview.com/chart/?symbol=KRX:"+row.ticker
-                        : "https://kr.tradingview.com/chart/?symbol="+row.ticker}
+                      <a href={isKR ? "https://kr.tradingview.com/chart/?symbol=KRX:"+row.ticker : "https://kr.tradingview.com/chart/?symbol="+row.ticker}
                         target="_blank" rel="noreferrer"
                         style={{ fontSize:10, color:"#60a5fa", textDecoration:"none", background:"#1e3a5f", borderRadius:4, padding:"1px 5px" }}
                         onClick={e => e.stopPropagation()}>TV</a>
                     </div>
                   </td>
-                {isKR ? <td style={{ padding:"7px 12px", color:"#94a3b8", fontSize:11 }}>{row.name}</td>
-                      : <td style={{ padding:"7px 12px", textAlign:"center" }}>
-                          <span style={{ borderRadius:6, padding:"2px 6px", fontSize:11, fontWeight:700, background:"#1e3a5f", color:"#60a5fa" }}>
-                            {row.cap==="MegaCap"?"초대형":row.cap==="LargeCap"?"대형":row.cap==="MidCap"?"중형":row.cap==="SmallCap"?"소형":row.cap==="SmallCap600"?"Small":row.cap==="MidCap400"?"Mid":"S&P500"}
-                          </span>
-                          {row.sector&&<div style={{fontSize:10,color:"#64748b",marginTop:2}}>{row.sector}</div>}
-                          {row.base_count&&<div style={{fontSize:10,fontWeight:700,marginTop:2,
-                            color:row.base_count==="1st"?"#94a3b8":row.base_count==="2nd"?"#22c55e":row.base_count==="3rd"?"#fb923c":"#ef4444"}}>
-                            {row.base_count+" base"}</div>}
-                        </td>}
-                <td style={{ padding:"7px 12px", textAlign:"center", fontWeight:800, color:(row.score||0)>=80?"#fb923c":(row.score||0)>=70?"#f1f5f9":"#475569" }}>{row.score||"-"}</td>
-                <td style={{ padding:"7px 12px", textAlign:"center", color:(row.rs||0)>0?"#22c55e":"#ef4444" }}>{fmt(row.rs)}</td>
-                <td style={{ padding:"7px 12px", textAlign:"center", color:"#64748b" }}>{row.vol_ratio?Number(row.vol_ratio).toFixed(2)+"x":"-"}</td>
-                <td style={{ padding:"7px 10px", textAlign:"right" }}>
-                  <div style={{ color:"#fb923c", fontWeight:700 }}>
-                    {isKR?(row.pivot?Number(row.pivot).toLocaleString():"-"):(row.pivot?"$"+Number(row.pivot).toFixed(2):"-")}
-                  </div>
-                  {row.pivot && <div style={{ color:"#ef4444", fontSize:10, marginTop:2 }}>
-                    {isKR?("↓"+Math.round(row.pivot*0.93).toLocaleString()):("↓$"+((row.pivot||0)*0.93).toFixed(2))}
-                  </div>}
-                </td>
-                {DAYS.map(d => {
-                  const v = row["r"+d];
-                  return <td key={d} style={{ padding:"7px 10px", textAlign:"center", ...cellStyle(v) }}>{fmt(v)}</td>;
-                })}
-              </tr>
-              {expanded===i && (
-                <tr style={{ background:"#0a0f1e" }}>
-                  <td colSpan={20} style={{ padding:"12px 20px", borderBottom:"2px solid #334155" }}>
-                    <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
-                      <div>
-                        <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>상세 정보</div>
-                        <div style={{ fontSize:12, color:"#94a3b8" }}>
-                          {"컵: "+(row.cup_depth||"-")+"% / "+(row.cup_days||"-")+"일"}
-                          {row.cup_start&&row.cup_end&&<span style={{color:"#fb923c",marginLeft:4}}>{"("+row.cup_start+"~"+row.cup_end+")"}</span>}<br/>
-                          {"핸들: "+(row.handle_depth||"-")+"% / "+(row.handle_days||"-")+"일"}<br/>
-                          {"거래량배율: "+(row.vol_ratio||"-")+"x"}
-                          {row.base_count&&<span style={{marginLeft:8,fontWeight:700,
-                            color:row.base_count==="1st"?"#94a3b8":row.base_count==="2nd"?"#22c55e":row.base_count==="3rd"?"#fb923c":"#ef4444"}}>
-                            {row.base_count+" base"}</span>}<br/>
-                          {"진입가: "+(isKR?Number(row.entry||0).toLocaleString():"$"+(row.entry||0).toFixed(2))}
+                  {isKR ? <td style={{ padding:"7px 12px", color:"#94a3b8", fontSize:11 }}>{row.name}</td>
+                    : <td style={{ padding:"7px 12px", textAlign:"center" }}>
+                        <span style={{ borderRadius:6, padding:"2px 6px", fontSize:11, fontWeight:700, background:"#1e3a5f", color:"#60a5fa" }}>
+                          {row.cap==="MegaCap"?"초대형":row.cap==="LargeCap"?"대형":row.cap==="MidCap"?"중형":row.cap==="SmallCap"?"소형":row.cap==="SmallCap600"?"Small":row.cap==="MidCap400"?"Mid":"S&P500"}
+                        </span>
+                        {row.sector&&<div style={{fontSize:10,color:"#64748b",marginTop:2}}>{row.sector}</div>}
+                        {row.base_count&&<div style={{fontSize:10,fontWeight:700,marginTop:2,
+                          color:row.base_count==="1st"?"#94a3b8":row.base_count==="2nd"?"#22c55e":row.base_count==="3rd"?"#fb923c":"#ef4444"}}>
+                          {row.base_count+" base"}</div>}
+                      </td>}
+                  <td style={{ padding:"7px 12px", textAlign:"center", fontWeight:800, color:(row.score||0)>=80?"#fb923c":(row.score||0)>=70?"#f1f5f9":"#475569" }}>{row.score||"-"}</td>
+                  <td style={{ padding:"7px 12px", textAlign:"center", color:(row.rs||0)>0?"#22c55e":"#ef4444" }}>{fmt(row.rs)}</td>
+                  <td style={{ padding:"7px 12px", textAlign:"center", color:"#64748b" }}>{row.vol_ratio?Number(row.vol_ratio).toFixed(2)+"x":"-"}</td>
+                  <td style={{ padding:"7px 10px", textAlign:"right" }}>
+                    <div style={{ color:"#fb923c", fontWeight:700 }}>
+                      {isKR?(row.pivot?Number(row.pivot).toLocaleString():"-"):(row.pivot?"$"+Number(row.pivot).toFixed(2):"-")}
+                    </div>
+                    {row.pivot && <div style={{ color:"#ef4444", fontSize:10, marginTop:2 }}>
+                      {isKR?("↓"+Math.round(row.pivot*0.93).toLocaleString()):("↓$"+((row.pivot||0)*0.93).toFixed(2))}
+                    </div>}
+                  </td>
+                  {DAYS.map(d => {
+                    const v = row["r"+d];
+                    return <td key={d} style={{ padding:"7px 10px", textAlign:"center", ...cellStyle(v) }}>{fmt(v)}</td>;
+                  })}
+                </tr>
+                {expanded===i && (
+                  <tr style={{ background:"#0a0f1e" }}>
+                    <td colSpan={20} style={{ padding:"12px 20px", borderBottom:"2px solid #334155" }}>
+                      <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
+                        <div>
+                          <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>상세 정보</div>
+                          <div style={{ fontSize:12, color:"#94a3b8" }}>
+                            {"컵: "+(row.cup_depth||"-")+"% / "+(row.cup_days||"-")+"일"}
+                            {row.cup_start&&row.cup_end&&<span style={{color:"#fb923c",marginLeft:4}}>{"("+row.cup_start+"~"+row.cup_end+")"}</span>}<br/>
+                            {"핸들: "+(row.handle_depth||"-")+"% / "+(row.handle_days||"-")+"일"}<br/>
+                            {"거래량배율: "+(row.vol_ratio||"-")+"x"}
+                            {row.base_count&&<span style={{marginLeft:8,fontWeight:700,
+                              color:row.base_count==="1st"?"#94a3b8":row.base_count==="2nd"?"#22c55e":row.base_count==="3rd"?"#fb923c":"#ef4444"}}>
+                              {row.base_count+" base"}</span>}<br/>
+                            {"진입가: "+(isKR?Number(row.entry||0).toLocaleString():"$"+(row.entry||0).toFixed(2))}
+                          </div>
                         </div>
                       </div>
-                      {isKR && row.hist_count>0 && (
-                        <div>
-                          <div style={{ fontSize:11, color:"#64748b", marginBottom:6 }}>
-                            {"과거이력 "+(row.hist_count||0)+"회 · 승률 "}
-                            <span style={{ color:"#22c55e", fontWeight:700 }}>{(row.hist_winrate||0)+"%"}</span>
-                          </div>
-                          <div style={{ fontSize:12, color:"#94a3b8" }}>
-                            {(row.hist_detail||"").split("|").filter(Boolean).map((h,j)=>{
-                              const p=h.indexOf(":");
-                              const date=p>=0?h.substring(0,p):h;
-                              const ret=p>=0?h.substring(p+1):"";
-                              const s=ret.indexOf("/");
-                              const r5=s>=0?ret.substring(0,s):ret;
-                              const r20=s>=0?ret.substring(s+1):"-";
-                              const win=r20!=="-"&&!isNaN(parseFloat(r20))&&parseFloat(r20)>0;
-                              return (
-                                <div key={j} style={{ marginBottom:2 }}>
-                                  <span style={{ color:"#475569" }}>{date}</span>
-                                  <span style={{ color:"#64748b" }}> 5일</span>
-                                  <span style={{ color:parseFloat(r5)>0?"#22c55e":"#ef4444" }}>{r5}</span>
-                                  <span style={{ color:"#64748b" }}> 20일</span>
-                                  <span style={{ color:win?"#22c55e":"#ef4444" }}>{r20}</span>
-                                  <span style={{ color:win?"#22c55e":"#ef4444" }}>{win?" v":" x"}</span>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              )}
+                    </td>
+                  </tr>
+                )}
               </React.Fragment>
             ))}
           </tbody>
@@ -726,33 +657,141 @@ function BacktestView({ data=[], market }) {
   );
 }
 
+function LSTMTop10View({ data=[] }) {
+  const [sort, setSort] = useState({ col:"date", dir:-1 });
+  const [filterDate, setFilterDate] = useState("전체");
+  const handleSort = col => setSort(s => s.col===col ? {col,dir:-s.dir} : {col,dir:-1});
+  const dates = ["전체", ...new Set(data.map(r=>r.date).filter(Boolean))].slice(0,11);
+  const filtered = useMemo(() => {
+    let d = filterDate === "전체" ? data : data.filter(r => r.date === filterDate);
+    return [...d].sort((a,b) => {
+      const av=a[sort.col], bv=b[sort.col];
+      if (av==null) return 1; if (bv==null) return -1;
+      return (av>bv?1:-1)*sort.dir;
+    });
+  }, [data, sort, filterDate]);
+  const avgScore = v => (v !== null && v !== undefined && v !== "") ? Number(v).toFixed(3) : "-";
+  const fmtRet = v => {
+    if (v === null || v === undefined || v === "") return <span style={{color:"#475569"}}>-</span>;
+    const n = Number(v);
+    return <span style={{color:n>0?"#22c55e":"#ef4444",fontWeight:700}}>{(n>=0?"+":"")+n.toFixed(1)+"%"}</span>;
+  };
+  return (
+    <div>
+      <div style={{marginBottom:16}}>
+        <div style={{fontSize:13,fontWeight:700,color:"#94a3b8",marginBottom:8}}>
+          🧠 LSTM 급등 예측 Top10 트래킹
+          <span style={{fontSize:11,color:"#475569",marginLeft:8}}>전체 4488종목 LSTM 점수 상위 10개 · 평일 매일 업데이트</span>
+        </div>
+        <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center",marginBottom:12}}>
+          <span style={{fontSize:12,color:"#64748b"}}>날짜 필터:</span>
+          {dates.map(d => (
+            <button key={d} onClick={()=>setFilterDate(d)}
+              style={{padding:"4px 10px",borderRadius:6,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:12,fontWeight:700,
+                background:filterDate===d?"linear-gradient(90deg,#fb923c,#f59e0b)":"#1e293b",
+                color:filterDate===d?"#000":"#64748b"}}>{d}</button>
+          ))}
+          <span style={{marginLeft:"auto",fontSize:12,color:"#475569"}}>{filtered.length}건</span>
+        </div>
+      </div>
+      <div style={{overflowX:"auto",borderRadius:10}}>
+        <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+          <thead>
+            <tr>
+              {[["date","날짜"],["ticker","티커"],["name","종목명"],["cap","구분"],["sector","섹터"],
+                ["lstm_r5","r5점수"],["lstm_r10","r10점수"],["lstm_avg","평균점수"],
+                ["minervini","미너비니"],["r5","5일"],["r10","10일"],["r20","20일"]].map(([col,label]) => (
+                <th key={col} onClick={()=>handleSort(col)}
+                  style={{padding:"10px 12px",cursor:"pointer",whiteSpace:"nowrap",userSelect:"none",
+                    background:sort.col===col?"#1e3a5f":"#0f172a",
+                    color:sort.col===col?"#fb923c":"#94a3b8",fontWeight:700,fontSize:12,position:"sticky",top:0,
+                    textAlign:["lstm_r5","lstm_r10","lstm_avg","minervini","r5","r10","r20"].includes(col)?"center":"left"}}>
+                  {label}{sort.col===col?(sort.dir===-1?" v":" ^"):""}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((row,i) => (
+              <tr key={i} style={{borderBottom:"1px solid #1e293b",background:i%2===0?"#0f172a":"#111827"}}>
+                <td style={{padding:"8px 10px",color:"#475569",whiteSpace:"nowrap",fontSize:11}}>
+                  {row.date?row.date.replace(/^20(\d{2})-(\d+)-(\d+)$/,"$1.$2.$3"):"-"}
+                </td>
+                <td style={{padding:"8px 12px",fontWeight:900}}>
+                  <span style={{color:"#f1f5f9"}}>{row.ticker}</span>
+                  <div style={{display:"flex",gap:4,marginTop:3}}>
+                    <a href={"https://finance.yahoo.com/quote/"+row.ticker} target="_blank" rel="noreferrer"
+                      style={{fontSize:10,color:"#22c55e",textDecoration:"none",background:"#14532d",borderRadius:4,padding:"1px 5px"}}>야후</a>
+                    <a href={"https://kr.tradingview.com/chart/?symbol="+row.ticker} target="_blank" rel="noreferrer"
+                      style={{fontSize:10,color:"#60a5fa",textDecoration:"none",background:"#1e3a5f",borderRadius:4,padding:"1px 5px"}}>TV</a>
+                  </div>
+                </td>
+                <td style={{padding:"8px 12px",color:"#94a3b8",fontSize:11,maxWidth:120,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{row.name||"-"}</td>
+                <td style={{padding:"8px 12px",textAlign:"center"}}>
+                  <span style={{borderRadius:6,padding:"2px 6px",fontSize:11,fontWeight:700,background:"#1e3a5f",color:"#60a5fa"}}>
+                    {row.cap==="MegaCap"?"초대형":row.cap==="LargeCap"?"대형":row.cap==="MidCap"?"중형":"소형"}
+                  </span>
+                </td>
+                <td style={{padding:"8px 12px",color:"#64748b",fontSize:11}}>{row.sector||"-"}</td>
+                <td style={{padding:"8px 12px",textAlign:"center"}}>
+                  <span style={{color:Number(row.lstm_r5||0)>=0.6?"#fb923c":Number(row.lstm_r5||0)>=0.5?"#f1f5f9":"#64748b",fontWeight:700}}>{avgScore(row.lstm_r5)}</span>
+                </td>
+                <td style={{padding:"8px 12px",textAlign:"center"}}>
+                  <span style={{color:Number(row.lstm_r10||0)>=0.6?"#fb923c":Number(row.lstm_r10||0)>=0.5?"#f1f5f9":"#64748b",fontWeight:700}}>{avgScore(row.lstm_r10)}</span>
+                </td>
+                <td style={{padding:"8px 12px",textAlign:"center"}}>
+                  <span style={{borderRadius:6,padding:"3px 8px",fontWeight:800,
+                    background:Number(row.lstm_avg||0)>=0.6?"linear-gradient(90deg,#fb923c,#f59e0b)":"#1e293b",
+                    color:Number(row.lstm_avg||0)>=0.6?"#000":"#64748b"}}>{avgScore(row.lstm_avg)}</span>
+                </td>
+                <td style={{padding:"8px 12px",textAlign:"center",fontSize:14}}>{row.minervini||"-"}</td>
+                <td style={{padding:"8px 10px",textAlign:"center"}}>{fmtRet(row.r5)}</td>
+                <td style={{padding:"8px 10px",textAlign:"center"}}>{fmtRet(row.r10)}</td>
+                <td style={{padding:"8px 10px",textAlign:"center"}}>{fmtRet(row.r20)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {filtered.length === 0 && (
+          <div style={{textAlign:"center",padding:"40px",color:"#475569"}}>
+            <div style={{fontSize:32,marginBottom:8}}>🧠</div>
+            <div>LSTM 스캐너 실행 후 데이터가 표시됩니다</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 const TABS = [
-  { id:"kr_scanner",    label:"KR 국장 스캐너",  market:"KR", type:"scanner"  },
-  { id:"kr_backtest",   label:"KR 국장 백테스트", market:"KR", type:"backtest" },
-  { id:"us_scanner",    label:"US S&P1500",       market:"US", type:"scanner"  },
-  { id:"us_small",      label:"US 소형주",         market:"US", type:"scanner"  },
-  { id:"us_backtest",   label:"US 백테스트",       market:"US", type:"backtest" },
-  { id:"ticker_search", label:"🔍 종목 검색",      market:"KR", type:"search"   },
+  { id:"kr_scanner", label:"KR 국장 스캐너", market:"KR", type:"scanner" },
+  { id:"kr_backtest", label:"KR 국장 백테스트", market:"KR", type:"backtest" },
+  { id:"us_scanner", label:"US S&P1500", market:"US", type:"scanner" },
+  { id:"us_small", label:"US 소형주", market:"US", type:"scanner" },
+  { id:"us_backtest", label:"US 백테스트", market:"US", type:"backtest" },
+  { id:"ticker_search", label:"🔍 종목 검색", market:"KR", type:"search" },
+  { id:"lstm_top10", label:"🧠 LSTM Top10", market:"US", type:"lstm" },
 ];
 
 const DATA_FILES_MAP = {
-  kr_scanner:  "/scanner_kr_raw.csv",
+  kr_scanner: "/scanner_kr_raw.csv",
   kr_backtest: "/backtest_raw.csv",
-  us_scanner:  "/scanner_us_raw.csv",
-  us_small:    "/scanner_us_small_raw.csv",
+  us_scanner: "/scanner_us_raw.csv",
+  us_small: "/scanner_us_small_raw.csv",
   us_backtest: "/backtest_us_raw.csv",
-  kr_all:      "/scanner_kr_all.csv",
-  us_all:      "/scanner_us_all.csv",
+  kr_all: "/scanner_kr_all.csv",
+  us_all: "/scanner_us_all.csv",
+  lstm_top10: "/scanner_lstm_top10.csv",
 };
 
 function App() {
   const [activeTab, setActiveTab] = useState("kr_scanner");
   const [datasets, setDatasets] = useState({
-    kr_scanner:[], kr_backtest:[], us_scanner:[], us_small:[], us_backtest:[], kr_all:[], us_all:[]
+    kr_scanner:[], kr_backtest:[], us_scanner:[], us_small:[], us_backtest:[], kr_all:[], us_all:[], lstm_top10:[]
   });
   const [loadState, setLoadState] = useState({
     kr_scanner:"idle", kr_backtest:"idle", us_scanner:"idle",
-    us_small:"idle", us_backtest:"idle", kr_all:"idle", us_all:"idle"
+    us_small:"idle", us_backtest:"idle", kr_all:"idle", us_all:"idle", lstm_top10:"idle"
   });
   const [lastUpdated, setLastUpdated] = useState({});
   const [tickerInput, setTickerInput] = useState("");
@@ -807,6 +846,7 @@ function App() {
     });
     fetchCSV("kr_all");
     fetchCSV("us_all");
+    fetchCSV("lstm_top10");
   }, []);
 
   const handleUpload = useCallback((tabId) => (e) => {
@@ -825,12 +865,10 @@ function App() {
 
   const activeInfo = TABS.find(t => t.id === activeTab);
 
-  // kr_scanner 탭은 kr_all에서 유효 시그널만 필터링
   const getActiveData = () => {
     if (activeTab === "kr_scanner") {
       const raw = datasets.kr_scanner || [];
       if (raw.length > 0) return raw;
-      // kr_all fallback
       return (datasets.kr_all || []).filter(r => {
         const sig = r.signal === true || r.signal === "True" || r.signal === "true" || r.signal === 1;
         if (!sig) return false;
@@ -842,6 +880,7 @@ function App() {
     }
     return datasets[activeTab] || [];
   };
+
   const active = getActiveData();
 
   return (
@@ -867,9 +906,7 @@ function App() {
                     return p>0 && c>=p*0.90 && c<=p*1.05;
                   }).length
                 : (datasets[t.id]||[]).length;
-              const st = t.id === "kr_scanner"
-                ? (loadState.kr_all||"idle")
-                : loadState[t.id];
+              const st = t.id === "kr_scanner" ? (loadState.kr_all||"idle") : loadState[t.id];
               return (
                 <div key={t.id} style={{ display:"flex", alignItems:"center", gap:4, fontSize:11 }}>
                   <span style={{ color:"#475569" }}>{t.id.split("_")[0].toUpperCase()}</span>
@@ -878,7 +915,7 @@ function App() {
                 </div>
               );
             })}
-            <button onClick={() => { TABS.forEach(t => { if(t.type!=="search") fetchCSV(t.id); }); fetchCSV("kr_all"); }}
+            <button onClick={() => { TABS.forEach(t => { if(t.type!=="search") fetchCSV(t.id); }); fetchCSV("kr_all"); fetchCSV("lstm_top10"); }}
               style={{ padding:"6px 14px", borderRadius:8, border:"1px solid #334155", background:"#1e293b", color:"#94a3b8", cursor:"pointer", fontSize:12, fontFamily:"inherit", fontWeight:700 }}>
               새로고침
             </button>
@@ -924,15 +961,12 @@ function App() {
       <div style={{ padding:20 }}>
         {activeInfo && activeInfo.type === "search" ? (
           <TickerSearchView
-            result={tickerResult}
-            input={tickerInput}
-            setInput={setTickerInput}
-            onSearch={searchTicker}
-            market={tickerMarket}
-            setMarket={setTickerMarket}
-            krData={datasets.kr_all||[]}
-            usData={datasets.us_all||[]}
+            result={tickerResult} input={tickerInput} setInput={setTickerInput}
+            onSearch={searchTicker} market={tickerMarket} setMarket={setTickerMarket}
+            krData={datasets.kr_all||[]} usData={datasets.us_all||[]}
           />
+        ) : activeInfo && activeInfo.type === "lstm" ? (
+          <LSTMTop10View data={datasets.lstm_top10||[]} />
         ) : loadState[activeTab] === "loading" ? (
           <div style={{ textAlign:"center", padding:"60px 20px", color:"#64748b" }}>⏳ 로딩 중...</div>
         ) : loadState[activeTab] === "error" ? (
