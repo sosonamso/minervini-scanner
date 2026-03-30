@@ -129,6 +129,80 @@ if __name__ == "__main__":
     val_auc = roc_auc_score(y_te_f, final_model.predict(X_te_f))
     print(f"최종 모델 Val AUC: {val_auc:.4f} (Fold3 참고값: 0.7244)")
 
+
+    # ── Walk-Forward Out-of-Sample 점수 분석 ──────────
+    print(f"\n{'='*55}")
+    print("[ Walk-Forward Out-of-Sample 점수 분석 ]")
+    print(f"{'='*55}")
+
+    oos_records = []
+    fold_models = []
+
+    for i, (tr_start, tr_end, te_start, te_end) in enumerate(FOLDS):
+        tr = df[(df.date >= tr_start) & (df.date <= tr_end)]
+        te = df[(df.date >= te_start) & (df.date <= te_end)]
+        if len(tr) < 30 or len(te) < 10:
+            continue
+
+        X_tr = tr[FEAT_COLS].values.astype(np.float32)
+        y_tr = tr["label"].values
+        X_te = te[FEAT_COLS].values.astype(np.float32)
+
+        dtrain = lgb.Dataset(X_tr, label=y_tr, feature_name=FEAT_COLS)
+        dvalid = lgb.Dataset(X_te, label=te["label"].values, reference=dtrain)
+
+        model = lgb.train(
+            LGB_PARAMS, dtrain, num_boost_round=500,
+            valid_sets=[dvalid],
+            callbacks=[lgb.early_stopping(50, verbose=False), lgb.log_evaluation(0)]
+        )
+
+        scores = model.predict(X_te)
+        for j, (_, row) in enumerate(te.iterrows()):
+            oos_records.append({
+                "date":       row["date"],
+                "ticker":     row["ticker"],
+                "label":      int(row["label"]),
+                "r5":         row.get("r5"),
+                "r10":        row.get("r10"),
+                "lgbm_score": round(float(scores[j]), 4),
+                "fold":       i + 1,
+            })
+
+    oos_df = pd.DataFrame(oos_records)
+    print(f"\nOut-of-Sample 총 {len(oos_df)}건")
+    print(f"점수 분포: 평균={oos_df.lgbm_score.mean():.3f} "
+          f"min={oos_df.lgbm_score.min():.3f} max={oos_df.lgbm_score.max():.3f}")
+
+    # 구간별 분석
+    bins   = [0, 0.2, 0.3, 0.4, 0.5, 1.0]
+    labels = ["~0.2", "0.2~0.3", "0.3~0.4", "0.4~0.5", "0.5+"]
+    oos_df["score_bin"] = pd.cut(oos_df.lgbm_score, bins=bins, labels=labels)
+
+    print(f"\n{'구간':10s} {'n':>4} {'승률(r10)':>10} {'평균r5':>8} {'평균r10':>8}")
+    print("-" * 45)
+    for lbl in labels:
+        sub = oos_df[oos_df.score_bin == lbl]
+        if len(sub) == 0: continue
+        r10_vals = sub["r10"].dropna()
+        r5_vals  = sub["r5"].dropna()
+        win_rate = (r10_vals >= 8).mean() * 100 if len(r10_vals) > 0 else 0
+        avg_r5   = r5_vals.mean()  if len(r5_vals)  > 0 else float("nan")
+        avg_r10  = r10_vals.mean() if len(r10_vals) > 0 else float("nan")
+        print(f"{lbl:10s} {len(sub):>4} {win_rate:>9.1f}% "
+              f"{avg_r5:>+7.1f}% {avg_r10:>+7.1f}%")
+
+    # 전체 베이스라인
+    r10_all = oos_df["r10"].dropna()
+    r5_all  = oos_df["r5"].dropna()
+    print("-" * 45)
+    print(f"{'전체':10s} {len(oos_df):>4} "
+          f"{(r10_all>=8).mean()*100:>9.1f}% "
+          f"{r5_all.mean():>+7.1f}% {r10_all.mean():>+7.1f}%")
+
+    oos_df.to_csv("lgbm_oos_kr.csv", index=False, encoding="utf-8-sig")
+    print("\nOut-of-Sample 결과 저장: lgbm_oos_kr.csv")
+
     final_model.save_model("model_lgbm_kr.txt")
     with open("feat_cols_lgbm_kr.pkl", "wb") as f:
         pickle.dump(FEAT_COLS, f)
