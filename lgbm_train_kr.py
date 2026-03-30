@@ -98,14 +98,27 @@ if __name__ == "__main__":
         for feat, val in avg_imp.head(20).items():
             print(f"  {feat:30s} {val:.1f}")
 
-    # 최종 모델
-    print("\n최종 모델 학습 중...")
-    X_all = df[FEAT_COLS].values.astype(np.float32)
-    y_all = df["label"].values
-    n_val = int(len(df) * 0.1)
+    # 최종 모델 (시간 기준: ~2025 train / 2026 val)
+    print("\n최종 모델 학습 중 (train: ~2025 / val: 2026)...")
+    tr_f = df[df.date <  "2026-01-01"]
+    te_f = df[df.date >= "2026-01-01"]
 
-    dtrain_f = lgb.Dataset(X_all[:-n_val], label=y_all[:-n_val], feature_name=FEAT_COLS)
-    dvalid_f = lgb.Dataset(X_all[-n_val:],  label=y_all[-n_val:],  reference=dtrain_f)
+    if len(te_f) < 5:
+        print("2026 데이터 부족 → 마지막 10% 사용")
+        n_val = int(len(df) * 0.1)
+        tr_f  = df.iloc[:-n_val]
+        te_f  = df.iloc[-n_val:]
+
+    X_tr_f = tr_f[FEAT_COLS].values.astype(np.float32)
+    y_tr_f = tr_f["label"].values
+    X_te_f = te_f[FEAT_COLS].values.astype(np.float32)
+    y_te_f = te_f["label"].values
+
+    print(f"  train: {len(tr_f)}건 / val: {len(te_f)}건")
+    print(f"  val 양성비율: {y_te_f.mean():.2f}")
+
+    dtrain_f = lgb.Dataset(X_tr_f, label=y_tr_f, feature_name=FEAT_COLS)
+    dvalid_f = lgb.Dataset(X_te_f, label=y_te_f, reference=dtrain_f)
 
     final_model = lgb.train(
         LGB_PARAMS, dtrain_f, num_boost_round=1000,
@@ -113,8 +126,8 @@ if __name__ == "__main__":
         callbacks=[lgb.early_stopping(50, verbose=False), lgb.log_evaluation(50)]
     )
 
-    val_auc = roc_auc_score(y_all[-n_val:], final_model.predict(X_all[-n_val:]))
-    print(f"최종 모델 Val AUC: {val_auc:.4f}")
+    val_auc = roc_auc_score(y_te_f, final_model.predict(X_te_f))
+    print(f"최종 모델 Val AUC: {val_auc:.4f} (Fold3 참고값: 0.7244)")
 
     final_model.save_model("model_lgbm_kr.txt")
     with open("feat_cols_lgbm_kr.pkl", "wb") as f:
