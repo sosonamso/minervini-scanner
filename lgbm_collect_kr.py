@@ -1,8 +1,10 @@
 """
-국장 LightGBM 데이터 수집
-- backtest_raw.csv (미너비니 시그널) 기반
-- KRX API로 각 종목 피처 계산
-- 라벨: 손절(-7%) 안 걸리고 10일 내 +8% 도달 → 1
+국장 LightGBM 데이터 수집 (최적화 버전)
+- backtest_raw.csv의 r5/r10으로 라벨 간접 계산
+  → r5 >= -7% AND r10 >= 8% → 1 (성공)
+  → 그 외 → 0 (실패)
+- 종목별 1회 fetch로 피처 계산
+- KRX API 호출 대폭 감소
 """
 import os, time, warnings, requests
 import numpy as np
@@ -15,14 +17,11 @@ TOK    = os.environ.get("TELEGRAM_TOKEN", "")
 CID    = os.environ.get("TELEGRAM_CHAT_ID", "")
 KRX    = os.environ.get("KRX_TOKEN", "")
 
-WINDOW      = 150
-SKIP        = 2
-VOL_MA      = 20
-MIN_PRICE   = 1000     # 최소 주가 1000원
-MIN_TRDVAL  = 5        # 일평균 거래대금 최소 5억
-STOP_PCT    = 0.93     # 손절 -7%
-TARGET_PCT  = 1.08     # 목표 +8%
-HOLD_DAYS   = 10
+WINDOW     = 150
+SKIP       = 2
+VOL_MA     = 20
+MIN_PRICE  = 1000   # 최소 주가
+MIN_TRDVAL = 5      # 일평균 거래대금 최소 5억
 
 _row_meta = {}
 
@@ -74,10 +73,10 @@ def get_krx_data(date_str, market="KOSPI"):
     return {}
 
 
-def get_trading_dates(start_date, end_date):
+def get_trading_dates(start_str, end_str):
     dates = []
-    d = pd.Timestamp(start_date)
-    end = pd.Timestamp(end_date)
+    d   = pd.Timestamp(start_str)
+    end = pd.Timestamp(end_str)
     while d <= end:
         if d.weekday() < 5:
             dates.append(d.strftime("%Y%m%d"))
@@ -85,33 +84,29 @@ def get_trading_dates(start_date, end_date):
     return dates
 
 
-def build_ticker_ohlcv(ticker, market, start_date, end_date):
-    """특정 종목의 OHLCV 구축"""
-    trading_dates = get_trading_dates(start_date, end_date)
-    rows = []
-    for date_str in trading_dates:
-        day_data = get_krx_data(date_str, market)
-        if ticker in day_data:
-            rows.append({"date": pd.Timestamp(date_str), **day_data[ticker]})
+def build_ticker_ohlcv(ticker, market, start_str, end_str):
+    """종목 하나의 OHLCV 구축"""
+    dates = get_trading_dates(start_str, end_str)
+    rows  = []
+    for date_str in dates:
+        day = get_krx_data(date_str, market)
+        if ticker in day:
+            rows.append({"date": pd.Timestamp(date_str), **day[ticker]})
         time.sleep(0.3)
-
-    if not rows:
-        return None
+    if not rows: return None
     df = pd.DataFrame(rows).set_index("date").sort_index()
     df = df[["Close", "High", "Low", "Volume", "TrdVal"]].astype(float)
-    df = df[df["Close"] > 0].dropna()
-    return df if len(df) >= WINDOW + SKIP + HOLD_DAYS else None
+    return df[df["Close"] > 0].dropna()
 
 
-def calc_label(df, sig_idx, entry_price):
-    """손절 안 걸리고 10일 내 +8% 도달 여부"""
-    stop   = entry_price * STOP_PCT
-    target = entry_price * TARGET_PCT
-    future = df.iloc[sig_idx + 1: sig_idx + 1 + HOLD_DAYS]
-    if len(future) == 0: return None
-    for _, row in future.iterrows():
-        if row["Low"] <= stop:   return 0
-        if row["High"] >= target: return 1
+def calc_label_indirect(r5, r10):
+    """
+    간접 라벨 계산
+    r5 >= -7% (손절 안 걸림) AND r10 >= 8% → 1
+    """
+    if pd.isna(r5) or pd.isna(r10): return None
+    if r5 < -7.0: return 0   # 5일 내 손절
+    if r10 >= 8.0: return 1  # 10일 내 목표 달성
     return 0
 
 
@@ -130,10 +125,9 @@ def calc_rsi(closes, period=14):
 
 
 def calc_features(df, mkt_df, d_idx, ticker_info):
-    """피처 계산"""
     start_idx = d_idx - SKIP - WINDOW
     end_idx   = d_idx - SKIP
-    if start_idx < max(VOL_MA, 252): return None
+    if start_idx < max(VOL_MA, 10): return None
 
     w = df.iloc[start_idx:end_idx]
     if len(w) < WINDOW: return None
@@ -144,21 +138,16 @@ def calc_features(df, mkt_df, d_idx, ticker_info):
     volume = w["Volume"].values
     trdval = w["TrdVal"].values
 
-    # 필터
     if close[-1] < MIN_PRICE: return None
-    trdval_avg = np.mean(trdval[-20:]) / 1e8
-    if trdval_avg < MIN_TRDVAL: return None
+    if np.mean(trdval[-20:]) / 1e8 < MIN_TRDVAL: return None
 
-    # 종가 정규화
     c_min, c_max = close.min(), close.max()
     if c_max == c_min: return None
     close_norm = (close - c_min) / (c_max - c_min)
 
-    # 등락률
     ret = np.zeros(WINDOW)
     ret[1:] = (close[1:] / close[:-1] - 1) * 100
 
-    # 거래량 비율
     vol_ratio = np.zeros(WINDOW)
     for k in range(WINDOW):
         abs_idx  = start_idx + k
@@ -172,14 +161,15 @@ def calc_features(df, mkt_df, d_idx, ticker_info):
         feat[f"close_norm_{k+1}"] = round(float(close_norm[k]), 4)
         feat[f"vol_ratio_{k+1}"]  = round(float(vol_ratio[k]), 4)
 
-    # RS (미너비니 방식)
+    # RS
     ref_idx = d_idx - SKIP
     td = df.index[:ref_idx + 1]
-    sa = mkt_df.reindex(td).ffill()
+    sa = mkt_df.reindex(td).ffill() if len(mkt_df) > 0 else pd.DataFrame()
     tc = df["Close"].iloc[:ref_idx + 1].values
-    sc = sa["Close"].values if not sa.isnull().all().any() else None
 
-    if sc is not None and len(tc) >= 253:
+    rs_at = rs_20 = rs_50 = rs_150 = 0.0
+    if len(sa) > 0 and not sa.isnull().all().any() and len(tc) >= 253:
+        sc = sa["Close"].values
         def pr(arr, n): return float(arr[-1] / arr[-n] - 1) if len(arr) >= n else 0.0
         w_ = [0.4, 0.2, 0.2, 0.2]; p_ = [63, 126, 189, 252]
         t_rs = sum(w_[i]*pr(tc, p_[i]) for i in range(4))
@@ -188,8 +178,6 @@ def calc_features(df, mkt_df, d_idx, ticker_info):
         rs_20  = round((pr(tc,20)  - pr(sc,20))  * 100, 4)
         rs_50  = round((pr(tc,50)  - pr(sc,50))  * 100, 4)
         rs_150 = round((pr(tc,150) - pr(sc,150)) * 100, 4)
-    else:
-        rs_at = rs_20 = rs_50 = rs_150 = 0.0
 
     feat["rs_at_d2"] = rs_at
     feat["rs_20"]    = rs_20
@@ -208,12 +196,8 @@ def calc_features(df, mkt_df, d_idx, ticker_info):
     feat["bb_pos"] = round(float(np.clip(bb_pos, 0, 1)), 4)
 
     year_close = df["Close"].iloc[max(0, d_idx-252):d_idx].values
-    if len(year_close) > 0:
-        feat["pos_52w_high"] = round(float(close[-1] / year_close.max()), 4)
-        feat["pos_52w_low"]  = round(float(close[-1] / year_close.min()), 4)
-    else:
-        feat["pos_52w_high"] = 1.0
-        feat["pos_52w_low"]  = 1.0
+    feat["pos_52w_high"] = round(float(close[-1] / year_close.max()), 4) if len(year_close) > 0 else 1.0
+    feat["pos_52w_low"]  = round(float(close[-1] / year_close.min()), 4) if len(year_close) > 0 else 1.0
 
     tr_list = []
     h_arr = high[-15:]; l_arr = low[-15:]; c_arr = close[-15:]
@@ -224,16 +208,14 @@ def calc_features(df, mkt_df, d_idx, ticker_info):
     feat["atr_ratio"] = round(float(atr / close[-1]) if close[-1] > 0 else 0, 4)
 
     feat["ma20_pos"] = round(float(close[-1] / np.mean(close[-20:])), 4)
-    feat["ma50_pos"] = round(float(close[-1] / np.mean(close[-50:])), 4)
-
-    # 거래대금 평균 (피처로)
+    feat["ma50_pos"] = round(float(close[-1] / np.mean(close[-50:])) if len(close) >= 50 else 1.0, 4)
     feat["trdval_20"] = round(float(np.mean(trdval[-20:]) / 1e8), 2)
 
-    # 섹터 OHE (국장)
-    KR_SECTORS = ["음식료품", "섬유의복", "종이목재", "화학", "의약품",
-                  "비금속광물", "철강금속", "기계", "전기전자", "의료정밀",
-                  "운수장비", "유통업", "전기가스업", "건설업", "운수창고업",
-                  "통신업", "금융업", "증권", "보험", "서비스업", "기타"]
+    # 섹터 OHE
+    KR_SECTORS = ["음식료품","섬유의복","종이목재","화학","의약품",
+                  "비금속광물","철강금속","기계","전기전자","의료정밀",
+                  "운수장비","유통업","전기가스업","건설업","운수창고업",
+                  "통신업","금융업","증권","보험","서비스업","기타"]
     sector = str(ticker_info.get("sector", "기타"))
     for s in KR_SECTORS:
         feat[f"sec_{s}"] = 1 if sector == s else 0
@@ -251,110 +233,89 @@ if __name__ == "__main__":
         send("KRX_TOKEN 없음!")
         exit(1)
 
-    # 백테스트 로드
-    try:
-        bt = pd.read_csv("backtest_raw.csv", encoding="utf-8-sig")
-        bt["date"] = pd.to_datetime(bt["date"])
-        bt = bt.sort_values("date").reset_index(drop=True)
-        print(f"백테스트 시그널: {len(bt)}건")
-    except Exception as e:
-        send(f"backtest_raw.csv 로드 실패: {e}")
-        exit(1)
+    bt = pd.read_csv("backtest_raw.csv", encoding="utf-8-sig")
+    bt["date"] = pd.to_datetime(bt["date"])
+    bt = bt.sort_values("date").reset_index(drop=True)
+    print(f"백테스트 시그널: {len(bt)}건")
 
-    # 지수 (KODEX200) 수집 - 전체 기간
-    min_date = bt["date"].min()
-    max_date = bt["date"].max()
-    data_start = (min_date - timedelta(days=600)).strftime("%Y%m%d")
-    data_end   = (max_date + timedelta(days=20)).strftime("%Y%m%d")
+    # 라벨 간접 계산 (API 추가 호출 없음)
+    bt["label"] = bt.apply(
+        lambda r: calc_label_indirect(r.get("r5"), r.get("r10")), axis=1
+    )
+    bt_valid = bt.dropna(subset=["label"]).copy()
+    bt_valid["label"] = bt_valid["label"].astype(int)
+    print(f"라벨 계산: {len(bt_valid)}건 (양성:{(bt_valid.label==1).sum()} 음성:{(bt_valid.label==0).sum()})")
 
-    send(f"🌲 국장 LightGBM 데이터 수집 시작\n{len(bt)}개 시그널\n필터: {MIN_PRICE}원+, 거래대금{MIN_TRDVAL}억+")
+    # 종목별로 그룹화 → 종목당 1번만 fetch
+    grouped = bt_valid.groupby(["ticker", "market"])
+    total_tickers = len(grouped)
+    print(f"고유 종목: {total_tickers}개")
 
-    # KODEX200 수집 (지수 대용)
-    print("KODEX200 수집 중...")
+    # 전체 기간 파악
+    global_start = (bt_valid["date"].min() - timedelta(days=600)).strftime("%Y%m%d")
+    global_end   = (bt_valid["date"].max()).strftime("%Y%m%d")
+
+    send(f"🌲 국장 LightGBM 데이터 수집 시작\n{len(bt_valid)}건 / {total_tickers}개 종목\n라벨: 간접계산 (r5/r10 기반)")
+
+    # KODEX200 먼저 수집
+    print("KODEX200 탐색 중...")
+    mkt_df = pd.DataFrame(columns=["Close"])
+    sample_dates = get_trading_dates(
+        (bt_valid["date"].min() - timedelta(days=10)).strftime("%Y%m%d"),
+        bt_valid["date"].min().strftime("%Y%m%d")
+    )
     mkt_ticker = None
-    mkt_df     = None
-
-    # 전체 기간 날짜별 순회해서 KODEX200 찾기
-    trading_dates = get_trading_dates(data_start, data_end)
-    mkt_rows = []
-    for date_str in trading_dates[:20]:  # 처음 몇 날만 확인해서 KODEX200 ticker 찾기
-        day_data = get_krx_data(date_str, "KOSPI")
+    for date_str in sample_dates[:5]:
+        day = get_krx_data(date_str, "KOSPI")
         for t, meta in _row_meta.items():
             if "KODEX" in meta["name"] and "200" in meta["name"] \
                     and "레버리지" not in meta["name"] and "인버스" not in meta["name"]:
                 mkt_ticker = t
-                print(f"KODEX200 발견: {meta['name']}({t})")
+                print(f"KODEX200: {meta['name']}({t})")
                 break
         if mkt_ticker: break
         time.sleep(0.3)
 
     if mkt_ticker:
-        print(f"KODEX200({mkt_ticker}) 전체 기간 수집 중...")
-        mkt_df = build_ticker_ohlcv(mkt_ticker, "KOSPI", data_start, data_end)
-        if mkt_df is not None:
-            mkt_df = mkt_df[["Close"]]
+        print("KODEX200 전체 기간 수집 중...")
+        mkt_df_full = build_ticker_ohlcv(mkt_ticker, "KOSPI", global_start, global_end)
+        if mkt_df_full is not None:
+            mkt_df = mkt_df_full[["Close"]]
             print(f"KODEX200: {len(mkt_df)}일치")
 
-    if mkt_df is None:
-        print("KODEX200 없음 → RS 피처 0으로 처리")
-        mkt_df = pd.DataFrame(columns=["Close"])
-
+    # 종목별 피처 계산
     samples = []
-    ticker_cache = {}  # 종목별 OHLCV 캐시
+    for t_idx, ((ticker, market), group) in enumerate(grouped):
+        ticker = str(ticker).zfill(6)
+        print(f"[{t_idx+1}/{total_tickers}] {ticker} ({market}) {len(group)}건")
 
-    for i, row in bt.iterrows():
-        if i % 50 == 0:
-            print(f"[{i}/{len(bt)}] {len(samples)}건 수집됨")
+        # 종목 OHLCV 1회 fetch
+        df = build_ticker_ohlcv(ticker, market, global_start, global_end)
+        if df is None or len(df) < WINDOW + SKIP + 5:
+            print(f"  → 데이터 부족 스킵")
+            continue
 
-        ticker   = str(row["ticker"]).zfill(6)
-        sig_date = pd.Timestamp(row["date"])
-        market   = str(row["market"])
-        entry    = float(row["entry"])
-        if entry <= 0: continue
-
-        # 종목 OHLCV (캐시 활용)
-        if ticker not in ticker_cache:
-            fetch_start = (sig_date - timedelta(days=600)).strftime("%Y%m%d")
-            fetch_end   = (max_date + timedelta(days=20)).strftime("%Y%m%d")
-            df = build_ticker_ohlcv(ticker, market, fetch_start, fetch_end)
-            ticker_cache[ticker] = df
-        else:
-            df = ticker_cache[ticker]
-
-        if df is None: continue
-
-        # 시그널 날짜 인덱스
         idx_list = df.index.tolist()
-        matches  = [x for x in idx_list if x.date() == sig_date.date()]
-        if not matches: continue
-        d_idx = idx_list.index(matches[0])
-        if d_idx < WINDOW + SKIP: continue
 
-        # 라벨 (r5/r10 컬럼 있으면 활용, 없으면 계산)
-        r10 = row.get("r10")
-        r5  = row.get("r5")
-        if pd.notna(r10) and pd.notna(r5):
-            # 간접 라벨: r10 >= 8% 이고 도중에 -7% 이하 없었는지
-            # 정확한 라벨은 High/Low로 재계산
-            label = calc_label(df, d_idx, entry)
-        else:
-            label = calc_label(df, d_idx, entry)
+        for _, row in group.iterrows():
+            sig_date = pd.Timestamp(row["date"])
+            matches  = [x for x in idx_list if x.date() == sig_date.date()]
+            if not matches: continue
+            d_idx = idx_list.index(matches[0])
+            if d_idx < WINDOW + SKIP: continue
 
-        if label is None: continue
+            info = {"sector": str(row.get("sector", "기타")),
+                    "market": market}
+            feat = calc_features(df, mkt_df, d_idx, info)
+            if feat is None: continue
 
-        # 피처 계산
-        info = {"sector": str(row.get("sector", "기타")),
-                "market": market}
-        feat = calc_features(df, mkt_df, d_idx, info)
-        if feat is None: continue
-
-        feat["ticker"] = ticker
-        feat["date"]   = sig_date.strftime("%Y-%m-%d")
-        feat["label"]  = label
-        feat["entry"]  = round(entry, 0)
-        feat["r5"]     = r5
-        feat["r10"]    = r10
-        samples.append(feat)
+            feat["ticker"] = ticker
+            feat["date"]   = sig_date.strftime("%Y-%m-%d")
+            feat["label"]  = int(row["label"])
+            feat["entry"]  = float(row["entry"])
+            feat["r5"]     = row.get("r5")
+            feat["r10"]    = row.get("r10")
+            samples.append(feat)
 
     print(f"\n수집 완료: {len(samples)}건")
     if not samples:
